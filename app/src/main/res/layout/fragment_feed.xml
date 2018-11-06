@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FeedFragment">
+
+    <TextView
+        android:id="@+id/tv_empty_list_notification"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="No Feed Posts."/>
+
+    <ProgressBar
+        android:id="@+id/pb_polls_feed"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_gravity="center"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_polls_feed"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+</FrameLayout>

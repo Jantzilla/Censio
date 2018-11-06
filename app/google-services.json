@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "106375141746",
+    "firebase_url": "https://censio-bbd2f.firebaseio.com",
+    "project_id": "censio-bbd2f",
+    "storage_bucket": "censio-bbd2f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106375141746:android:a8902be65f3bfc3b",
+        "android_client_info": {
+          "package_name": "com.apps.creativesource.censio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "106375141746-unvfej5v76gro0sg2furpbspdalh8u2h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apps.creativesource.censio",
+            "certificate_hash": "1a2db02d557e92d374232be9b0433751768112e8"
+          }
+        },
+        {
+          "client_id": "106375141746-asckk2oboko0qjof6btk63cgbfb6ld1k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsybQgcjkhdaYo6Or75ie0XzauBHT3URk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "106375141746-asckk2oboko0qjof6btk63cgbfb6ld1k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/et_multi_choice"
+        app:layout_constraintEnd_toStartOf="@+id/et_multi_choice"
+        app:layout_constraintTop_toTopOf="@+id/et_multi_choice"
+        app:srcCompat="@android:drawable/ic_notification_clear_all" />
+
+    <EditText
+        android:id="@+id/et_multi_choice"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:ems="10"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Option" />
+</android.support.constraint.ConstraintLayout>

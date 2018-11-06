@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddActivity">
+
+    <TextView
+        android:id="@+id/tv_statement_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="@string/statement"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/et_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enter_a_context"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/vp_view_pager"
+        app:layout_constraintBottom_toTopOf="@+id/tv_response_label"
+        app:layout_constraintTop_toBottomOf="@id/tv_statement_label" />
+
+    <TextView
+        android:id="@+id/tv_response_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="@string/feedback"
+        android:textSize="24sp"
+        app:layout_constraintTop_toBottomOf="@id/et_title"
+        app:layout_constraintBottom_toTopOf="@id/tl_tab_layout"/>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tl_tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_response_label"
+        app:layout_constraintVertical_chainStyle="spread_inside"
+        app:tabBackground="@color/colorPrimary"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/colorAccent"
+        app:tabIndicatorHeight="4dp"
+        app:tabMode="fixed"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_publish"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tl_tab_layout" />
+
+    <Button
+        android:id="@+id/btn_publish"
+        android:layout_width="150dp"
+        android:layout_height="75dp"
+        android:background="@drawable/button"
+        android:textSize="22sp"
+        android:textColor="#ffffff"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/publish"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

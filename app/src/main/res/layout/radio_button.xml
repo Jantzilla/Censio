@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_option"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <RadioButton
+            android:id="@+id/rb_choice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:paddingStart="15dp"
+            android:paddingLeft="15dp"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            tools:text="@string/option_1"
+            app:layout_constraintEnd_toStartOf="@+id/tv_percent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_percent"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            app:layout_constraintBottom_toBottomOf="@+id/rb_choice"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/rb_choice"
+            tools:text="100%" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>
