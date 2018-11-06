@@ -6,21 +6,21 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,10 +29,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
@@ -44,7 +42,7 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 import worker8.com.github.radiogroupplus.RadioGroupPlus;
 
-public class ChoiceDetailActivity extends AppCompatActivity {
+public class ChoiceDetailFragment extends Fragment {
     private ArrayList<Comment> commentArrayList = new ArrayList<>();
     private TextView statementTextView;
     private TextView usernameTextView;
@@ -66,36 +64,41 @@ public class ChoiceDetailActivity extends AppCompatActivity {
     private int likeCode = 0;
     private boolean userPost;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_choice_detail);
-        ActionBar actionBar = getSupportActionBar();
+    public ChoiceDetailFragment() {
 
-        CensioDbHelper dbHelper = new CensioDbHelper(this);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_choice_detail, container, false);
+
+//        ActionBar actionBar = getSupportActionBar();
+
+        CensioDbHelper dbHelper = new CensioDbHelper(getContext());
         db = dbHelper.getWritableDatabase();
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         editor = sharedPreferences.edit();
 
         firestore = FirebaseFirestore.getInstance();
 
-        if(actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+//        if(actionBar != null) {
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//        }
 
-        circleImageView = findViewById(R.id.iv_profile);
-        interactionImageView = findViewById(R.id.iv_interaction);
-        likesImageView = findViewById(R.id.iv_likes);
-        dislikesImageView = findViewById(R.id.iv_dislikes);
-        statementTextView = findViewById(R.id.tv_statement);
-        usernameTextView = findViewById(R.id.tv_username);
-        interactionCountTextView = findViewById(R.id.tv_interaction_count);
-        likesCountTextView = findViewById(R.id.tv_likes_count);
-        dislikesCountTextView = findViewById(R.id.tv_dislikes_count);
-        choicesRadioGroup = findViewById(R.id.rg_choices);
+        circleImageView = view.findViewById(R.id.iv_profile);
+        interactionImageView = view.findViewById(R.id.iv_interaction);
+        likesImageView = view.findViewById(R.id.iv_likes);
+        dislikesImageView = view.findViewById(R.id.iv_dislikes);
+        statementTextView = view.findViewById(R.id.tv_statement);
+        usernameTextView = view.findViewById(R.id.tv_username);
+        interactionCountTextView = view.findViewById(R.id.tv_interaction_count);
+        likesCountTextView = view.findViewById(R.id.tv_likes_count);
+        dislikesCountTextView = view.findViewById(R.id.tv_dislikes_count);
+        choicesRadioGroup = view.findViewById(R.id.rg_choices);
 
-        Intent initialIntent = getIntent();
+        Intent initialIntent = getActivity().getIntent();
 
         if(initialIntent.hasExtra("statement")) {
             Glide.with(this).load(initialIntent.getStringExtra("profileUri")).into(circleImageView);
@@ -114,14 +117,13 @@ public class ChoiceDetailActivity extends AppCompatActivity {
         getAllInteraction();
         setLikeClickListeners();
 
+        return view;
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if(userPost)
-            getMenuInflater().inflate(R.menu.post, menu);
-
-        return true;
+            inflater.inflate(R.menu.post, menu);
     }
 
     @Override
@@ -133,7 +135,7 @@ public class ChoiceDetailActivity extends AppCompatActivity {
                 //Todo: do something
                 break;
             case R.id.it_delete:
-                AlertDialog.Builder builder = new AlertDialog.Builder(ChoiceDetailActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Delete this post?");
                 builder.setCancelable(true);
                 builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
@@ -146,9 +148,9 @@ public class ChoiceDetailActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 //                        deletePost(postId);                                                        Todo: Fix delete post implementation
-                        Intent homeIntent = new Intent(getApplicationContext(), MainActivity.class);
+                        Intent homeIntent = new Intent(getContext(), MainActivity.class);
                         startActivity(homeIntent);
-                        finish();
+                        getActivity().finish();
                         dialog.cancel();
                     }
                 });
@@ -160,7 +162,7 @@ public class ChoiceDetailActivity extends AppCompatActivity {
         }
 
         if(id == android.R.id.home) {
-            NavUtils.navigateUpFromSameTask(this);
+            NavUtils.navigateUpFromSameTask(getActivity());
         }
         return super.onOptionsItemSelected(item);
     }
