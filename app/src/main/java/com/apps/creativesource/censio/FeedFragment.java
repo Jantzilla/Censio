@@ -141,12 +141,8 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
     @Override
     public void onListItemClicked(int clickedItemIndex, String profileUri, String username, String statement,
                                   String interactionCount, int likes, int dislikes, int postTypeId, String id, String postFireUserId) {
-        Class destinationClass = ChoiceDetailActivity.class;
 
-        if(postTypeId == R.drawable.ic_comment_white_28dp)
-            destinationClass = CommentDetailActivity.class;
-
-        Intent detailIntent = new Intent(getContext(), destinationClass);
+        Intent detailIntent = new Intent(getContext(), DetailActivity.class);
         detailIntent.putExtra("profileUri", profileUri);
         detailIntent.putExtra("username", username);
         detailIntent.putExtra("statement",statement);
