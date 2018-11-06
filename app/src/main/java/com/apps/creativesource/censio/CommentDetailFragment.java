@@ -7,18 +7,19 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -30,7 +31,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,7 +46,8 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CommentDetailActivity extends AppCompatActivity {
+public class CommentDetailFragment extends Fragment {
+
     private ArrayList<Comment> commentArrayList = new ArrayList<>();
     private String commentEntry;
     private EditText commentEditText;
@@ -70,38 +71,42 @@ public class CommentDetailActivity extends AppCompatActivity {
     private String postUserId;
     private boolean userPost;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_comment_detail);
-        ActionBar actionBar = getSupportActionBar();
+    public CommentDetailFragment() {
 
-        CensioDbHelper dbHelper = new CensioDbHelper(this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_comment_detail, container, false);
+
+//        ActionBar actionBar = getgetSupportActionBar();
+
+        CensioDbHelper dbHelper = new CensioDbHelper(getContext());
         db = dbHelper.getWritableDatabase();
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         editor = sharedPreferences.edit();
 
         firestore = FirebaseFirestore.getInstance();
 
-        if(actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+//        if(actionBar != null) {
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//        }
 
-        circleImageView = findViewById(R.id.iv_profile);
-        interactionImageView = findViewById(R.id.iv_interaction);
-        likesImageView = findViewById(R.id.iv_likes);
-        dislikesImageView = findViewById(R.id.iv_dislikes);
-        statementTextView = findViewById(R.id.tv_statement);
-        usernameTextView = findViewById(R.id.tv_username);
-        interactionCountTextView = findViewById(R.id.tv_interaction_count);
-        likesCountTextView = findViewById(R.id.tv_likes_count);
-        dislikesCountTextView = findViewById(R.id.tv_dislikes_count);
+        circleImageView = view.findViewById(R.id.iv_profile);
+        interactionImageView = view.findViewById(R.id.iv_interaction);
+        likesImageView = view.findViewById(R.id.iv_likes);
+        dislikesImageView = view.findViewById(R.id.iv_dislikes);
+        statementTextView = view.findViewById(R.id.tv_statement);
+        usernameTextView = view.findViewById(R.id.tv_username);
+        interactionCountTextView = view.findViewById(R.id.tv_interaction_count);
+        likesCountTextView = view.findViewById(R.id.tv_likes_count);
+        dislikesCountTextView = view.findViewById(R.id.tv_dislikes_count);
 
-        commentEditText = findViewById(R.id.et_comment_post);
-        commentRecyclerView = findViewById(R.id.rv_comment_list);
+        commentEditText = view.findViewById(R.id.et_comment_post);
+        commentRecyclerView = view.findViewById(R.id.rv_comment_list);
 
-        Intent initialIntent = getIntent();
+        Intent initialIntent = getActivity().getIntent();
 
         if(initialIntent.hasExtra("statement")) {
             Glide.with(this).load(initialIntent.getStringExtra("profileUri")).into(circleImageView);
@@ -117,7 +122,7 @@ public class CommentDetailActivity extends AppCompatActivity {
 
         }
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         commentRecyclerView.setLayoutManager(layoutManager);
         commentRecyclerView.setHasFixedSize(true);
 
@@ -129,7 +134,7 @@ public class CommentDetailActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     createPostInteractions(0,0, "comment");
-                    InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(commentEditText.getWindowToken(), 0);
                     return true;
                 }
@@ -139,14 +144,14 @@ public class CommentDetailActivity extends AppCompatActivity {
 
         getAllInteraction();
         setLikeClickListeners();
+
+        return view;
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if(userPost)
-            getMenuInflater().inflate(R.menu.post, menu);
-        
-        return true;
+            inflater.inflate(R.menu.post, menu);
     }
 
     @Override
@@ -158,7 +163,7 @@ public class CommentDetailActivity extends AppCompatActivity {
                 //Todo: do something
             break;
             case R.id.it_delete:
-                AlertDialog.Builder builder = new AlertDialog.Builder(CommentDetailActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Delete this post?");
                 builder.setCancelable(true);
                 builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
@@ -171,9 +176,9 @@ public class CommentDetailActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 //                        deletePost(postId);                                                        Todo: Fix delete post implementation
-                        Intent homeIntent = new Intent(getApplicationContext(), MainActivity.class);
+                        Intent homeIntent = new Intent(getContext(), MainActivity.class);
                         startActivity(homeIntent);
-                        finish();
+                        getActivity().finish();
                         dialog.cancel();
                     }
                 });
@@ -185,7 +190,7 @@ public class CommentDetailActivity extends AppCompatActivity {
         }
 
         if(id == android.R.id.home) {
-            NavUtils.navigateUpFromSameTask(this);
+            NavUtils.navigateUpFromSameTask(getActivity());
         }
         return super.onOptionsItemSelected(item);
     }
