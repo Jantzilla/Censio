@@ -38,11 +38,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".ChoiceDetailActivity"
+        <activity
+            android:name=".ChoiceDetailActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" /></activity>
+                android:value=".MainActivity" />
+        </activity>
+        <activity android:name=".DetailActivity"></activity>
     </application>
 
 </manifest>
