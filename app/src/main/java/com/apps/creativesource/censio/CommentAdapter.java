@@ -22,7 +22,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     private Context context;
     private ArrayList<Comment> commentArrayList = new ArrayList<>();
     private String profileUri;
-    public static Long lastTimestamp = Long.valueOf("0");
+    public Long lastTimestamp = Long.valueOf("0");
 
     public CommentAdapter(ArrayList<Comment> commentArrayList) {
         this.commentArrayList.addAll(commentArrayList);
