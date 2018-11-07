@@ -3,8 +3,10 @@ package com.apps.creativesource.censio;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,6 +29,10 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
     private RecyclerView pollsList;
     private ProgressBar progressBar;
     private TextView emptyListTextView;
+
+    private boolean twoPane = false;
+
+    private FragmentManager fragmentManager;
 
     private UserPollsAdapter adapter;
     private FirebaseFirestore firestore;
@@ -56,6 +62,16 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_polls, container, false);
 
+        fragmentManager = getActivity().getSupportFragmentManager();
+//
+//        Fragment fragment = new ChoiceDetailFragment();
+
+        if(getActivity().findViewById(R.id.detail_container) != null) {
+            twoPane = true;
+//            fragmentManager.beginTransaction()
+//                    .add(R.id.fl_detail_container, fragment)
+//                    .commit();
+        }
         CensioDbHelper dbHelper = new CensioDbHelper(getContext());
         db = dbHelper.getWritableDatabase();
 
@@ -127,18 +143,49 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
     @Override
     public void onListItemClicked(int clickedItemIndex, String profileUri, String username, String statement,
                                   String interactionCount, int likes, int dislikes, int postTypeId, String id, String postFireUserId) {
+        if(twoPane) {
 
-        Intent detailIntent = new Intent(getContext(), DetailActivity.class);
-        detailIntent.putExtra("profileUri", profileUri);
-        detailIntent.putExtra("username", username);
-        detailIntent.putExtra("statement",statement);
-        detailIntent.putExtra("interactionCount", interactionCount);
-        detailIntent.putExtra("likes", likes);
-        detailIntent.putExtra("dislikes", dislikes);
-        detailIntent.putExtra("postTypeId", postTypeId);
-        detailIntent.putExtra("firestoreId", id);
-        detailIntent.putExtra("postFireUserId", postFireUserId);
-        detailIntent.putExtra("userPost", true);
-        startActivity(detailIntent);
+            Fragment fragment;
+
+            if(postTypeId == R.drawable.ic_touch_app_white_28dp)
+                fragment = new ChoiceDetailFragment();
+            else
+                fragment = new CommentDetailFragment();
+
+            Bundle args = new Bundle();
+
+            args.putString("profileUri", profileUri);
+            args.putString("username", username);
+            args.putString("statement",statement);
+            args.putString("interactionCount", interactionCount);
+            args.putInt("likes", likes);
+            args.putInt("dislikes", dislikes);
+            args.putInt("postTypeId", postTypeId);
+            args.putString("firestoreId", id);
+            args.putString("postFireUserId", postFireUserId);
+            args.putBoolean("userPost", false);
+
+            fragment.setArguments(args);
+
+            ProgressBar progressBar = getActivity().findViewById(R.id.pb_detail);
+            progressBar.setVisibility(View.GONE);
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.detail_container, fragment)
+                    .commit();
+        } else {
+            Intent detailIntent = new Intent(getContext(), DetailActivity.class);
+            detailIntent.putExtra("profileUri", profileUri);
+            detailIntent.putExtra("username", username);
+            detailIntent.putExtra("statement", statement);
+            detailIntent.putExtra("interactionCount", interactionCount);
+            detailIntent.putExtra("likes", likes);
+            detailIntent.putExtra("dislikes", dislikes);
+            detailIntent.putExtra("postTypeId", postTypeId);
+            detailIntent.putExtra("firestoreId", id);
+            detailIntent.putExtra("postFireUserId", postFireUserId);
+            detailIntent.putExtra("userPost", true);
+            startActivity(detailIntent);
+        }
     }
 }

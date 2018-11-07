@@ -25,7 +25,7 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
     //private boolean showProfile;
     private Context context;
     private String profileUri;
-    private FirebaseAuth auth;
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser firebaseUser;
     private ListItemClickListener clickListener;
     private DocumentReference userRef;
@@ -80,6 +80,11 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
                 profileUri = documentSnapshot.getString("profileUri");
                 Glide.with(context).load(profileUri).into(pollsViewHolder.profileImageView);
                 pollsViewHolder.profileTextView.setText(documentSnapshot.getString("name"));
+
+                if(i == 0 && !(postArrayList.get(i).author.equals(auth.getUid()))) {
+                    pollsViewHolder.itemView.performClick();
+                }
+
             }
         });
 

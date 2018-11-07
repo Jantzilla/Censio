@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -18,14 +19,14 @@
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/iv_profile"
-            android:layout_width="135dp"
-            android:layout_height="135dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
             android:src="@drawable/ic_person_gray_100dp"
             app:layout_constraintBottom_toTopOf="@+id/tv_statement"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread_inside" />
 
         <TextView
             android:id="@+id/tv_statement"
@@ -51,84 +52,94 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
             android:text="Username"
             android:textColor="#ffffff"
             android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/tv_statement"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_profile"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_profile"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.25" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_profile" />
 
         <ImageView
             android:id="@+id/iv_interaction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
             android:src="@drawable/ic_comment_white_28dp"
-            app:layout_constraintBottom_toTopOf="@+id/tv_statement"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_interaction_count"
             app:layout_constraintEnd_toStartOf="@+id/tv_interaction_count"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toEndOf="@+id/iv_profile"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.88" />
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="@+id/tv_interaction_count" />
 
         <TextView
             android:id="@+id/tv_interaction_count"
             android:layout_width="32dp"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="28"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_interaction"
-            app:layout_constraintEnd_toStartOf="@+id/iv_likes"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_likes"
             app:layout_constraintStart_toEndOf="@+id/iv_interaction"
-            app:layout_constraintTop_toTopOf="@+id/iv_interaction" />
+            app:layout_constraintTop_toTopOf="@+id/iv_likes" />
 
         <ImageView
             android:id="@+id/iv_likes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_thumb_up_white_28dp"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_interaction"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_likes_count"
             app:layout_constraintEnd_toStartOf="@+id/tv_likes_count"
             app:layout_constraintStart_toEndOf="@+id/tv_interaction_count"
-            app:layout_constraintTop_toTopOf="@+id/iv_interaction" />
+            app:layout_constraintTop_toTopOf="@+id/tv_likes_count" />
 
         <TextView
             android:id="@+id/tv_likes_count"
             android:layout_width="32dp"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="85"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_likes"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_dislikes"
             app:layout_constraintEnd_toStartOf="@+id/iv_dislikes"
             app:layout_constraintStart_toEndOf="@+id/iv_likes"
-            app:layout_constraintTop_toTopOf="@+id/iv_likes" />
+            app:layout_constraintTop_toTopOf="@+id/iv_dislikes" />
 
         <ImageView
             android:id="@+id/iv_dislikes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_thumb_down_white_28dp"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_likes"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_dislikes_count"
             app:layout_constraintEnd_toStartOf="@+id/tv_dislikes_count"
             app:layout_constraintStart_toEndOf="@+id/tv_likes_count"
-            app:layout_constraintTop_toTopOf="@+id/iv_likes" />
+            app:layout_constraintTop_toTopOf="@+id/tv_dislikes_count" />
 
         <TextView
             android:id="@+id/tv_dislikes_count"
             android:layout_width="32dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
             android:text="5"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_dislikes"
+            app:layout_constraintBottom_toTopOf="@+id/tv_statement"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_dislikes"
-            app:layout_constraintTop_toTopOf="@+id/iv_dislikes" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.9" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_close_white_32dp"
+            app:fabSize="mini"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </android.support.constraint.ConstraintLayout>

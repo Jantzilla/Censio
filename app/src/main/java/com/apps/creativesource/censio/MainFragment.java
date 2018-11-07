@@ -176,68 +176,68 @@ public class MainFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int selectedMenuItem = item.getItemId();
-
-        switch (selectedMenuItem) {
-            case R.id.it_sign_out:
-                AuthUI.getInstance()
-                        .signOut(getContext())
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful())
-                                    toLogin();
-                                else
-                                    Toast.makeText(getContext(), "Sign out failed.", Toast.LENGTH_LONG).show();
-                            }
-                        });
-                break;
-            case R.id.it_close_account:
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Are you sure you want to close your account?");
-                builder.setCancelable(true);
-                builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        removeProfile();
-
-//                                        AuthUI.getInstance()                            TODO: reauthenticate user to delete
-//                        .delete(MainActivity.this)
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        inflater.inflate(R.menu.main, menu);
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int selectedMenuItem = item.getItemId();
+//
+//        switch (selectedMenuItem) {
+//            case R.id.it_sign_out:
+//                AuthUI.getInstance()
+//                        .signOut(getContext())
 //                        .addOnCompleteListener(new OnCompleteListener<Void>() {
 //                            @Override
 //                            public void onComplete(@NonNull Task<Void> task) {
-//                                if(task.isSuccessful()) {
-//                                    removeProfile();
-//                                    dialog.cancel();
+//                                if(task.isSuccessful())
 //                                    toLogin();
-//                                } else
-//                                    Toast.makeText(getApplicationContext(), "Account deletion failed.", Toast.LENGTH_LONG).show();
+//                                else
+//                                    Toast.makeText(getContext(), "Sign out failed.", Toast.LENGTH_LONG).show();
 //                            }
 //                        });
-                    }
-                });
-                builder.show();
-                break;
-            default:
-                break;
-        }
-        return true;
-    }
+//                break;
+//            case R.id.it_close_account:
+//
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//                builder.setTitle("Are you sure you want to close your account?");
+//                builder.setCancelable(true);
+//                builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//                builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//
+//                        removeProfile();
+//
+////                                        AuthUI.getInstance()                            TODO: reauthenticate user to delete
+////                        .delete(MainActivity.this)
+////                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+////                            @Override
+////                            public void onComplete(@NonNull Task<Void> task) {
+////                                if(task.isSuccessful()) {
+////                                    removeProfile();
+////                                    dialog.cancel();
+////                                    toLogin();
+////                                } else
+////                                    Toast.makeText(getApplicationContext(), "Account deletion failed.", Toast.LENGTH_LONG).show();
+////                            }
+////                        });
+//                    }
+//                });
+//                builder.show();
+//                break;
+//            default:
+//                break;
+//        }
+//        return true;
+//    }
 
     private boolean isUserLogin() {
         if(auth.getCurrentUser() != null) {
@@ -271,37 +271,37 @@ public class MainFragment extends Fragment {
                 });
     }
 
-    private void removeProfile() {
-//        DocumentReference userRef = firestore.collection("users")               TODO: Fix cloud functions implementation.
-//                .document("hb1XtSaZ8sETaGBGSixg");
-//
-//        functions = FirebaseFunctions.getInstance();
-//
-//        functions.getHttpsCallable("mintAdminToken")
-//                .call(auth.getUid())
-//                .continueWith(new Continuation<HttpsCallableResult, Object>() {
-//                    @Override
-//                    public Object then(@NonNull Task<HttpsCallableResult> task) throws Exception {
-//                        return null;
-//                    }
-//                });
-////                .addOnCompleteListener(new OnCompleteListener<HttpsCallableResult>() {
+//    private void removeProfile() {
+////        DocumentReference userRef = firestore.collection("users")               TODO: Fix cloud functions implementation.
+////                .document("hb1XtSaZ8sETaGBGSixg");
+////
+////        functions = FirebaseFunctions.getInstance();
+////
+////        functions.getHttpsCallable("mintAdminToken")
+////                .call(auth.getUid())
+////                .continueWith(new Continuation<HttpsCallableResult, Object>() {
 ////                    @Override
-////                    public void onComplete(@NonNull Task<HttpsCallableResult> task) {
-////
-////                        functions.getHttpsCallable("recursiveDelete")
-////                                .call(userRef.toString())
-////                                .addOnCompleteListener(new OnCompleteListener<HttpsCallableResult>() {
-////                                    @Override
-////                                    public void onComplete(@NonNull Task<HttpsCallableResult> task) {
-////
-////                                    }
-////                                });
+////                    public Object then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+////                        return null;
 ////                    }
 ////                });
-
-        Intent intentToLogin = new Intent(getContext(), LoginActivity.class);
-        startActivity(intentToLogin);
-        getActivity().finish();
-    }
+//////                .addOnCompleteListener(new OnCompleteListener<HttpsCallableResult>() {
+//////                    @Override
+//////                    public void onComplete(@NonNull Task<HttpsCallableResult> task) {
+//////
+//////                        functions.getHttpsCallable("recursiveDelete")
+//////                                .call(userRef.toString())
+//////                                .addOnCompleteListener(new OnCompleteListener<HttpsCallableResult>() {
+//////                                    @Override
+//////                                    public void onComplete(@NonNull Task<HttpsCallableResult> task) {
+//////
+//////                                    }
+//////                                });
+//////                    }
+//////                });
+//
+//        Intent intentToLogin = new Intent(getContext(), LoginActivity.class);
+//        startActivity(intentToLogin);
+//        getActivity().finish();
+//    }
 }

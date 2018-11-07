@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
@@ -53,6 +54,7 @@ public class ChoiceDetailFragment extends Fragment {
     private ImageView interactionImageView;
     private ImageView likesImageView;
     private ImageView dislikesImageView;
+    private FloatingActionButton fab;
     private RadioGroupPlus choicesRadioGroup;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -97,6 +99,7 @@ public class ChoiceDetailFragment extends Fragment {
         likesCountTextView = view.findViewById(R.id.tv_likes_count);
         dislikesCountTextView = view.findViewById(R.id.tv_dislikes_count);
         choicesRadioGroup = view.findViewById(R.id.rg_choices);
+        fab = view.findViewById(R.id.fab_delete);
 
         Intent initialIntent = getActivity().getIntent();
 
@@ -112,29 +115,25 @@ public class ChoiceDetailFragment extends Fragment {
             postUserId = initialIntent.getStringExtra("postFireUserId");
             userPost = initialIntent.getBooleanExtra("userPost", false);
 
+        } else {
+            Glide.with(this).load(getArguments().getString("profileUri")).into(circleImageView);
+            statementTextView.setText(getArguments().getString("statement"));
+            usernameTextView.setText(getArguments().getString("username"));
+            interactionCountTextView.setText(getArguments().getString("interactionCount"));
+            likesCountTextView.setText(String.valueOf(getArguments().getInt("likes", 0)));
+            dislikesCountTextView.setText(String.valueOf(getArguments().getInt("dislikes", 0)));
+            interactionImageView.setImageResource(getArguments().getInt("postTypeId", R.drawable.ic_touch_app_white_28dp));
+            postId = getArguments().getString("firestoreId");
+            postUserId = getArguments().getString("postFireUserId");
+            userPost = getArguments().getBoolean("userPost", false);
         }
 
-        getAllInteraction();
-        setLikeClickListeners();
+        if(userPost && getActivity().findViewById(R.id.detail_container) == null)
+            fab.hide();
 
-        return view;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if(userPost)
-            inflater.inflate(R.menu.post, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-            case android.R.id.home:
-                //Todo: do something
-                break;
-            case R.id.it_delete:
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Delete this post?");
                 builder.setCancelable(true);
@@ -155,16 +154,13 @@ public class ChoiceDetailFragment extends Fragment {
                     }
                 });
                 builder.show();
-                break;
-            default:
-                //Todo: do something else else
-                break;
-        }
+            }
+        });
 
-        if(id == android.R.id.home) {
-            NavUtils.navigateUpFromSameTask(getActivity());
-        }
-        return super.onOptionsItemSelected(item);
+        getAllInteraction();
+        setLikeClickListeners();
+
+        return view;
     }
 
     private void getAllChoices() {

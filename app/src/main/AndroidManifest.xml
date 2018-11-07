@@ -32,20 +32,12 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".CommentDetailFragment"
+            android:name=".DetailActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity
-            android:name=".ChoiceDetailFragment"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
-        <activity android:name=".DetailActivity"></activity>
     </application>
 
 </manifest>
