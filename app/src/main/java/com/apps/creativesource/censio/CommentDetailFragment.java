@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
@@ -34,6 +35,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
@@ -140,6 +142,8 @@ public class CommentDetailFragment extends Fragment {
             fab.hide();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
         commentRecyclerView.setLayoutManager(layoutManager);
         commentRecyclerView.setHasFixedSize(true);
 
@@ -198,7 +202,7 @@ public class CommentDetailFragment extends Fragment {
         firestore.collection("posts")
                 .document(postId)
                 .collection("comments")
-                .orderBy("timestamp", Query.Direction.DESCENDING)        //Todo: Add "timestamp" and orderBy that
+                .orderBy("timestamp", Query.Direction.ASCENDING)        //Todo: Add "timestamp" and orderBy that
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -214,6 +218,51 @@ public class CommentDetailFragment extends Fragment {
                         }
                     }
                 });
+    }
+
+    private void newCommentListener() {
+
+        DocumentReference docRef = firestore.collection("posts")
+                .document(postId);
+
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+//                    Log.w(TAG, "Listen failed.", e);
+                    return;
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+//                    Log.d(TAG, "Current data: " + snapshot.getData());
+                    if(snapshot.getLong("interactionCount") > adapter.getItemCount()) {
+
+                        docRef.collection("comments")
+                                .whereGreaterThan("timestamp", adapter.lastTimestamp)
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        ArrayList<Comment> newComments = new ArrayList<>();
+
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                Comment comment = document.toObject(Comment.class);
+                                                newComments.add(comment);
+
+                                            }
+                                            adapter.swapList(newComments);
+                                            commentRecyclerView.smoothScrollToPosition(adapter.getItemCount());
+                                        }
+                                    }
+                                });
+                    }
+                } else {
+//                    Log.d(TAG, "Current data: null");
+                }
+            }
+        });
     }
 
     private void getAllInteraction() {
@@ -310,7 +359,7 @@ public class CommentDetailFragment extends Fragment {
 
     public void addComment() {
 
-        Comment comment = new Comment();
+//        Comment comment = new Comment();
 
         commentEntry = commentEditText.getText().toString();
 
@@ -375,15 +424,15 @@ public class CommentDetailFragment extends Fragment {
                                     @Override
                                     public void onSuccess(Void aVoid) {
 
-                                        comment.comment = commentEntry;
-                                        comment.userRef = userRef;
-                                        ArrayList<Comment> newComments = new ArrayList<>();
-
-                                        newComments.add(comment);
-                                        newComments.addAll(commentArrayList);
-                                        commentArrayList = newComments;
-
-                                        adapter.swapList(commentArrayList);
+//                                        comment.comment = commentEntry;
+//                                        comment.userRef = userRef;
+//                                        ArrayList<Comment> newComments = new ArrayList<>();
+//
+//                                        newComments.add(comment);
+////                                        newComments.addAll(commentArrayList);
+////                                        commentArrayList = newComments;
+//
+//                                        adapter.swapList(newComments);
 
                                     }
                                 })
@@ -422,6 +471,7 @@ public class CommentDetailFragment extends Fragment {
 
         adapter = new CommentAdapter(commentArrayList);
         commentRecyclerView.setAdapter(adapter);
+        newCommentListener();
 
     }
 

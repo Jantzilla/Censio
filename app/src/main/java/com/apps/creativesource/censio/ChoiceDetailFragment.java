@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,8 +31,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
@@ -45,6 +48,7 @@ import worker8.com.github.radiogroupplus.RadioGroupPlus;
 
 public class ChoiceDetailFragment extends Fragment {
     private ArrayList<Comment> commentArrayList = new ArrayList<>();
+    private ArrayList<ListenerRegistration> registrations = new ArrayList<>();
     private TextView statementTextView;
     private TextView usernameTextView;
     private TextView interactionCountTextView;
@@ -161,6 +165,16 @@ public class ChoiceDetailFragment extends Fragment {
         setLikeClickListeners();
 
         return view;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        for(int i = 0; i < registrations.size(); i++) {
+            registrations.get(0).remove();
+            Log.w("Debug", "registration number " + i + " removed.");
+        }
     }
 
     private void getAllChoices() {
@@ -552,6 +566,28 @@ public class ChoiceDetailFragment extends Fragment {
         TextView textView = radioButtonLayout.findViewById(R.id.tv_percent);
         if(constraintLayout.getParent()!=null)
             ((ViewGroup)constraintLayout.getParent()).removeView(constraintLayout);
+
+        DocumentReference docRef = document.getReference();
+
+        ListenerRegistration registration = docRef.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+//                    Log.w(TAG, "Listen failed.", e);
+                    return;
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    textView.setText(String.valueOf((int)(snapshot.getLong("count") / Float.valueOf(interactionCountTextView.getText().toString()) * 100)) + "%");
+//                    Log.d(TAG, "Current data: " + snapshot.getData());
+                } else {
+//                    Log.d(TAG, "Current data: null");
+                }
+            }
+        });
+
+        registrations.add(registration);
 
         radioButton.setText(document.getString("title"));
         radioButton.setId((int) System.currentTimeMillis());

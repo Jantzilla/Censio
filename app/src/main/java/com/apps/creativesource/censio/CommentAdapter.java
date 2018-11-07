@@ -22,6 +22,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     private Context context;
     private ArrayList<Comment> commentArrayList = new ArrayList<>();
     private String profileUri;
+    public static Long lastTimestamp = Long.valueOf("0");
 
     public CommentAdapter(ArrayList<Comment> commentArrayList) {
         this.commentArrayList.addAll(commentArrayList);
@@ -50,6 +51,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
         DocumentReference userRef = commentArrayList.get(i).userRef;
 
+        if(commentArrayList.get(i).timestamp > lastTimestamp)
+            lastTimestamp = commentArrayList.get(i).timestamp;
+
         userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -62,6 +66,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         commentViewHolder.commentTextView.setText(comment);
 
     }
+
 
     @Override
     public int getItemCount() {
@@ -83,8 +88,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     }
 
         public void swapList(ArrayList<Comment> comments) {                                            //TODO: FIX SWAP METHOD
-        if(!this.commentArrayList.isEmpty())
-            commentArrayList.clear();
+//        if(!this.commentArrayList.isEmpty())
+//            commentArrayList.clear();
 
         this.commentArrayList.addAll(comments);
 
