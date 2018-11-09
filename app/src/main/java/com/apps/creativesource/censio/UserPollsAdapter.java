@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -27,8 +28,9 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
     private String profileUri;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser firebaseUser;
+    private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private ListItemClickListener clickListener;
-    private DocumentReference userRef;
+    private String userRef;
 
     public interface ListItemClickListener{
         void onListItemClicked(int clickedItemIndex, String profileUri, String username, String statement,
@@ -73,7 +75,9 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
         pollsViewHolder.postTypeId = postArrayList.get(i).postTypeId;
         userRef = postArrayList.get(i).userRef;
 
-        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        DocumentReference documentReference = firestore.collection("users").document(userRef);
+
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 pollsViewHolder.postFireUserId = documentSnapshot.getId();

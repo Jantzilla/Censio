@@ -19,4 +19,6 @@
     <string name="statement">Statement:</string>
     <string name="feedback">Feedback:</string>
     <string name="comment_instruction">Allow users to freely reply to your statement</string>
+    <string name="channel_name">Censio Notifications</string>
+    <string name="channel_description">Censio Post Interactions</string>
 </resources>

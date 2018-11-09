@@ -24,6 +24,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 200;
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
+
+    String token;
 
     private Button loginButton;
     private ConstraintLayout signInLayout;
@@ -116,6 +120,24 @@ public class LoginActivity extends AppCompatActivity {
 
         firestore = FirebaseFirestore.getInstance();
 
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("TOKEN", "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        token = task.getResult().getToken();
+
+                        // Log and toast
+                        Log.d("TOKEN ", token);
+                        Toast.makeText(LoginActivity.this, token, Toast.LENGTH_LONG).show();
+                    }
+                });
+
         firestore.collection("users")
                 .whereEqualTo("id", auth.getUid())
                 .get()
@@ -135,6 +157,7 @@ public class LoginActivity extends AppCompatActivity {
                                 users.put("dislikes", 0);
                                 users.put("comments", 0);
                                 users.put("votes", 0);
+                                users.put("token", token);
 
                                 firestore.collection("users")
                                         .add(users)

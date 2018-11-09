@@ -151,8 +151,6 @@ public class AddActivity extends AppCompatActivity {
 
     private void addNewPost(String statement) {
 
-        DocumentReference userRef = firestore.collection("users").document(sharedPreferences.getString("userFireId", ""));
-
         Map<String, Object> posts = new HashMap<>();                    //TODO: FIX THIS FIRESTORE USER POST IMPLEMENTATION
         posts.put("author", Objects.requireNonNull(auth.getUid()));
         posts.put("statement", statement);
@@ -160,7 +158,7 @@ public class AddActivity extends AppCompatActivity {
         posts.put("likes", 0);
         posts.put("dislikes", 0);
         posts.put("interactionCount", 0);
-        posts.put("userRef", userRef);
+        posts.put("userRef", sharedPreferences.getString("userFireId", ""));
         posts.put("timestamp", System.currentTimeMillis());
 
 // Add a new document with a generated ID
