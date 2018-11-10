@@ -146,7 +146,7 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
 
     public void loadAdapter(ArrayList<Post> postArrayList) {
         if(!postArrayList.isEmpty()) {
-            adapter = new UserPollsAdapter(postArrayList,true, FeedFragment.this);
+            adapter = new UserPollsAdapter(postArrayList,twoPane, FeedFragment.this);
             pollsList.setAdapter(adapter);
             pollsList.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
@@ -185,7 +185,7 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
 
             fragment.setArguments(args);
 
-            ProgressBar progressBar = getActivity().findViewById(R.id.detail_container);
+            ProgressBar progressBar = getActivity().findViewById(R.id.pb_detail);
             progressBar.setVisibility(View.GONE);
 
             fragmentManager.beginTransaction()

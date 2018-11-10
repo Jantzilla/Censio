@@ -63,23 +63,23 @@
             app:layout_constraintTop_toTopOf="@+id/iv_profile" />
 
         <ImageView
-            android:id="@+id/iv_interaction"
+            android:id="@+id/iv_comments"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_comment_white_28dp"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_interaction_count"
-            app:layout_constraintEnd_toStartOf="@+id/tv_interaction_count"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_comments_count"
+            app:layout_constraintEnd_toStartOf="@+id/tv_comments_count"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintTop_toTopOf="@+id/tv_interaction_count" />
+            app:layout_constraintTop_toTopOf="@+id/tv_comments_count" />
 
         <TextView
-            android:id="@+id/tv_interaction_count"
+            android:id="@+id/tv_comments_count"
             android:layout_width="32dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="28"
             app:layout_constraintBottom_toBottomOf="@+id/iv_likes"
-            app:layout_constraintStart_toEndOf="@+id/iv_interaction"
+            app:layout_constraintStart_toEndOf="@+id/iv_comments"
             app:layout_constraintTop_toTopOf="@+id/iv_likes" />
 
         <ImageView
@@ -89,7 +89,7 @@
             android:src="@drawable/ic_thumb_up_white_28dp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_likes_count"
             app:layout_constraintEnd_toStartOf="@+id/tv_likes_count"
-            app:layout_constraintStart_toEndOf="@+id/tv_interaction_count"
+            app:layout_constraintStart_toEndOf="@+id/tv_comments_count"
             app:layout_constraintTop_toTopOf="@+id/tv_likes_count" />
 
         <TextView

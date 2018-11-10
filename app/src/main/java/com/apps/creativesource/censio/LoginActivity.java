@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,7 +23,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
@@ -92,6 +92,12 @@ public class LoginActivity extends AppCompatActivity {
 
         if(requestCode == RC_SIGN_IN) {
             if(resultCode == RESULT_OK) {
+                IdpResponse idpResponse = IdpResponse.fromResultIntent(data);
+
+                if(idpResponse.getIdpToken() == null)
+                    editor.putString("AuthToken", null);
+                else
+                    editor.putString("AuthToken", idpResponse.getIdpToken());
                 loginUser();
             } if(resultCode == RESULT_CANCELED) {
                 Toast.makeText(this,"Login Cancelled", Toast.LENGTH_LONG).show();
@@ -109,6 +115,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void toMainActivity() {
+        UserInfoWidget.sendRefreshBroadcast(getApplicationContext());
         Intent intentLogin = new Intent(this, MainActivity.class);
         startActivity(intentLogin);
         finish();
@@ -133,8 +140,7 @@ public class LoginActivity extends AppCompatActivity {
                         token = task.getResult().getToken();
 
                         // Log and toast
-                        Log.d("TOKEN ", token);
-                        Toast.makeText(LoginActivity.this, token, Toast.LENGTH_LONG).show();
+//                        Log.d("TOKEN ", token);
                     }
                 });
 

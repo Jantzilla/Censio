@@ -1,7 +1,6 @@
 package com.apps.creativesource.censio;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,7 +21,7 @@ import java.util.ArrayList;
 
 public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.PollsViewHolder> {
     private ArrayList<Post> postArrayList = new ArrayList<>();
-    //private boolean showProfile;
+    private boolean twoPane;
     private Context context;
     private String profileUri;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -38,10 +36,11 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
     }
 
 
-    public UserPollsAdapter(ArrayList<Post> postArrayList, boolean showProfile, ListItemClickListener clickListener) {
+    public UserPollsAdapter(ArrayList<Post> postArrayList, boolean twoPane, ListItemClickListener clickListener) {
         this.postArrayList.addAll(postArrayList);
         //  this.showProfile = showProfile;
         this.clickListener = clickListener;
+        this.twoPane = twoPane;
     }
 
     @NonNull
@@ -85,7 +84,7 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
                 Glide.with(context).load(profileUri).into(pollsViewHolder.profileImageView);
                 pollsViewHolder.profileTextView.setText(documentSnapshot.getString("name"));
 
-                if(i == 0 && !(postArrayList.get(i).author.equals(auth.getUid()))) {
+                if(twoPane && i == 0 && !(postArrayList.get(i).author.equals(auth.getUid()))) {
                     pollsViewHolder.itemView.performClick();
                 }
 

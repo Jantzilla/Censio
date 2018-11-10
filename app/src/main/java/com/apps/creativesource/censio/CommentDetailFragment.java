@@ -10,16 +10,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -29,6 +26,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -75,6 +76,8 @@ public class CommentDetailFragment extends Fragment {
     private String postUserId;
     private boolean userPost;
 
+    private InterstitialAd interstitialAd;
+
     public CommentDetailFragment() {
 
     }
@@ -84,6 +87,21 @@ public class CommentDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_comment_detail, container, false);
 
 //        ActionBar actionBar = getgetSupportActionBar();
+
+        MobileAds.initialize(getContext(), "ca-app-pub-3940256099942544~3347511713");
+
+        interstitialAd = new InterstitialAd(getContext());
+        interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        interstitialAd.loadAd(new AdRequest.Builder().build());
+
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                // Load the next interstitial.
+                interstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+
+        });
 
         CensioDbHelper dbHelper = new CensioDbHelper(getContext());
         db = dbHelper.getWritableDatabase();
@@ -98,12 +116,12 @@ public class CommentDetailFragment extends Fragment {
 //        }
 
         circleImageView = view.findViewById(R.id.iv_profile);
-        interactionImageView = view.findViewById(R.id.iv_interaction);
+        interactionImageView = view.findViewById(R.id.iv_comments);
         likesImageView = view.findViewById(R.id.iv_likes);
         dislikesImageView = view.findViewById(R.id.iv_dislikes);
         statementTextView = view.findViewById(R.id.tv_statement);
         usernameTextView = view.findViewById(R.id.tv_username);
-        interactionCountTextView = view.findViewById(R.id.tv_interaction_count);
+        interactionCountTextView = view.findViewById(R.id.tv_comments_count);
         likesCountTextView = view.findViewById(R.id.tv_likes_count);
         dislikesCountTextView = view.findViewById(R.id.tv_dislikes_count);
         fab = view.findViewById(R.id.fab_delete);
@@ -138,7 +156,7 @@ public class CommentDetailFragment extends Fragment {
             userPost = getArguments().getBoolean("userPost", false);
         }
 
-        if(userPost && getActivity().findViewById(R.id.detail_container) == null)
+        if(!userPost && getActivity().findViewById(R.id.detail_container) == null)
             fab.hide();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -178,7 +196,7 @@ public class CommentDetailFragment extends Fragment {
                 builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        deletePost(postId);                                                        Todo: Fix delete post implementation
+                        deletePost();
                         Intent homeIntent = new Intent(getContext(), MainActivity.class);
                         startActivity(homeIntent);
                         getActivity().finish();
@@ -360,6 +378,12 @@ public class CommentDetailFragment extends Fragment {
     public void addComment() {
 
 //        Comment comment = new Comment();
+
+        if (interstitialAd.isLoaded()) {
+            interstitialAd.show();
+        } else {
+            Log.d("TAG", "The interstitial wasn't loaded yet.");
+        }
 
         commentEntry = commentEditText.getText().toString();
 
@@ -601,8 +625,24 @@ public class CommentDetailFragment extends Fragment {
     }
 
 
-//    private boolean deletePost(long id) {                                                           Todo: Fix delete post implementation
-//        return db.delete(CensioContract.Posts.TABLE_NAME,
-//                CensioContract.Posts._ID + "=" + id, null) > 0;
-//    }
+    private void deletePost() {                                                        //   Todo: Fix delete post implementation
+
+        DocumentReference docRef = firestore.collection("posts")
+                .document(postId);
+
+        docRef
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+//                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+//                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
+    }
 }

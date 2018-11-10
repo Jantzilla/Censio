@@ -10,14 +10,10 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -25,6 +21,10 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -69,6 +69,7 @@ public class ChoiceDetailFragment extends Fragment {
     private SQLiteDatabase db;
     private int likeCode = 0;
     private boolean userPost;
+    private InterstitialAd interstitialAd;
 
     public ChoiceDetailFragment() {
 
@@ -80,6 +81,21 @@ public class ChoiceDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_choice_detail, container, false);
 
 //        ActionBar actionBar = getSupportActionBar();
+
+        MobileAds.initialize(getContext(), "ca-app-pub-3940256099942544~3347511713");
+
+        interstitialAd = new InterstitialAd(getContext());
+        interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        interstitialAd.loadAd(new AdRequest.Builder().build());
+
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                // Load the next interstitial.
+                interstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+
+        });
 
         CensioDbHelper dbHelper = new CensioDbHelper(getContext());
         db = dbHelper.getWritableDatabase();
@@ -94,12 +110,12 @@ public class ChoiceDetailFragment extends Fragment {
 //        }
 
         circleImageView = view.findViewById(R.id.iv_profile);
-        interactionImageView = view.findViewById(R.id.iv_interaction);
+        interactionImageView = view.findViewById(R.id.iv_comments);
         likesImageView = view.findViewById(R.id.iv_likes);
         dislikesImageView = view.findViewById(R.id.iv_dislikes);
         statementTextView = view.findViewById(R.id.tv_statement);
         usernameTextView = view.findViewById(R.id.tv_username);
-        interactionCountTextView = view.findViewById(R.id.tv_interaction_count);
+        interactionCountTextView = view.findViewById(R.id.tv_comments_count);
         likesCountTextView = view.findViewById(R.id.tv_likes_count);
         dislikesCountTextView = view.findViewById(R.id.tv_dislikes_count);
         choicesRadioGroup = view.findViewById(R.id.rg_choices);
@@ -132,7 +148,7 @@ public class ChoiceDetailFragment extends Fragment {
             userPost = getArguments().getBoolean("userPost", false);
         }
 
-        if(userPost && getActivity().findViewById(R.id.detail_container) == null)
+        if(!userPost && getActivity().findViewById(R.id.detail_container) == null)
             fab.hide();
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -364,6 +380,12 @@ public class ChoiceDetailFragment extends Fragment {
 //                .document(postId)
 //                .collection("choices")
 //                .document();
+
+        if (interstitialAd.isLoaded()) {
+            interstitialAd.show();
+        } else {
+            Log.d("TAG", "The interstitial wasn't loaded yet.");
+        }
 
         firestore.collection("users")
                 .document(sharedPreferences.getString("userFireId", ""))
