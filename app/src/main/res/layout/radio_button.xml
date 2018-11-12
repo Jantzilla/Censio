@@ -15,7 +15,7 @@
             android:id="@+id/rb_choice"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-
+            android:textSize="18sp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:paddingStart="15dp"
@@ -28,9 +28,10 @@
 
         <TextView
             android:id="@+id/tv_percent"
-            android:layout_width="40dp"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:gravity="end"
+            android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="@+id/rb_choice"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/rb_choice"

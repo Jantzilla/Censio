@@ -148,7 +148,7 @@ public class ChoiceDetailFragment extends Fragment {
             userPost = getArguments().getBoolean("userPost", false);
         }
 
-        if(!userPost && getActivity().findViewById(R.id.detail_container) == null)
+        if(!userPost || getActivity().findViewById(R.id.detail_container) == null)
             fab.hide();
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -166,7 +166,7 @@ public class ChoiceDetailFragment extends Fragment {
                 builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        deletePost(postId);                                                        Todo: Fix delete post implementation
+                        deletePost();
                         Intent homeIntent = new Intent(getContext(), MainActivity.class);
                         startActivity(homeIntent);
                         getActivity().finish();
@@ -192,6 +192,8 @@ public class ChoiceDetailFragment extends Fragment {
             Log.w("Debug", "registration number " + i + " removed.");
         }
     }
+
+
 
     private void getAllChoices() {
 
@@ -636,8 +638,24 @@ public class ChoiceDetailFragment extends Fragment {
             radioButton.setChecked(true);
     }
 
-//    private boolean deletePost(long id) {                                                           Todo: Fix delete post implementation
-//        return db.delete(CensioContract.Posts.TABLE_NAME,
-//                CensioContract.Posts._ID + "=" + id, null) > 0;
-//    }
+    private void deletePost() {                                                        //   Todo: Fix delete post implementation
+
+        DocumentReference docRef = firestore.collection("posts")
+                .document(postId);
+
+        docRef
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+//                        Log.d("Successful Delete", "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+//                        Log.w("Delete Failed", "Error deleting document", e);
+                    }
+                });
+    }
 }

@@ -3,6 +3,7 @@ package com.apps.creativesource.censio;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
@@ -10,12 +11,20 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class DetailActivity extends AppCompatActivity {
     private boolean userPost;
+    private String postId;
+    private FirebaseFirestore firestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +32,8 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         ActionBar actionBar = getSupportActionBar();
+
+        firestore = FirebaseFirestore.getInstance();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment;
@@ -39,6 +50,7 @@ public class DetailActivity extends AppCompatActivity {
                 .commit();
 
         userPost = initialIntent.getBooleanExtra("userPost", false);
+        postId = initialIntent.getStringExtra("firestoreId");
 
         if(actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -84,7 +96,7 @@ public class DetailActivity extends AppCompatActivity {
                 builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        deletePost(postId);                                                        Todo: Fix delete post implementation
+                        deletePost();
                         Intent homeIntent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(homeIntent);
                         finish();
@@ -100,4 +112,26 @@ public class DetailActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void deletePost() {                                                        //   Todo: Fix delete post implementation
+
+        DocumentReference docRef = firestore.collection("posts")
+                .document(postId);
+
+        docRef
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Successful Delete", "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Delete Failed", "Error deleting document", e);
+                    }
+                });
+    }
+
 }

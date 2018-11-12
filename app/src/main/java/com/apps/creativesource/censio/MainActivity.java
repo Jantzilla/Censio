@@ -21,11 +21,15 @@ import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.FirebaseFunctionsException;
 import com.google.firebase.functions.HttpsCallableResult;
@@ -38,13 +42,14 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-
+    private FirebaseFirestore firestore;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        firestore = FirebaseFirestore.getInstance();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
     }
@@ -291,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
                                         editor.putString("AuthToken", null);
                                         if(dialog != null)
                                             dialog.cancel();
-                                        toLogin();
+                                        deleteFirestoreUser();
                                     } else {
                                         //Handle the exception
                                         if(!password.isEmpty())
@@ -304,6 +309,30 @@ public class MainActivity extends AppCompatActivity {
                     });
         }
     }
+
+
+    private void deleteFirestoreUser() {
+
+        DocumentReference userInteractRef = firestore.collection("users")
+                .document(sharedPreferences.getString("userFireId", ""));
+
+        userInteractRef
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Successful Delete", "DocumentSnapshot successfully deleted!");
+                        toLogin();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Delete Failed", "Error deleting document", e);
+                    }
+                });
+    }
+
 
     private void toLogin() {
         Intent intentToLogin = new Intent(this, LoginActivity.class);

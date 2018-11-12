@@ -4,6 +4,6 @@
     android:initialLayout="@layout/user_info_widget"
     android:minWidth="250dp"
     android:minHeight="110dp"
-    android:previewImage="@drawable/ic_launcher_foreground"
+    android:previewImage="@mipmap/ic_launcher_foreground"
     android:updatePeriodMillis="18000000"
     android:widgetCategory="home_screen"></appwidget-provider>

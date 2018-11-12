@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -41,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     String token;
 
     private Button loginButton;
+    private TextView signUpButton;
     private ConstraintLayout signInLayout;
     private ProgressBar progressBar;
 
@@ -58,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         editor = sharedPreferences.edit();
 
         loginButton = findViewById(R.id.btn_login);
+        signUpButton = findViewById(R.id.tv_sign_up);
         signInLayout = findViewById(R.id.cl_sign_in);
         progressBar = findViewById(R.id.pb_sign_in);
 
@@ -77,8 +80,24 @@ public class LoginActivity extends AppCompatActivity {
                         AuthUI.getInstance()
                                 .createSignInIntentBuilder()
                                 .setAvailableProviders(providers)
-                                .setLogo(R.drawable.ic_launcher_foreground)      // Set logo drawable
+                                .setLogo(R.mipmap.ic_launcher_foreground)      // Set logo drawable
                                 .setTheme(R.style.AppTheme_NoActionBar)
+                                .build(),
+                        RC_SIGN_IN);
+            }
+        });
+
+        signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivityForResult(
+                        AuthUI.getInstance()
+                                .createSignInIntentBuilder()
+                                .setAvailableProviders(providers)
+                                .setLogo(R.mipmap.ic_launcher_foreground)      // Set logo drawable
+                                .setTheme(R.style.AppTheme_NoActionBar)
+                                .setIsSmartLockEnabled(false,false)
                                 .build(),
                         RC_SIGN_IN);
             }

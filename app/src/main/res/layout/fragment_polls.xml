@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:visibility="gone"
-        android:text="You haven't created any posts yet."/>
+        android:text="You don't have any posts."/>
 
     <ProgressBar
         android:id="@+id/pb_user_polls"

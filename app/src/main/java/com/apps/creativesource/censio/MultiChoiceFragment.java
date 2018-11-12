@@ -108,7 +108,7 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
         if(isEditTextFinished())
             return getAllEditText();
         else
-            return getAllEditText();
+            return null;
 
     }
 }

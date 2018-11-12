@@ -113,11 +113,16 @@ public class AddActivity extends AppCompatActivity {
                 if(isValidTextFields()){
 
                     postTypeId = getPostTypeId();
-                    addNewPost(statementEditText.getText().toString());
-                    Toast.makeText(getApplicationContext(), "Your poll has been posted!", Toast.LENGTH_LONG).show();
-                    Intent returnIntent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(returnIntent);
-                    finish();
+
+                    if(postTypeId == R.drawable.ic_comment_white_28dp || clickListener.myAction() != null) {
+
+                        addNewPost(statementEditText.getText().toString());
+                        Toast.makeText(getApplicationContext(), "Your poll has been posted!", Toast.LENGTH_LONG).show();
+                        Intent returnIntent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(returnIntent);
+                        finish();
+
+                    }
                 }
             }
         });

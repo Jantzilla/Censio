@@ -36,18 +36,18 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
     }
 
 
-    public UserPollsAdapter(ArrayList<Post> postArrayList, boolean twoPane, ListItemClickListener clickListener) {
+    public UserPollsAdapter(Context context, ArrayList<Post> postArrayList, boolean twoPane, ListItemClickListener clickListener) {
         this.postArrayList.addAll(postArrayList);
         //  this.showProfile = showProfile;
         this.clickListener = clickListener;
         this.twoPane = twoPane;
+        this.context = context;
     }
 
     @NonNull
     @Override
     public PollsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        context = viewGroup.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
 
         View view = inflater.inflate(R.layout.post_item, viewGroup, false);
 

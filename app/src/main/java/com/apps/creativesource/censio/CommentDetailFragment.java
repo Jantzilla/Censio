@@ -156,7 +156,7 @@ public class CommentDetailFragment extends Fragment {
             userPost = getArguments().getBoolean("userPost", false);
         }
 
-        if(!userPost && getActivity().findViewById(R.id.detail_container) == null)
+        if(!userPost || getActivity().findViewById(R.id.detail_container) == null)
             fab.hide();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -313,7 +313,7 @@ public class CommentDetailFragment extends Fragment {
                                         break;
                                 }
 
-                                if (document.getBoolean("comment"))
+                                    if (document.getBoolean("comment"))
                                     interactionImageView.setImageResource(R.drawable.ic_comment_accent_28dp);
 
                             }
@@ -624,6 +624,10 @@ public class CommentDetailFragment extends Fragment {
 
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
     private void deletePost() {                                                        //   Todo: Fix delete post implementation
 
@@ -635,13 +639,13 @@ public class CommentDetailFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-//                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+//                        Log.d("Successful Delete", "DocumentSnapshot successfully deleted!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-//                        Log.w(TAG, "Error deleting document", e);
+//                       Log.w("Delete Failed", "Error deleting document", e);
                     }
                 });
     }

@@ -129,7 +129,7 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
 
     public void loadAdapter(ArrayList<Post> postArrayList) {
         if(!postArrayList.isEmpty()) {
-            adapter = new UserPollsAdapter(postArrayList,false, PollsFragment.this);
+            adapter = new UserPollsAdapter(getActivity().getApplicationContext(), postArrayList,twoPane, PollsFragment.this);
             pollsList.setAdapter(adapter);
             pollsList.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE );
@@ -163,7 +163,7 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
             args.putInt("postTypeId", postTypeId);
             args.putString("firestoreId", id);
             args.putString("postFireUserId", postFireUserId);
-            args.putBoolean("userPost", false);
+            args.putBoolean("userPost", true);
 
             fragment.setArguments(args);
 
