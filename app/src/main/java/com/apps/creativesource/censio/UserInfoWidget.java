@@ -23,15 +23,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-/**
- * Implementation of App Widget functionality.
- */
 public class UserInfoWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.user_info_widget);
 
         Intent intent = new Intent(context, LoginActivity.class);
@@ -89,7 +85,6 @@ public class UserInfoWidget extends AppWidgetProvider {
                                     views.setViewVisibility(R.id.tv_username, View.VISIBLE);
                                     views.setViewVisibility(R.id.ll_data, View.VISIBLE);
 
-                                    // Instruct the widget manager to update the widget
                                     appWidgetManager.updateAppWidget(appWidgetId, views);
 
                                 }
@@ -110,7 +105,6 @@ public class UserInfoWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
@@ -118,12 +112,10 @@ public class UserInfoWidget extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
     }
 
     @Override
     public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
     }
 
     public static void sendRefreshBroadcast(Context context) {
@@ -136,7 +128,6 @@ public class UserInfoWidget extends AppWidgetProvider {
     public void onReceive(final Context context, Intent intent) {
         final String action = intent.getAction();
         if (action.equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
-            // refresh all your widgets
             AppWidgetManager mgr = AppWidgetManager.getInstance(context);
             ComponentName cn = new ComponentName(context, UserInfoWidget.class);
             mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(cn), R.id.rl_main);
@@ -144,7 +135,6 @@ public class UserInfoWidget extends AppWidgetProvider {
             for (int appWidgetId : mgr.getAppWidgetIds(cn)) {
                 updateAppWidget(context, mgr, appWidgetId);
             }
-//            updateAppWidget(context,mgr, mgr.getAppWidgetIds(cn));
             onUpdate(context,mgr, mgr.getAppWidgetIds(cn));
         }
     }

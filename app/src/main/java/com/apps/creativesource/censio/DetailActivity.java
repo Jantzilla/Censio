@@ -11,7 +11,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,7 +39,7 @@ public class DetailActivity extends AppCompatActivity {
 
         Intent initialIntent = getIntent();
 
-        if(initialIntent.getIntExtra("postTypeId", R.drawable.ic_touch_app_white_28dp) == R.drawable.ic_touch_app_white_28dp)
+        if(initialIntent.getIntExtra("postTypeId", R.drawable.ic_touch_app_primary_28dp) == R.drawable.ic_touch_app_primary_28dp)
             fragment = new ChoiceDetailFragment();
         else
             fragment = new CommentDetailFragment();
@@ -85,15 +84,15 @@ public class DetailActivity extends AppCompatActivity {
                 break;
             case R.id.it_delete:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Delete this post?");
+                builder.setTitle(getString(R.string.delete_post_confirm));
                 builder.setCancelable(true);
-                builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
-                builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deletePost();
@@ -106,14 +105,13 @@ public class DetailActivity extends AppCompatActivity {
                 builder.show();
                 break;
             default:
-                //Todo: do something else else
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void deletePost() {                                                        //   Todo: Fix delete post implementation
+    private void deletePost() {
 
         DocumentReference docRef = firestore.collection("posts")
                 .document(postId);
@@ -123,13 +121,11 @@ public class DetailActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("Successful Delete", "DocumentSnapshot successfully deleted!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w("Delete Failed", "Error deleting document", e);
                     }
                 });
     }

@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,7 +30,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.functions.FirebaseFunctions;
-import com.google.firebase.functions.FirebaseFunctionsException;
 import com.google.firebase.functions.HttpsCallableResult;
 
 import java.util.HashMap;
@@ -76,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                                 if(task.isSuccessful())
                                     toLogin();
                                 else
-                                    Toast.makeText(getApplicationContext(), "Sign out failed.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), getString(R.string.sign_out_failed), Toast.LENGTH_LONG).show();
                             }
                         });
                 break;
@@ -85,15 +83,15 @@ public class MainActivity extends AppCompatActivity {
                 Context context = this;
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Are you sure you want to close your account?");
+                builder.setTitle(R.string.close_account_confim);
                 builder.setCancelable(true);
-                builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
-                builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         functions = FirebaseFunctions.getInstance();
@@ -104,13 +102,14 @@ public class MainActivity extends AppCompatActivity {
 
                         String token = sharedPreferences.getString("AuthToken", null);
 
+
                         if (token == null) {
 
                             final AlertDialog dialog2 = new AlertDialog.Builder(context)
                                     .setView(input)
-                                    .setTitle("Please re-enter your password")
-                                    .setPositiveButton("Remove Account", null)
-                                    .setNegativeButton("Cancel", null)
+                                    .setTitle(R.string.re_enter_password)
+                                    .setPositiveButton(R.string.remove_account, null)
+                                    .setNegativeButton(R.string.cancel, null)
                                     .create();
 
                             dialog2.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -123,10 +122,9 @@ public class MainActivity extends AppCompatActivity {
 
                                         @Override
                                         public void onClick(View view) {
-                                            // TODO Do something
 
                                             if(input.getText().toString().isEmpty())
-                                                input.setError("Field is empty.");
+                                                input.setError(getString(R.string.field_is_empty));
                                             else {
                                                 removeUserAuth(dialog2, input);
                                             }
@@ -139,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
 
                                         @Override
                                         public void onClick(View view) {
-                                            // TODO Do something
 
                                             dialog2.cancel();
 
@@ -222,7 +219,6 @@ public class MainActivity extends AppCompatActivity {
 
     private Task<String> recursiveDelete(String path) {
 
-        // Create the arguments to the callable function.
         Map<String, Object> data = new HashMap<>();
         data.put("path", path);
         data.put("push", true);
@@ -233,9 +229,6 @@ public class MainActivity extends AppCompatActivity {
                 .continueWith(new Continuation<HttpsCallableResult, String>() {
                     @Override
                     public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
-                        // This continuation runs on either success or failure, but if the task
-                        // has failed then getResult() will throw an Exception which will be
-                        // propagated down.
                         String result = (String) task.getResult().getData();
                         return result;
                     }
@@ -246,7 +239,6 @@ public class MainActivity extends AppCompatActivity {
 
     private Task<String> mintAdminToken (String uid) {
 
-        // Create the arguments to the callable function.
 //        Map<String, String> data = new HashMap<>();
 //        data.put("uid", uid);
 
@@ -256,9 +248,6 @@ public class MainActivity extends AppCompatActivity {
                 .continueWith(new Continuation<HttpsCallableResult, String>() {
                     @Override
                     public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
-                        // This continuation runs on either success or failure, but if the task
-                        // has failed then getResult() will throw an Exception which will be
-                        // propagated down.
                         String result = (String) task.getResult().getData();
                         return result;
                     }
@@ -270,9 +259,7 @@ public class MainActivity extends AppCompatActivity {
     private void removeUserAuth(DialogInterface dialog, EditText input) {
 
         if (auth.getCurrentUser() != null) {
-            //You need to get here the token you saved at logging-in time.
             String token = sharedPreferences.getString("AuthToken", null);
-            //You need to get here the password you saved at logging-in time.
             String password = input.getText().toString();
 
             AuthCredential credential;
@@ -287,7 +274,6 @@ public class MainActivity extends AppCompatActivity {
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            //Calling delete to remove the user and wait for a result.
                             auth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -298,9 +284,8 @@ public class MainActivity extends AppCompatActivity {
                                             dialog.cancel();
                                         deleteFirestoreUser();
                                     } else {
-                                        //Handle the exception
                                         if(!password.isEmpty())
-                                            input.setError("Invalid Password");
+                                            input.setError(getString(R.string.invalid_password));
                                         task.getException();
                                     }
                                 }
@@ -321,14 +306,12 @@ public class MainActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("Successful Delete", "DocumentSnapshot successfully deleted!");
                         toLogin();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w("Delete Failed", "Error deleting document", e);
                     }
                 });
     }

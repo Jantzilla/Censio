@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -16,7 +15,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/et_multi_choice"
         app:layout_constraintEnd_toStartOf="@+id/et_multi_choice"
         app:layout_constraintTop_toTopOf="@+id/et_multi_choice"
-        app:srcCompat="@android:drawable/ic_notification_clear_all" />
+        app:srcCompat="@android:drawable/ic_notification_clear_all"
+        android:contentDescription="@string/delete_focused_choice_field" />
 
     <EditText
         android:id="@+id/et_multi_choice"
@@ -31,6 +31,5 @@
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Option" />
+        app:layout_constraintTop_toTopOf="parent"/>
 </android.support.constraint.ConstraintLayout>

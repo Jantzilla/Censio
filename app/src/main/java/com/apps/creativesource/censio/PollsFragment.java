@@ -1,9 +1,7 @@
 package com.apps.creativesource.censio;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -38,11 +36,7 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
 
-    private SQLiteDatabase db;
-
-    public PollsFragment() {
-        // Required empty public constructor
-    }
+    public PollsFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,21 +53,14 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_polls, container, false);
 
         fragmentManager = getActivity().getSupportFragmentManager();
-//
-//        Fragment fragment = new ChoiceDetailFragment();
 
         if(getActivity().findViewById(R.id.detail_container) != null) {
             twoPane = true;
-//            fragmentManager.beginTransaction()
-//                    .add(R.id.fl_detail_container, fragment)
-//                    .commit();
         }
-        CensioDbHelper dbHelper = new CensioDbHelper(getContext());
-        db = dbHelper.getWritableDatabase();
 
         firestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -93,8 +80,6 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
     }
 
     private void getAllPosts() {
-
-        //TODO: FIX POST USER IMPLEMENTATION
 
         ArrayList<Post> postArrayList = new ArrayList<>();
 
@@ -117,14 +102,6 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
                         }
                     }
                 });
-
-//        return db.query(CensioContract.Posts.TABLE_NAME,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                CensioContract.Posts.COLUMN_POST_TIMESTAMP + " DESC");
     }
 
     public void loadAdapter(ArrayList<Post> postArrayList) {
@@ -147,7 +124,7 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
 
             Fragment fragment;
 
-            if(postTypeId == R.drawable.ic_touch_app_white_28dp)
+            if(postTypeId == R.drawable.ic_touch_app_primary_28dp)
                 fragment = new ChoiceDetailFragment();
             else
                 fragment = new CommentDetailFragment();

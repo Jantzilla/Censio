@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,7 +13,6 @@ import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,10 +66,8 @@ public class CommentDetailFragment extends Fragment {
     private FloatingActionButton fab;
     private CommentAdapter adapter;
     private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
     private FirebaseFirestore firestore;
     private String postId;
-    private SQLiteDatabase db;
     private int likeCode = 0;
     private String postUserId;
     private boolean userPost;
@@ -86,34 +82,24 @@ public class CommentDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_comment_detail, container, false);
 
-//        ActionBar actionBar = getgetSupportActionBar();
 
-        MobileAds.initialize(getContext(), "ca-app-pub-3940256099942544~3347511713");
+        MobileAds.initialize(getContext(), getString(R.string.app_id_test_mob));
 
         interstitialAd = new InterstitialAd(getContext());
-        interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        interstitialAd.setAdUnitId(getString(R.string.ad_id_test_mob));
         interstitialAd.loadAd(new AdRequest.Builder().build());
 
         interstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
-                // Load the next interstitial.
                 interstitialAd.loadAd(new AdRequest.Builder().build());
             }
 
         });
 
-        CensioDbHelper dbHelper = new CensioDbHelper(getContext());
-        db = dbHelper.getWritableDatabase();
-
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        editor = sharedPreferences.edit();
 
         firestore = FirebaseFirestore.getInstance();
-
-//        if(actionBar != null) {
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//        }
 
         circleImageView = view.findViewById(R.id.iv_profile);
         interactionImageView = view.findViewById(R.id.iv_comments);
@@ -138,7 +124,7 @@ public class CommentDetailFragment extends Fragment {
             interactionCountTextView.setText(initialIntent.getStringExtra("interactionCount"));
             likesCountTextView.setText(String.valueOf(initialIntent.getIntExtra("likes", 0)));
             dislikesCountTextView.setText(String.valueOf(initialIntent.getIntExtra("dislikes", 0)));
-            interactionImageView.setImageResource(initialIntent.getIntExtra("postTypeId", R.drawable.ic_touch_app_white_28dp));
+            interactionImageView.setImageResource(initialIntent.getIntExtra("postTypeId", R.drawable.ic_touch_app_primary_28dp));
             postId = initialIntent.getStringExtra("firestoreId");
             postUserId = initialIntent.getStringExtra("postFireUserId");
             userPost = initialIntent.getBooleanExtra("userPost", false);
@@ -150,7 +136,7 @@ public class CommentDetailFragment extends Fragment {
             interactionCountTextView.setText(getArguments().getString("interactionCount"));
             likesCountTextView.setText(String.valueOf(getArguments().getInt("likes", 0)));
             dislikesCountTextView.setText(String.valueOf(getArguments().getInt("dislikes", 0)));
-            interactionImageView.setImageResource(getArguments().getInt("postTypeId", R.drawable.ic_touch_app_white_28dp));
+            interactionImageView.setImageResource(getArguments().getInt("postTypeId", R.drawable.ic_touch_app_primary_28dp));
             postId = getArguments().getString("firestoreId");
             postUserId = getArguments().getString("postFireUserId");
             userPost = getArguments().getBoolean("userPost", false);
@@ -185,15 +171,15 @@ public class CommentDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Delete this post?");
+                builder.setTitle(getString(R.string.delete_post_confirm));
                 builder.setCancelable(true);
-                builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
-                builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deletePost();
@@ -215,12 +201,10 @@ public class CommentDetailFragment extends Fragment {
 
     private void getAllComments() {
 
-        //TODO: FIX POST USER IMPLEMENTATION
-
         firestore.collection("posts")
                 .document(postId)
                 .collection("comments")
-                .orderBy("timestamp", Query.Direction.ASCENDING)        //Todo: Add "timestamp" and orderBy that
+                .orderBy("timestamp", Query.Direction.ASCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -248,12 +232,10 @@ public class CommentDetailFragment extends Fragment {
             public void onEvent(@Nullable DocumentSnapshot snapshot,
                                 @Nullable FirebaseFirestoreException e) {
                 if (e != null) {
-//                    Log.w(TAG, "Listen failed.", e);
                     return;
                 }
 
                 if (snapshot != null && snapshot.exists()) {
-//                    Log.d(TAG, "Current data: " + snapshot.getData());
                     if(snapshot.getLong("interactionCount") > adapter.getItemCount()) {
 
                         docRef.collection("comments")
@@ -277,7 +259,6 @@ public class CommentDetailFragment extends Fragment {
                                 });
                     }
                 } else {
-//                    Log.d(TAG, "Current data: null");
                 }
             }
         });
@@ -377,12 +358,9 @@ public class CommentDetailFragment extends Fragment {
 
     public void addComment() {
 
-//        Comment comment = new Comment();
-
         if (interstitialAd.isLoaded()) {
             interstitialAd.show();
         } else {
-            Log.d("TAG", "The interstitial wasn't loaded yet.");
         }
 
         commentEntry = commentEditText.getText().toString();
@@ -410,13 +388,11 @@ public class CommentDetailFragment extends Fragment {
             DocumentReference posterRef = firestore.collection("users")
                     .document(postUserId);
 
-            Map<String, Object> comments = new HashMap<>();                    //TODO: FIX THIS FIRESTORE USER COMMENT IMPLEMENTATION
+            Map<String, Object> comments = new HashMap<>();
             comments.put("comment", commentEntry);
             comments.put("userRef", userRef);
             comments.put("timestamp", System.currentTimeMillis());
             commentEditText.setText("");
-
-            // Add a new document with a generated ID
 
             userInteractRef
                     .get()
@@ -448,16 +424,6 @@ public class CommentDetailFragment extends Fragment {
                                     @Override
                                     public void onSuccess(Void aVoid) {
 
-//                                        comment.comment = commentEntry;
-//                                        comment.userRef = userRef;
-//                                        ArrayList<Comment> newComments = new ArrayList<>();
-//
-//                                        newComments.add(comment);
-////                                        newComments.addAll(commentArrayList);
-////                                        commentArrayList = newComments;
-//
-//                                        adapter.swapList(newComments);
-
                                     }
                                 })
                                         .addOnFailureListener(new OnFailureListener() {
@@ -470,23 +436,6 @@ public class CommentDetailFragment extends Fragment {
                             }
                         }
                     });
-
-//            firestore.collection("posts")
-//                    .document(postId)
-//                    .collection("comments")
-//                    .add(comments)
-//                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                        @Override
-//                        public void onSuccess(DocumentReference documentReference) {
-//
-//                        }
-//                    })
-//                    .addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            Log.w("Firestore Log", "Error adding document", e);
-//                        }
-//                    });
 
         }
     }
@@ -503,27 +452,23 @@ public class CommentDetailFragment extends Fragment {
         likesImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Map<String, Object> choice = new HashMap<>();
                 switch (likeCode) {
                     case -1: likeCode = 1;
                         likesImageView.setImageResource(R.drawable.ic_thumb_up_accent_28dp);
                         likesCountTextView.setText(String.valueOf(Integer.valueOf(likesCountTextView.getText().toString()) + 1));
-                        dislikesImageView.setImageResource(R.drawable.ic_thumb_down_white_28dp);
+                        dislikesImageView.setImageResource(R.drawable.ic_thumb_down_primary_28dp);
                         dislikesCountTextView.setText(String.valueOf(Integer.valueOf(dislikesCountTextView.getText().toString()) - 1));
                         createPostInteractions(1,-1,"like");
-//                    likeInteraction(1, -1);
                         break;
                     case 1: likeCode = 0;
-                        likesImageView.setImageResource(R.drawable.ic_thumb_up_white_28dp);
+                        likesImageView.setImageResource(R.drawable.ic_thumb_up_primary_28dp);
                         likesCountTextView.setText(String.valueOf(Integer.valueOf(likesCountTextView.getText().toString()) - 1));
                         createPostInteractions(-1, 0, "like");
-//                    likeInteraction(-1, 0);
                         break;
                     case 0: likeCode = 1;
                         likesImageView.setImageResource(R.drawable.ic_thumb_up_accent_28dp);
                         likesCountTextView.setText(String.valueOf(Integer.valueOf(likesCountTextView.getText().toString()) + 1));
                         createPostInteractions(1, 0, "like");
-//                    likeInteraction(1, 0);
                         break;
                 }
             }
@@ -531,27 +476,23 @@ public class CommentDetailFragment extends Fragment {
         dislikesImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Map<String, Object> choice = new HashMap<>();
                 switch (likeCode) {
                     case -1: likeCode = 0;
-                        dislikesImageView.setImageResource(R.drawable.ic_thumb_down_white_28dp);
+                        dislikesImageView.setImageResource(R.drawable.ic_thumb_down_primary_28dp);
                         dislikesCountTextView.setText(String.valueOf(Integer.valueOf(dislikesCountTextView.getText().toString()) - 1));
                         createPostInteractions(0, -1, "like");
-//                    likeInteraction(0, -1);
                         break;
                     case 1: likeCode = -1;
                         dislikesImageView.setImageResource(R.drawable.ic_thumb_down_accent_28dp);
                         dislikesCountTextView.setText(String.valueOf(Integer.valueOf(dislikesCountTextView.getText().toString()) + 1));
-                        likesImageView.setImageResource(R.drawable.ic_thumb_up_white_28dp);
+                        likesImageView.setImageResource(R.drawable.ic_thumb_up_primary_28dp);
                         likesCountTextView.setText(String.valueOf(Integer.valueOf(likesCountTextView.getText().toString()) - 1));
                         createPostInteractions(-1, 1, "like");
-//                    likeInteraction(-1, 1);
                         break;
                     case 0: likeCode = -1;
                         dislikesImageView.setImageResource(R.drawable.ic_thumb_down_accent_28dp);
                         dislikesCountTextView.setText(String.valueOf(Integer.valueOf(dislikesCountTextView.getText().toString()) + 1));
                         createPostInteractions(0, 1, "like");
-//                    likeInteraction(0, 1);
                         break;
                 }
             }
@@ -602,19 +543,16 @@ public class CommentDetailFragment extends Fragment {
                                     transaction.update(postInteractionRef, "likes", newPostLikes);
                                     transaction.update(postInteractionRef, "dislikes", newPostDislikes);
 
-                                    // Success
                                     return null;
                                 }
                             }).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-//                Log.d(TAG, "Transaction success!");
                                 }
                             })
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-//                        Log.w(TAG, "Transaction failure.", e);
                                         }
                                     });
 
@@ -629,7 +567,7 @@ public class CommentDetailFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    private void deletePost() {                                                        //   Todo: Fix delete post implementation
+    private void deletePost() {
 
         DocumentReference docRef = firestore.collection("posts")
                 .document(postId);
@@ -639,13 +577,11 @@ public class CommentDetailFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-//                        Log.d("Successful Delete", "DocumentSnapshot successfully deleted!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-//                       Log.w("Delete Failed", "Error deleting document", e);
                     }
                 });
     }

@@ -18,7 +18,8 @@
             android:id="@+id/iv_profile"
             android:layout_width="75dp"
             android:layout_height="75dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:contentDescription="@string/current_user_profile_image" />
 
     </LinearLayout>
 
@@ -28,7 +29,6 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/ll_image"
-            android:text="Username"
             android:textColor="#ffffff"
             android:textSize="20sp"
             android:visibility="invisible"/>
@@ -47,30 +47,29 @@
             android:id="@+id/iv_votes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_username"
-            android:src="@drawable/ic_touch_app_white_28dp" />
+            android:src="@drawable/ic_touch_app_primary_28dp"
+            android:contentDescription="@string/vote_count_icon" />
 
         <TextView
             android:id="@+id/tv_votes_count"
             android:layout_width="32dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:text="28" />
+            android:gravity="center"/>
 
         <ImageView
             android:id="@+id/iv_comments"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_comment_white_28dp" />
+            android:src="@drawable/ic_comment_primary_28dp"
+            android:contentDescription="@string/comment_count_icon" />
 
         <TextView
             android:id="@+id/tv_comments_count"
             android:layout_width="32dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:text="28" />
+            android:gravity="center"/>
 
         <ImageView
             android:id="@+id/iv_likes"
@@ -78,29 +77,28 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:src="@drawable/ic_thumb_up_white_28dp" />
+            android:src="@drawable/ic_thumb_up_primary_28dp"
+            android:contentDescription="@string/like_count_icon" />
 
         <TextView
             android:id="@+id/tv_likes_count"
             android:layout_width="32dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:text="85" />
+            android:gravity="center"/>
 
         <ImageView
             android:id="@+id/iv_dislikes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_thumb_down_white_28dp" />
+            android:src="@drawable/ic_thumb_down_primary_28dp" />
 
         <TextView
             android:id="@+id/tv_dislikes_count"
             android:layout_width="32dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:text="5" />
+            android:gravity="center"/>
 
     </LinearLayout>
 
@@ -116,8 +114,8 @@
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:layout_centerInParent="true"
-        android:text="Login"
-        android:textSize="28dp"
+        android:text="@string/login"
+        android:textSize="28sp"
         android:textColor="#ffffff"
         android:visibility="gone"/>
 

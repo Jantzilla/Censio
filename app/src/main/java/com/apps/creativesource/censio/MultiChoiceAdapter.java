@@ -38,7 +38,7 @@ public class MultiChoiceAdapter extends RecyclerView.Adapter<MultiChoiceAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ChoiceViewHolder choiceViewHolder, int i) {
-        choiceViewHolder.multiChoiceEditText.setHint("Option " + (i + 1));
+        choiceViewHolder.multiChoiceEditText.setHint((R.string.option) + " " + (i + 1));
     }
 
     @Override

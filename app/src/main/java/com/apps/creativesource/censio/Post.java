@@ -1,7 +1,5 @@
 package com.apps.creativesource.censio;
 
-import com.google.firebase.firestore.DocumentReference;
-
 public class Post {
 
     public String author, statement, firestoreId, userRef;

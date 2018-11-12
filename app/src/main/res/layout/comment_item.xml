@@ -2,12 +2,12 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_profile"
+        android:contentDescription="@string/comment_author_profile_image"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
@@ -35,7 +35,6 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:padding="4dp"
-        tools:text="This is a Comment."
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iv_profile"
@@ -49,7 +48,6 @@
         android:layout_marginLeft="8dp"
         android:padding="4dp"
         android:textStyle="bold"
-        tools:text="Username"
         app:layout_constraintBottom_toBottomOf="@+id/iv_profile"
         app:layout_constraintStart_toEndOf="@+id/iv_profile"
         app:layout_constraintTop_toTopOf="@+id/iv_profile" />

@@ -30,7 +30,7 @@
         android:ems="10"
         android:inputType="text"
         android:imeOptions="actionDone"
-        android:hint="Post a comment"
+        android:hint="@string/post_a_comment"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

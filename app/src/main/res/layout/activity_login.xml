@@ -59,7 +59,7 @@
             android:clickable="true"
             android:focusable="true"
             android:textColor="@color/colorPrimaryDark"
-            android:text="Sign Up"
+            android:text="@string/sign_up"
             android:textSize="18sp"
             app:layout_constraintTop_toBottomOf="@+id/btn_login"
             app:layout_constraintEnd_toEndOf="parent"

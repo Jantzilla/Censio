@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -80,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
                         AuthUI.getInstance()
                                 .createSignInIntentBuilder()
                                 .setAvailableProviders(providers)
-                                .setLogo(R.mipmap.ic_launcher_foreground)      // Set logo drawable
+                                .setLogo(R.mipmap.ic_launcher_foreground)
                                 .setTheme(R.style.AppTheme_NoActionBar)
                                 .build(),
                         RC_SIGN_IN);
@@ -95,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                         AuthUI.getInstance()
                                 .createSignInIntentBuilder()
                                 .setAvailableProviders(providers)
-                                .setLogo(R.mipmap.ic_launcher_foreground)      // Set logo drawable
+                                .setLogo(R.mipmap.ic_launcher_foreground)
                                 .setTheme(R.style.AppTheme_NoActionBar)
                                 .setIsSmartLockEnabled(false,false)
                                 .build(),
@@ -119,11 +118,11 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("AuthToken", idpResponse.getIdpToken());
                 loginUser();
             } if(resultCode == RESULT_CANCELED) {
-                Toast.makeText(this,"Login Cancelled", Toast.LENGTH_LONG).show();
+                Toast.makeText(this,getString(R.string.login_cancelled), Toast.LENGTH_LONG).show();
             }
             return;
         }
-        Toast.makeText(this,"Unknown Response", Toast.LENGTH_LONG).show();
+        Toast.makeText(this,getString(R.string.unknown_response), Toast.LENGTH_LONG).show();
     }
 
     private boolean isUserLogin() {
@@ -151,15 +150,11 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<InstanceIdResult> task) {
                         if (!task.isSuccessful()) {
-                            Log.w("TOKEN", "getInstanceId failed", task.getException());
                             return;
                         }
 
-                        // Get new Instance ID token
                         token = task.getResult().getToken();
 
-                        // Log and toast
-//                        Log.d("TOKEN ", token);
                     }
                 });
 
@@ -174,7 +169,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             if(task.getResult().isEmpty()) {
 
-                                Map<String, Object> users = new HashMap<>();         //TODO: FIX THIS CREATE FIRESTORE USER IMPLEMENTATION
+                                Map<String, Object> users = new HashMap<>();
                                 users.put("id", Objects.requireNonNull(auth.getUid()));
                                 users.put("name", auth.getCurrentUser().getDisplayName());
                                 users.put("profileUri", auth.getCurrentUser().getPhotoUrl().toString());

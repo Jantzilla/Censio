@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.ArrayList;
 
 public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.ListItemClickListener, AddActivity.PublishClickListener {
@@ -20,9 +18,7 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
     private RecyclerView multiChoiceList;
     private FloatingActionButton fab;
 
-    public MultiChoiceFragment() {
-        // Required empty public constructor
-    }
+    public MultiChoiceFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,10 +73,10 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
             MultiChoiceAdapter.ChoiceViewHolder viewHolder = (MultiChoiceAdapter.ChoiceViewHolder)
                     multiChoiceList.findViewHolderForAdapterPosition(i);
             if(viewHolder.multiChoiceEditText.getText().toString().isEmpty()) {
-                viewHolder.multiChoiceEditText.setError("Please enter a choice");
+                viewHolder.multiChoiceEditText.setError(getString(R.string.please_enter_choice));
                 result = false;
             } if(viewHolder.multiChoiceEditText.getText().toString().length() > 150) {
-                viewHolder.multiChoiceEditText.setError("Cannot exceed 150 characters.");
+                viewHolder.multiChoiceEditText.setError(getString(R.string.cannot_exceed_150_chars));
                 result = false;
             }
         }
@@ -90,8 +86,6 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
 
     private ArrayList<String> getAllEditText() {
         ArrayList<String> editTextStrings = new ArrayList<>();
-
-             //TODO: FIX THIS FIRESTORE USER CHOICES IMPLEMENTATION
 
         for(int i=0;i<adapter.getItemCount();i++){
             MultiChoiceAdapter.ChoiceViewHolder viewHolder = (MultiChoiceAdapter.ChoiceViewHolder)

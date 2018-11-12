@@ -3,7 +3,6 @@ package com.apps.creativesource.censio;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,7 +11,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +45,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import worker8.com.github.radiogroupplus.RadioGroupPlus;
 
 public class ChoiceDetailFragment extends Fragment {
-    private ArrayList<Comment> commentArrayList = new ArrayList<>();
     private ArrayList<ListenerRegistration> registrations = new ArrayList<>();
     private TextView statementTextView;
     private TextView usernameTextView;
@@ -61,12 +58,10 @@ public class ChoiceDetailFragment extends Fragment {
     private FloatingActionButton fab;
     private RadioGroupPlus choicesRadioGroup;
     private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
     private FirebaseFirestore firestore;
     private String postId;
     private String postUserId;
     private String chosenRadioButton;
-    private SQLiteDatabase db;
     private int likeCode = 0;
     private boolean userPost;
     private InterstitialAd interstitialAd;
@@ -80,34 +75,23 @@ public class ChoiceDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_choice_detail, container, false);
 
-//        ActionBar actionBar = getSupportActionBar();
-
-        MobileAds.initialize(getContext(), "ca-app-pub-3940256099942544~3347511713");
+        MobileAds.initialize(getContext(), getString(R.string.app_id_test_mob));
 
         interstitialAd = new InterstitialAd(getContext());
-        interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        interstitialAd.setAdUnitId(getString(R.string.ad_id_test_mob));
         interstitialAd.loadAd(new AdRequest.Builder().build());
 
         interstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
-                // Load the next interstitial.
                 interstitialAd.loadAd(new AdRequest.Builder().build());
             }
 
         });
 
-        CensioDbHelper dbHelper = new CensioDbHelper(getContext());
-        db = dbHelper.getWritableDatabase();
-
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        editor = sharedPreferences.edit();
 
         firestore = FirebaseFirestore.getInstance();
-
-//        if(actionBar != null) {
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//        }
 
         circleImageView = view.findViewById(R.id.iv_profile);
         interactionImageView = view.findViewById(R.id.iv_comments);
@@ -130,7 +114,7 @@ public class ChoiceDetailFragment extends Fragment {
             interactionCountTextView.setText(initialIntent.getStringExtra("interactionCount"));
             likesCountTextView.setText(String.valueOf(initialIntent.getIntExtra("likes", 0)));
             dislikesCountTextView.setText(String.valueOf(initialIntent.getIntExtra("dislikes", 0)));
-            interactionImageView.setImageResource(initialIntent.getIntExtra("postTypeId", R.drawable.ic_touch_app_white_28dp));
+            interactionImageView.setImageResource(initialIntent.getIntExtra("postTypeId", R.drawable.ic_touch_app_primary_28dp));
             postId = initialIntent.getStringExtra("firestoreId");
             postUserId = initialIntent.getStringExtra("postFireUserId");
             userPost = initialIntent.getBooleanExtra("userPost", false);
@@ -142,7 +126,7 @@ public class ChoiceDetailFragment extends Fragment {
             interactionCountTextView.setText(getArguments().getString("interactionCount"));
             likesCountTextView.setText(String.valueOf(getArguments().getInt("likes", 0)));
             dislikesCountTextView.setText(String.valueOf(getArguments().getInt("dislikes", 0)));
-            interactionImageView.setImageResource(getArguments().getInt("postTypeId", R.drawable.ic_touch_app_white_28dp));
+            interactionImageView.setImageResource(getArguments().getInt("postTypeId", R.drawable.ic_touch_app_primary_28dp));
             postId = getArguments().getString("firestoreId");
             postUserId = getArguments().getString("postFireUserId");
             userPost = getArguments().getBoolean("userPost", false);
@@ -155,15 +139,15 @@ public class ChoiceDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Delete this post?");
+                builder.setTitle(R.string.delete_post_confirm);
                 builder.setCancelable(true);
-                builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
-                builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deletePost();
@@ -189,15 +173,12 @@ public class ChoiceDetailFragment extends Fragment {
 
         for(int i = 0; i < registrations.size(); i++) {
             registrations.get(0).remove();
-            Log.w("Debug", "registration number " + i + " removed.");
         }
     }
 
 
 
     private void getAllChoices() {
-
-        //TODO: FIX POST USER IMPLEMENTATION
 
         firestore.collection("posts")
                 .document(postId)
@@ -306,19 +287,16 @@ public class ChoiceDetailFragment extends Fragment {
                                     transaction.update(postInteractionRef, "likes", newPostLikes);
                                     transaction.update(postInteractionRef, "dislikes", newPostDislikes);
 
-                                    // Success
                                     return null;
                                 }
                             }).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-//                Log.d(TAG, "Transaction success!");
                                 }
                             })
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-//                        Log.w(TAG, "Transaction failure.", e);
                                         }
                                     });
 
@@ -378,15 +356,9 @@ public class ChoiceDetailFragment extends Fragment {
 
     private void makechoice() {
 
-//        DocumentReference choiceCountRef = firestore.collection("posts")
-//                .document(postId)
-//                .collection("choices")
-//                .document();
-
         if (interstitialAd.isLoaded()) {
             interstitialAd.show();
         } else {
-            Log.d("TAG", "The interstitial wasn't loaded yet.");
         }
 
         firestore.collection("users")
@@ -507,14 +479,12 @@ public class ChoiceDetailFragment extends Fragment {
                                 }).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-//                Log.d(TAG, "Transaction success!");
 
                                     }
                                 })
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-//                        Log.w(TAG, "Transaction failure.", e);
                                             }
                                         });
                             }
@@ -528,27 +498,23 @@ public class ChoiceDetailFragment extends Fragment {
         likesImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Map<String, Object> choice = new HashMap<>();
                 switch (likeCode) {
                     case -1: likeCode = 1;
                     likesImageView.setImageResource(R.drawable.ic_thumb_up_accent_28dp);
                     likesCountTextView.setText(String.valueOf(Integer.valueOf(likesCountTextView.getText().toString()) + 1));
-                    dislikesImageView.setImageResource(R.drawable.ic_thumb_down_white_28dp);
+                    dislikesImageView.setImageResource(R.drawable.ic_thumb_down_primary_28dp);
                     dislikesCountTextView.setText(String.valueOf(Integer.valueOf(dislikesCountTextView.getText().toString()) - 1));
                     createPostInteractions(1,-1,"like");
-//                    likeInteraction(1, -1);
                     break;
                     case 1: likeCode = 0;
-                    likesImageView.setImageResource(R.drawable.ic_thumb_up_white_28dp);
+                    likesImageView.setImageResource(R.drawable.ic_thumb_up_primary_28dp);
                     likesCountTextView.setText(String.valueOf(Integer.valueOf(likesCountTextView.getText().toString()) - 1));
                     createPostInteractions(-1, 0, "like");
-//                    likeInteraction(-1, 0);
                     break;
                     case 0: likeCode = 1;
                     likesImageView.setImageResource(R.drawable.ic_thumb_up_accent_28dp);
                     likesCountTextView.setText(String.valueOf(Integer.valueOf(likesCountTextView.getText().toString()) + 1));
                     createPostInteractions(1, 0, "like");
-//                    likeInteraction(1, 0);
                     break;
                 }
             }
@@ -556,27 +522,23 @@ public class ChoiceDetailFragment extends Fragment {
         dislikesImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Map<String, Object> choice = new HashMap<>();
                 switch (likeCode) {
                     case -1: likeCode = 0;
-                    dislikesImageView.setImageResource(R.drawable.ic_thumb_down_white_28dp);
+                    dislikesImageView.setImageResource(R.drawable.ic_thumb_down_primary_28dp);
                     dislikesCountTextView.setText(String.valueOf(Integer.valueOf(dislikesCountTextView.getText().toString()) - 1));
                     createPostInteractions(0, -1, "like");
-//                    likeInteraction(0, -1);
                     break;
                     case 1: likeCode = -1;
                     dislikesImageView.setImageResource(R.drawable.ic_thumb_down_accent_28dp);
                     dislikesCountTextView.setText(String.valueOf(Integer.valueOf(dislikesCountTextView.getText().toString()) + 1));
-                    likesImageView.setImageResource(R.drawable.ic_thumb_up_white_28dp);
+                    likesImageView.setImageResource(R.drawable.ic_thumb_up_primary_28dp);
                     likesCountTextView.setText(String.valueOf(Integer.valueOf(likesCountTextView.getText().toString()) - 1));
                     createPostInteractions(-1, 1, "like");
-//                    likeInteraction(-1, 1);
                     break;
                     case 0: likeCode = -1;
                     dislikesImageView.setImageResource(R.drawable.ic_thumb_down_accent_28dp);
                     dislikesCountTextView.setText(String.valueOf(Integer.valueOf(dislikesCountTextView.getText().toString()) + 1));
                     createPostInteractions(0, 1, "like");
-//                    likeInteraction(0, 1);
                     break;
                 }
             }
@@ -598,15 +560,12 @@ public class ChoiceDetailFragment extends Fragment {
             public void onEvent(@Nullable DocumentSnapshot snapshot,
                                 @Nullable FirebaseFirestoreException e) {
                 if (e != null) {
-//                    Log.w(TAG, "Listen failed.", e);
                     return;
                 }
 
                 if (snapshot != null && snapshot.exists()) {
                     textView.setText(String.valueOf((int)(snapshot.getLong("count") / Float.valueOf(interactionCountTextView.getText().toString()) * 100)) + "%");
-//                    Log.d(TAG, "Current data: " + snapshot.getData());
                 } else {
-//                    Log.d(TAG, "Current data: null");
                 }
             }
         });
@@ -626,19 +585,13 @@ public class ChoiceDetailFragment extends Fragment {
                 createPostInteractions(0,0,"choice");
             }
 
-//            @Override
-//            public void onCheckedChanged(RadioGroup group, int checkedId) {
-//                RadioButton rb = group.findViewById(checkedId);
-//                chosenRadioButton = rb.getText().toString();
-//                makechoice();
-//            }
         });
 
         if(document.getString("title").equals(chosenRadioButton))
             radioButton.setChecked(true);
     }
 
-    private void deletePost() {                                                        //   Todo: Fix delete post implementation
+    private void deletePost() {
 
         DocumentReference docRef = firestore.collection("posts")
                 .document(postId);
@@ -648,13 +601,11 @@ public class ChoiceDetailFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-//                        Log.d("Successful Delete", "DocumentSnapshot successfully deleted!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-//                        Log.w("Delete Failed", "Error deleting document", e);
                     }
                 });
     }

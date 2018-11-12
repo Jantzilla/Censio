@@ -6,21 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".MultiChoiceFragment">
 
-    <!--EditText
-        android:id="@+id/et_option_1"
-        android:hint="@string/option_1"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <EditText
-        android:id="@+id/et_option_2"
-        android:hint="@string/option_2"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/et_option_1"/-->
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_multi_choice"
         android:layout_width="match_parent"
@@ -33,7 +18,7 @@
         android:clickable="true"
         android:focusable="true"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_add_white_56dp"
+        android:src="@drawable/ic_add_dark_56dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 

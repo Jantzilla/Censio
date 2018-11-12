@@ -1,9 +1,7 @@
 package com.apps.creativesource.censio;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -35,14 +32,12 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
     private FragmentManager fragmentManager;
 
     private UserPollsAdapter adapter;
-    private SQLiteDatabase db;
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
 
     private boolean twoPane = false;
 
     public FeedFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -59,22 +54,13 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
         fragmentManager = getActivity().getSupportFragmentManager();
-//
-//        Fragment fragment = new ChoiceDetailFragment();
 
         if(getActivity().findViewById(R.id.detail_container) != null) {
             twoPane = true;
-//            fragmentManager.beginTransaction()
-//                    .add(R.id.fl_detail_container, fragment)
-//                    .commit();
         }
-
-        CensioDbHelper dbHelper = new CensioDbHelper(getContext());
-        db = dbHelper.getWritableDatabase();
 
         firestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -94,7 +80,6 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
 
     private void getAllPosts() {
 
-        //TODO: FIX POST FEED IMPLEMENTATION
         ArrayList<Post> postArrayList = new ArrayList<>();
 
         Query firstQuery = firestore.collection("posts")
@@ -134,14 +119,6 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
                 }
             }
         });
-
-//        return db.query(CensioContract.Posts.TABLE_NAME,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                CensioContract.Posts.COLUMN_POST_TIMESTAMP + " DESC");
     }
 
     public void loadAdapter(ArrayList<Post> postArrayList) {
@@ -165,7 +142,7 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
 
             Fragment fragment;
 
-            if(postTypeId == R.drawable.ic_touch_app_white_28dp)
+            if(postTypeId == R.drawable.ic_touch_app_primary_28dp)
                 fragment = new ChoiceDetailFragment();
             else
                 fragment = new CommentDetailFragment();

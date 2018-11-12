@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -25,7 +24,6 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
     private Context context;
     private String profileUri;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
-    private FirebaseUser firebaseUser;
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private ListItemClickListener clickListener;
     private String userRef;
@@ -38,7 +36,6 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
 
     public UserPollsAdapter(Context context, ArrayList<Post> postArrayList, boolean twoPane, ListItemClickListener clickListener) {
         this.postArrayList.addAll(postArrayList);
-        //  this.showProfile = showProfile;
         this.clickListener = clickListener;
         this.twoPane = twoPane;
         this.context = context;
@@ -58,10 +55,6 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
 
     @Override
     public void onBindViewHolder(@NonNull UserPollsAdapter.PollsViewHolder pollsViewHolder, int i) {
-
-        //if(showProfile) {
-//            if (profileUri == null)
-//                getFirebaseUser();
 
             if(postArrayList.isEmpty())
                 return;
@@ -95,14 +88,6 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
         pollsViewHolder.interactionTextView.setText(String.valueOf(pollsViewHolder.interactionCount));
         pollsViewHolder.itemView.setTag(pollsViewHolder.postFireId);
         pollsViewHolder.interactionImageView.setImageResource(pollsViewHolder.postTypeId);
-
-        //int interactionCount = postArrayList.get(i).interactionCount;        //TODO: FIX BINDING
-        //long postId = postArrayList.get(i).id;
-
-
-//            pollsViewHolder.profileTextView.setText(userName);
-        //pollsViewHolder.interactionTextView.setText(String.valueOf(interactionCount));
-        //pollsViewHolder.itemView.setTag(postId);
 
     }
 
@@ -144,23 +129,4 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
                     , postTitle, String.valueOf(interactionCount), likes, dislikes, postTypeId, postFireId, postFireUserId);
         }
     }
-
-//    public void swapList(Cursor cursor) {                                            //TODO: FIX SWAP METHOD
-//        if(this.postArrayList != null)
-//            this.postArrayList.close();
-//
-//        this.postArrayList = cursor;
-//
-//        if(cursor != null)
-//            this.notifyDataSetChanged();
-//    }
-
-//    public void getFirebaseUser() {
-//        auth = FirebaseAuth.getInstance();
-//        firebaseUser = auth.getCurrentUser();
-//        assert firebaseUser != null;
-//        for (UserInfo profile : firebaseUser.getProviderData()) {
-//            profileUri = Uri.parse(profile.getPhotoUrl().toString());
-//        }
-//    }
 }

@@ -1,7 +1,6 @@
 package com.apps.creativesource.censio;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -87,9 +86,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         }
     }
 
-        public void swapList(ArrayList<Comment> comments) {                                            //TODO: FIX SWAP METHOD
-//        if(!this.commentArrayList.isEmpty())
-//            commentArrayList.clear();
+        public void swapList(ArrayList<Comment> comments) {
 
         this.commentArrayList.addAll(comments);
 

@@ -6,6 +6,6 @@
         android:orderInCategory="1"/>
     <item
         android:id="@+id/it_close_account"
-        android:title="Close Account"
+        android:title="@string/close_account"
         android:orderInCategory="2"/>
 </menu>
