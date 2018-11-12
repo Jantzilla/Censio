@@ -14,7 +14,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 public class NotificationService extends FirebaseMessagingService {
-    private final String CHANNEL_ID = getString(R.string.censio);
+    private final String CHANNEL_ID = "Censio";
     String notificationTitle = null, notificationBody = null;
     String dataTitle = null, dataMessage = null;
 

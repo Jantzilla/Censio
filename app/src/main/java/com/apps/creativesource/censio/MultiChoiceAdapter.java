@@ -12,6 +12,7 @@ import android.widget.ImageView;
 public class MultiChoiceAdapter extends RecyclerView.Adapter<MultiChoiceAdapter.ChoiceViewHolder> {
     private int itemCount;
     private final ListItemClickListener onClickListener;
+    private String option;
 
     public interface ListItemClickListener {
         void onListItemClick(int clickedItemIndex);
@@ -38,7 +39,7 @@ public class MultiChoiceAdapter extends RecyclerView.Adapter<MultiChoiceAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ChoiceViewHolder choiceViewHolder, int i) {
-        choiceViewHolder.multiChoiceEditText.setHint((R.string.option) + " " + (i + 1));
+        choiceViewHolder.multiChoiceEditText.setHint("Option" + " " + (i + 1));
     }
 
     @Override
