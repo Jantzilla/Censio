@@ -21,6 +21,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -36,7 +42,7 @@ import java.util.Objects;
 public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 200;
     private FirebaseAuth auth;
-    private FirebaseFirestore firestore;
+    private DatabaseReference realtimeRef;
 
     String token;
 
@@ -143,7 +149,7 @@ public class LoginActivity extends AppCompatActivity {
         signInLayout.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
 
-        firestore = FirebaseFirestore.getInstance();
+        realtimeRef = FirebaseDatabase.getInstance().getReference();
 
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
@@ -158,61 +164,59 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
 
-        firestore.collection("users")
-                .whereEqualTo("id", auth.getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        realtimeRef.child("users")
+                .child(auth.getUid())
+                .addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onComplete(Task<QuerySnapshot> task) {
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        if (task.isSuccessful()) {
+                        if(!dataSnapshot.exists()) {
 
-                            if(task.getResult().isEmpty()) {
+                            createNewUser(auth.getUid(),auth.getCurrentUser().getDisplayName(),auth.getCurrentUser().getPhotoUrl().toString(),token);
 
-                                Map<String, Object> users = new HashMap<>();
-                                users.put("id", Objects.requireNonNull(auth.getUid()));
-                                users.put("name", auth.getCurrentUser().getDisplayName());
-                                users.put("profileUri", auth.getCurrentUser().getPhotoUrl().toString());
-                                users.put("likes", 0);
-                                users.put("dislikes", 0);
-                                users.put("comments", 0);
-                                users.put("votes", 0);
-                                users.put("token", token);
+                            editor.putString("userFireId",auth.getUid());
+                            editor.putString("name", auth.getCurrentUser().getDisplayName());
+                            editor.putString("profileUri", auth.getCurrentUser().getPhotoUrl().toString());
+                            editor.apply();
 
-                                firestore.collection("users")
-                                        .add(users)
-                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                            @Override
-                                            public void onSuccess(DocumentReference documentReference) {
+                            progressBar.setVisibility(View.GONE);
+                            toMainActivity();
 
-                                                editor.putString("userFireId",documentReference.getId());
-                                                editor.putString("name", auth.getCurrentUser().getDisplayName());
-                                                editor.putString("profileUri", auth.getCurrentUser().getPhotoUrl().toString());
-                                                editor.apply();
 
-                                                progressBar.setVisibility(View.GONE);
-                                                toMainActivity();
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
+                        } else {
 
-                                            }
-                                        });
+                            editor.putString("userFireId",auth.getUid());
+                            editor.putString("name", auth.getCurrentUser().getDisplayName());
+                            editor.putString("profileUri", auth.getCurrentUser().getPhotoUrl().toString());
+                            editor.apply();
 
-                            } else {
+                            toMainActivity();
 
-                                editor.putString("userFireId",task.getResult().getDocuments().get(0).getId());
-                                editor.putString("name", auth.getCurrentUser().getDisplayName());
-                                editor.putString("profileUri", auth.getCurrentUser().getPhotoUrl().toString());
-                                editor.apply();
 
-                                toMainActivity();
-
-                            }
                         }
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                     }
                 });
+    }
+
+    private void createNewUser(String id, String name, String profileUri, String token){
+
+        Map<String, Object> user = new HashMap<>();
+        user.put("id", id);
+        user.put("name", name);
+        user.put("profileUri", profileUri);
+        user.put("likes", 0);
+        user.put("dislikes", 0);
+        user.put("comments", 0);
+        user.put("votes", 0);
+        user.put("token", token);
+
+        realtimeRef.child("users").child(id).setValue(user);
     }
 }

@@ -21,6 +21,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
@@ -37,7 +39,7 @@ public class AddActivity extends AppCompatActivity {
     private TabAdapter tabAdapter;
     private Button publishButton;
     private EditText statementEditText;
-    private FirebaseFirestore firestore;
+    private DatabaseReference realtimeRef;
     private FirebaseAuth auth;
     private SharedPreferences sharedPreferences;
     private int postTypeId;
@@ -85,7 +87,7 @@ public class AddActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        firestore = FirebaseFirestore.getInstance();
+        realtimeRef = FirebaseDatabase.getInstance().getReference();
 
         MultiChoiceFragment multiChoiceFragment = new MultiChoiceFragment();
         setClickListener(multiChoiceFragment);
@@ -157,7 +159,7 @@ public class AddActivity extends AppCompatActivity {
         posts.put("userRef", sharedPreferences.getString("userFireId", ""));
         posts.put("timestamp", System.currentTimeMillis());
 
-        firestore.collection("posts")
+        realtimeRef.child("posts")
                 .add(posts)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
@@ -165,10 +167,10 @@ public class AddActivity extends AppCompatActivity {
                         if(getPostTypeId() == R.drawable.ic_touch_app_primary_28dp) {
 
                             choices.addAll(clickListener.myAction());
-                            WriteBatch batch = firestore.batch();
+                            WriteBatch batch = realtimeRef.batch();
 
                             for(int i = 0; i < choices.size(); i++) {
-                                DocumentReference choiceRef = firestore.collection("posts").document(documentReference.getId())
+                                DocumentReference choiceRef = realtimeRef.collection("posts").document(documentReference.getId())
                                         .collection("choices")
                                         .document(String.valueOf(System.nanoTime()));
 

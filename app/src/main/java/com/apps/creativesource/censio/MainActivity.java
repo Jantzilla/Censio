@@ -27,6 +27,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.functions.FirebaseFunctions;
@@ -40,14 +42,14 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-    private FirebaseFirestore firestore;
+    private DatabaseReference realtimeRef;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        firestore = FirebaseFirestore.getInstance();
+        realtimeRef = FirebaseDatabase.getInstance().getReference();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
     }
@@ -298,11 +300,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void deleteFirestoreUser() {
 
-        DocumentReference userInteractRef = firestore.collection("users")
-                .document(sharedPreferences.getString("userFireId", ""));
-
-        userInteractRef
-                .delete()
+        realtimeRef.child("users")
+                .child(sharedPreferences.getString("userFireId", ""))
+                .removeValue()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

@@ -25,6 +25,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -52,7 +58,7 @@ public class MainFragment extends Fragment {
     private FirebaseAuth auth;
     private FirebaseUser firebaseUser;
 
-    private FirebaseFirestore firestore;
+    private DatabaseReference realtimeRef;
 
     public MainFragment() {}
 
@@ -72,7 +78,7 @@ public class MainFragment extends Fragment {
         votesTextView = view.findViewById(R.id.tv_votes);
         commentsTextView = view.findViewById(R.id.tv_comments);
 
-        firestore = FirebaseFirestore.getInstance();
+        realtimeRef = FirebaseDatabase.getInstance().getReference();
 
         auth = FirebaseAuth.getInstance();
 
@@ -173,20 +179,23 @@ public class MainFragment extends Fragment {
     }
 
     private void getInteractions() {
-        firestore.collection("users")
-                .whereEqualTo("id", auth.getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        realtimeRef.child("users")
+                .child(auth.getUid())
+                .addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()) {
-                            for(QueryDocumentSnapshot document : task.getResult()) {
-                                likesTextView.setText(String.valueOf(document.getLong("likes")));
-                                dislikesTextView.setText(String.valueOf(document.getLong("dislikes")));
-                                votesTextView.setText(String.valueOf(document.getLong("votes")));
-                                commentsTextView.setText(String.valueOf(document.getLong("comments")));
-                            }
-                        }
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+
+                        likesTextView.setText(String.valueOf(user.likes));
+                        dislikesTextView.setText(String.valueOf(user.dislikes));
+                        votesTextView.setText(String.valueOf(user.votes));
+                        commentsTextView.setText(String.valueOf(user.comments));
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                     }
                 });
     }
