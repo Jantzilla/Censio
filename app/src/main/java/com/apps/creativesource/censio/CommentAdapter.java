@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
     private Context context;
     private ArrayList<Comment> commentArrayList = new ArrayList<>();
+    private DatabaseReference realtimeRef = FirebaseDatabase.getInstance().getReference();
     private String profileUri;
     public Long lastTimestamp = Long.valueOf("0");
 
@@ -49,12 +51,14 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
         String comment = commentArrayList.get(i).comment;
 
-        DatabaseReference userRef = commentArrayList.get(i).userRef;
+        String userRef = commentArrayList.get(i).userRef;
 
         if(commentArrayList.get(i).timestamp > lastTimestamp)
             lastTimestamp = commentArrayList.get(i).timestamp;
 
-        userRef
+        realtimeRef
+                .child("users")
+                .child(userRef)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

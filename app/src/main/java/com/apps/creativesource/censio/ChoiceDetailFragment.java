@@ -179,7 +179,7 @@ public class ChoiceDetailFragment extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Choice choice = snapshot.getValue(Choice.class);          //TODO: CREATE OBJECT
-                            createRadioButton(choice, dataSnapshot.getRef());
+                            createRadioButton(choice, snapshot.getRef());
                         }
                     }
 
@@ -257,7 +257,7 @@ public class ChoiceDetailFragment extends Fragment {
         Map<String, Object> code = new HashMap<>();
         code.put("like", likeCode);
 
-        userInteractRef.setValue(code);
+        userInteractRef.updateChildren(code);
 
         postInteractionRef
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -269,9 +269,9 @@ public class ChoiceDetailFragment extends Fragment {
 
                             Map<String, Object> likes = new HashMap<>();
                             likes.put("likes", post.likes + like);
-                            likes.put("dislikes", post.likes + dislike);
+                            likes.put("dislikes", post.dislikes + dislike);
 
-                            postInteractionRef.setValue(likes);
+                            postInteractionRef.updateChildren(likes);
 
                         }
 
@@ -295,7 +295,7 @@ public class ChoiceDetailFragment extends Fragment {
                             likes.put("likes", user.likes + like);
                             likes.put("dislikes", user.dislikes + dislike);
 
-                            userRef.setValue(likes);
+                            userRef.updateChildren(likes);
 
                         }
 
@@ -366,13 +366,13 @@ public class ChoiceDetailFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        if(dataSnapshot.exists()) {
+                        if(!dataSnapshot.exists()) {
 
                             realtimeRef.child("users")
                                     .child(sharedPreferences.getString("userFireId", ""))
                                     .child("postInteractions")
                                     .child(postId)
-                                    .setValue(setInteractions)
+                                    .updateChildren(setInteractions)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
@@ -459,7 +459,8 @@ public class ChoiceDetailFragment extends Fragment {
                             realtimeRef.child("posts")
                                     .child(postId)
                                     .child("choices")
-                                    .equalTo("title",postInteraction.choice)
+                                    .orderByChild("title")
+                                    .equalTo(postInteraction.choice)
                                     .addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -482,8 +483,8 @@ public class ChoiceDetailFragment extends Fragment {
                                                                     if(dataSnapshot.exists()) {
                                                                         Choice choice = dataSnapshot.getValue(Choice.class);
                                                                         Map<String, Object> choiceMap = new HashMap<>();
-                                                                        choiceMap.put("like", choice.count - 1);
-                                                                        choiceCountRef.setValue(choiceMap);
+                                                                        choiceMap.put("count", choice.count - 1);
+                                                                        choiceCountRef.updateChildren(choiceMap);
                                                                     }
 
                                                                 }
@@ -638,7 +639,8 @@ public class ChoiceDetailFragment extends Fragment {
         realtimeRef.child("posts")
                 .child(postId)
                 .child("choices")
-                .equalTo("title", chosenRadioButton)
+                .orderByChild("title")
+                .equalTo(chosenRadioButton)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -688,7 +690,7 @@ public class ChoiceDetailFragment extends Fragment {
                                                                             Map<String, Object> interaction = new HashMap<>();
                                                                             interaction.put("interactionCount", post.interactionCount + 1);
 
-                                                                            postInteractionRef.setValue(interaction);
+                                                                            postInteractionRef.updateChildren(interaction);
                                                                         }
 
                                                                     }
@@ -710,7 +712,7 @@ public class ChoiceDetailFragment extends Fragment {
                                                                             Map<String, Object> vote = new HashMap<>();
                                                                             vote.put("votes", user.votes + 1);
 
-                                                                            posterRef.setValue(vote);
+                                                                            posterRef.updateChildren(vote);
                                                                         }
 
                                                                     }
@@ -734,7 +736,7 @@ public class ChoiceDetailFragment extends Fragment {
                                                                         Map<String, Object> choiceMap = new HashMap<>();
                                                                         choiceMap.put("count", choice.count + 1);
 
-                                                                        choiceCountRef.setValue(choiceMap);
+                                                                        choiceCountRef.updateChildren(choiceMap);
                                                                     }
 
                                                                 }
@@ -748,7 +750,7 @@ public class ChoiceDetailFragment extends Fragment {
                                                     Map<String, Object> choiceMap = new HashMap<>();
                                                     choiceMap.put("choice", chosenRadioButton);
 
-                                                    userInteractRef.setValue(choiceMap);
+                                                    userInteractRef.updateChildren(choiceMap);
 
                                                 }
 
@@ -942,7 +944,7 @@ public class ChoiceDetailFragment extends Fragment {
         if(constraintLayout.getParent()!=null)
             ((ViewGroup)constraintLayout.getParent()).removeView(constraintLayout);
 
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 

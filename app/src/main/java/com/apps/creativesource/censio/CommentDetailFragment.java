@@ -243,7 +243,7 @@ public class CommentDetailFragment extends Fragment {
         DatabaseReference docRef = realtimeRef.child("posts")
                 .child(postId);
 
-        docRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        docRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -538,8 +538,8 @@ public class CommentDetailFragment extends Fragment {
                     .child(postId);
 
 
-            DatabaseReference userRef = realtimeRef.child("users")
-                    .child(sharedPreferences.getString("userFireId", ""));
+//            DatabaseReference userRef = realtimeRef.child("users")      //TODO: IF BELOW WORKS
+//                    .child(sharedPreferences.getString("userFireId", ""));
 
 
             DatabaseReference posterRef = realtimeRef.child("users")
@@ -547,7 +547,7 @@ public class CommentDetailFragment extends Fragment {
 
             Map<String, Object> comments = new HashMap<>();
             comments.put("comment", commentEntry);
-            comments.put("userRef", userRef);
+            comments.put("userRef", sharedPreferences.getString("userFireId", ""));
             comments.put("timestamp", System.currentTimeMillis());
             commentEditText.setText("");
 
@@ -556,7 +556,7 @@ public class CommentDetailFragment extends Fragment {
             Map<String, Object> comment = new HashMap<>();
             comment.put("comment", true);
 
-            userInteractRef.setValue(comment);
+            userInteractRef.updateChildren(comment);
 
             postInteractionRef
                     .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -569,7 +569,7 @@ public class CommentDetailFragment extends Fragment {
                                 Map<String, Object> interaction = new HashMap<>();
                                 interaction.put("interactionCount", post.interactionCount + 1);
 
-                                postInteractionRef.setValue(interaction);
+                                postInteractionRef.updateChildren(interaction);
 
                             }
 
@@ -592,7 +592,7 @@ public class CommentDetailFragment extends Fragment {
                                 Map<String, Object> comment = new HashMap<>();
                                 comment.put("comments", user.comments + 1);
 
-                                posterRef.setValue(comment);
+                                posterRef.updateChildren(comment);
 
                             }
 
@@ -730,7 +730,7 @@ public class CommentDetailFragment extends Fragment {
         Map<String, Object> code = new HashMap<>();
         code.put("like", likeCode);
 
-        userInteractRef.setValue(code);
+        userInteractRef.updateChildren(code);
 
         postInteractionRef
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -742,9 +742,9 @@ public class CommentDetailFragment extends Fragment {
 
                             Map<String, Object> likes = new HashMap<>();
                             likes.put("likes", post.likes + like);
-                            likes.put("dislikes", post.likes + dislike);
+                            likes.put("dislikes", post.dislikes + dislike);
 
-                            postInteractionRef.setValue(likes);
+                            postInteractionRef.updateChildren(likes);
 
                         }
 
@@ -768,7 +768,7 @@ public class CommentDetailFragment extends Fragment {
                             likes.put("likes", user.likes + like);
                             likes.put("dislikes", user.dislikes + dislike);
 
-                            userRef.setValue(likes);
+                            userRef.updateChildren(likes);
 
                         }
 
