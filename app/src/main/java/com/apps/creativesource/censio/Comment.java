@@ -1,12 +1,12 @@
 package com.apps.creativesource.censio;
 
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.database.DatabaseReference;
 
 public class Comment {
 
     public String comment = "";
 
-    public DocumentReference userRef;
+    public DatabaseReference userRef;
 
     public long timestamp = 0;
 

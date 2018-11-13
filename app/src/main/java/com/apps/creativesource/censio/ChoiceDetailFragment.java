@@ -32,17 +32,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.Transaction;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,7 +40,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import worker8.com.github.radiogroupplus.RadioGroupPlus;
 
 public class ChoiceDetailFragment extends Fragment {
-    private ArrayList<ListenerRegistration> registrations = new ArrayList<>();
     private TextView statementTextView;
     private TextView usernameTextView;
     private TextView interactionCountTextView;
@@ -176,9 +165,6 @@ public class ChoiceDetailFragment extends Fragment {
     public void onStop() {
         super.onStop();
 
-        for(int i = 0; i < registrations.size(); i++) {
-            registrations.get(0).remove();
-        }
     }
 
 

@@ -9,9 +9,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -48,19 +49,41 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
         String comment = commentArrayList.get(i).comment;
 
-        DocumentReference userRef = commentArrayList.get(i).userRef;
+        DatabaseReference userRef = commentArrayList.get(i).userRef;
 
         if(commentArrayList.get(i).timestamp > lastTimestamp)
             lastTimestamp = commentArrayList.get(i).timestamp;
 
-        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                profileUri = documentSnapshot.getString("profileUri");
-                Glide.with(context).load(profileUri).into(commentViewHolder.profileImageView);
-                commentViewHolder.usernameTextView.setText(documentSnapshot.getString("name"));
-            }
-        });
+        userRef
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        if(dataSnapshot.exists()) {
+                            User user = dataSnapshot.getValue(User.class);
+
+                            profileUri = user.profileUri;
+                            Glide.with(context).load(profileUri).into(commentViewHolder.profileImageView);
+                            commentViewHolder.usernameTextView.setText(user.name);
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+//                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() { TODO: Remove Comment
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                profileUri = documentSnapshot.getString("profileUri");
+//                Glide.with(context).load(profileUri).into(commentViewHolder.profileImageView);
+//                commentViewHolder.usernameTextView.setText(documentSnapshot.getString("name"));
+//            }
+//        });
 
         commentViewHolder.commentTextView.setText(comment);
 
