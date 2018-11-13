@@ -71,7 +71,7 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
         DatabaseReference documentReference = realtimeRef.child("users").child(userRef);
 
         documentReference.
-                addValueEventListener(new ValueEventListener() {
+                addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {    //TODO: User Object
 

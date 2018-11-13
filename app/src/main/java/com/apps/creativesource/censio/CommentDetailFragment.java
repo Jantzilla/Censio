@@ -200,7 +200,7 @@ public class CommentDetailFragment extends Fragment {
                 .child(postId)
                 .child("comments")
                 .orderByChild("timestamp")
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -243,7 +243,7 @@ public class CommentDetailFragment extends Fragment {
         DatabaseReference docRef = realtimeRef.child("posts")
                 .child(postId);
 
-        docRef.addValueEventListener(new ValueEventListener() {
+        docRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -257,7 +257,7 @@ public class CommentDetailFragment extends Fragment {
                         docRef.child("comments")
                                 .orderByChild("timestamp")
                                 .startAt(adapter.lastTimestamp + 1)
-                                .addValueEventListener(new ValueEventListener() {
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -354,7 +354,7 @@ public class CommentDetailFragment extends Fragment {
                 .child(sharedPreferences.getString("userFireId", ""))
                 .child("postInteractions")
                 .child(postId)
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -434,7 +434,7 @@ public class CommentDetailFragment extends Fragment {
                 .child(sharedPreferences.getString("userFireId", ""))
                 .child("postInteractions")
                 .child(postId)
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -559,7 +559,7 @@ public class CommentDetailFragment extends Fragment {
             userInteractRef.setValue(comment);
 
             postInteractionRef
-                    .addValueEventListener(new ValueEventListener() {
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -582,7 +582,7 @@ public class CommentDetailFragment extends Fragment {
                     });
 
             posterRef
-                    .addValueEventListener(new ValueEventListener() {
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -733,7 +733,7 @@ public class CommentDetailFragment extends Fragment {
         userInteractRef.setValue(code);
 
         postInteractionRef
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -757,7 +757,7 @@ public class CommentDetailFragment extends Fragment {
                 });
 
         userRef
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
