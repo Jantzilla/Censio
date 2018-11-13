@@ -47,7 +47,7 @@
             android:id="@+id/iv_votes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_touch_app_primary_28dp"
+            android:src="@drawable/ic_touch_app_dark_28dp"
             android:contentDescription="@string/vote_count_icon" />
 
         <TextView
@@ -61,7 +61,7 @@
             android:id="@+id/iv_comments"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_comment_primary_28dp"
+            android:src="@drawable/ic_comment_dark_28dp"
             android:contentDescription="@string/comment_count_icon" />
 
         <TextView
@@ -77,7 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:src="@drawable/ic_thumb_up_primary_28dp"
+            android:src="@drawable/ic_thumb_up_dark_28dp"
             android:contentDescription="@string/like_count_icon" />
 
         <TextView
@@ -91,7 +91,7 @@
             android:id="@+id/iv_dislikes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_thumb_down_primary_28dp" />
+            android:src="@drawable/ic_thumb_down_dark_28dp" />
 
         <TextView
             android:id="@+id/tv_dislikes_count"
