@@ -3,7 +3,6 @@ package com.apps.creativesource.censio;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
@@ -16,16 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -147,7 +140,66 @@ public class AddActivity extends AppCompatActivity {
         }
     }
 
-    private void addNewPost(String statement) {
+//    private void addNewPost(String statement) {
+//
+//        Map<String, Object> posts = new HashMap<>();
+//        posts.put("author", Objects.requireNonNull(auth.getUid()));
+//        posts.put("statement", statement);
+//        posts.put("postTypeId", postTypeId);
+//        posts.put("likes", 0);
+//        posts.put("dislikes", 0);
+//        posts.put("interactionCount", 0);
+//        posts.put("userRef", sharedPreferences.getString("userFireId", ""));
+//        posts.put("timestamp", System.currentTimeMillis());
+//
+//        realtimeRef.child("posts")
+//                .add(posts)
+//                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                    @Override
+//                    public void onSuccess(DocumentReference documentReference) {
+//                        if(getPostTypeId() == R.drawable.ic_touch_app_primary_28dp) {
+//
+//                            choices.addAll(clickListener.myAction());
+//                            WriteBatch batch = realtimeRef.batch();
+//
+//                            for(int i = 0; i < choices.size(); i++) {
+//                                DocumentReference choiceRef = realtimeRef.collection("posts").document(documentReference.getId())
+//                                        .collection("choices")
+//                                        .document(String.valueOf(System.nanoTime()));
+//
+//
+//                                Map<String, Object> choice = new HashMap<>();
+//                                choice.put("title", choices.get(i));
+//                                choice.put("count", 0);
+//
+//                                batch.set(choiceRef, choice);
+//                            }
+//
+//                            batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<Void> task) {
+//
+//                                }
+//                            })
+//                                    .addOnFailureListener(new OnFailureListener() {
+//                                        @Override
+//                                        public void onFailure(@NonNull Exception e) {
+//
+//                                        }
+//                                    });
+//                        }
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                    }
+//                });
+//    }
+
+    private void addNewPost(String statement){
+
+        Long postId = System.nanoTime();
 
         Map<String, Object> posts = new HashMap<>();
         posts.put("author", Objects.requireNonNull(auth.getUid()));
@@ -159,49 +211,32 @@ public class AddActivity extends AppCompatActivity {
         posts.put("userRef", sharedPreferences.getString("userFireId", ""));
         posts.put("timestamp", System.currentTimeMillis());
 
-        realtimeRef.child("posts")
-                .add(posts)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        realtimeRef.child("posts").child(String.valueOf(postId)).setValue(posts)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
+                    public void onSuccess(Void aVoid) {
                         if(getPostTypeId() == R.drawable.ic_touch_app_primary_28dp) {
 
                             choices.addAll(clickListener.myAction());
-                            WriteBatch batch = realtimeRef.batch();
 
                             for(int i = 0; i < choices.size(); i++) {
-                                DocumentReference choiceRef = realtimeRef.collection("posts").document(documentReference.getId())
-                                        .collection("choices")
-                                        .document(String.valueOf(System.nanoTime()));
-
 
                                 Map<String, Object> choice = new HashMap<>();
                                 choice.put("title", choices.get(i));
                                 choice.put("count", 0);
 
-                                batch.set(choiceRef, choice);
+                                createNewChoice(choice, postId);
+
                             }
-
-                            batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-
-                                }
-                            })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-
-                                        }
-                                    });
                         }
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                    }
                 });
+    }
+
+    private void createNewChoice(Map<String, Object> choice, Long postId) {
+
+        realtimeRef.child("posts").child(String.valueOf(postId)).child("choices").child(String.valueOf(System.nanoTime())).setValue(choice);
+
     }
 
 }

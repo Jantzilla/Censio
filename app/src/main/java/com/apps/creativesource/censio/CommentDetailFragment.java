@@ -32,6 +32,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -66,7 +71,7 @@ public class CommentDetailFragment extends Fragment {
     private FloatingActionButton fab;
     private CommentAdapter adapter;
     private SharedPreferences sharedPreferences;
-    private FirebaseFirestore firestore;
+    private DatabaseReference realtimeRef;
     private String postId;
     private int likeCode = 0;
     private String postUserId;
@@ -99,7 +104,7 @@ public class CommentDetailFragment extends Fragment {
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-        firestore = FirebaseFirestore.getInstance();
+        realtimeRef = FirebaseDatabase.getInstance().getReference();
 
         circleImageView = view.findViewById(R.id.iv_profile);
         interactionImageView = view.findViewById(R.id.iv_comments);
@@ -201,108 +206,231 @@ public class CommentDetailFragment extends Fragment {
 
     private void getAllComments() {
 
-        firestore.collection("posts")
-                .document(postId)
-                .collection("comments")
-                .orderBy("timestamp", Query.Direction.ASCENDING)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        realtimeRef.child("posts")
+                .child(postId)
+                .child("comments")
+                .orderByChild("timestamp")
+                .addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Comment comment = document.toObject(Comment.class);
+                        if(dataSnapshot.exists()) {
+
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                Comment comment = snapshot.getValue(Comment.class);
                                 commentArrayList.add(comment);
-
                             }
+
                             loadAdapter(commentArrayList);
                         }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                     }
                 });
+//                .get() //TODO: REMOVE COMMENT
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                Comment comment = document.toObject(Comment.class);
+//                                commentArrayList.add(comment);
+//
+//                            }
+//                            loadAdapter(commentArrayList);
+//                        }
+//                    }
+//                });
     }
 
     private void newCommentListener() {
 
-        DocumentReference docRef = firestore.collection("posts")
-                .document(postId);
+        DatabaseReference docRef = realtimeRef.child("posts")
+                .child(postId);
 
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        docRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    return;
-                }
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if (snapshot != null && snapshot.exists()) {
-                    if(snapshot.getLong("interactionCount") > adapter.getItemCount()) {
+                if(dataSnapshot.exists()) {
 
-                        docRef.collection("comments")
-                                .whereGreaterThan("timestamp", adapter.lastTimestamp)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    Post post = dataSnapshot.getValue(Post.class);
+
+                    if(post.interactionCount > adapter.getItemCount()) {
+
+
+                        docRef.child("comments")
+                                .orderByChild("timestamp")
+                                .startAt(adapter.lastTimestamp + 1)
+                                .addValueEventListener(new ValueEventListener() {
                                     @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        ArrayList<Comment> newComments = new ArrayList<>();
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                Comment comment = document.toObject(Comment.class);
+                                        if(dataSnapshot.exists()) {
+                                            ArrayList<Comment> newComments = new ArrayList<>();
+
+                                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                Comment comment = snapshot.getValue(Comment.class);
                                                 newComments.add(comment);
-
                                             }
+
                                             adapter.swapList(newComments);
                                             commentRecyclerView.smoothScrollToPosition(adapter.getItemCount());
+
                                         }
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                                     }
                                 });
+//                                .get()
+//                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                        ArrayList<Comment> newComments = new ArrayList<>();
+//
+//                                        if (task.isSuccessful()) {
+//                                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                                Comment comment = document.toObject(Comment.class);
+//                                                newComments.add(comment);
+//
+//                                            }
+//                                            adapter.swapList(newComments);
+//                                            commentRecyclerView.smoothScrollToPosition(adapter.getItemCount());
+//                                        }
+//                                    }
+//                                });
+
                     }
-                } else {
+
                 }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
+
+//        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() { TODO: REMOVE COMMENT
+//            @Override
+//            public void onEvent(@Nullable DocumentSnapshot snapshot,
+//                                @Nullable FirebaseFirestoreException e) {
+//                if (e != null) {
+//                    return;
+//                }
+//
+//                if (snapshot != null && snapshot.exists()) {
+//                    if(snapshot.getLong("interactionCount") > adapter.getItemCount()) {
+//
+//                        docRef.collection("comments")
+//                                .whereGreaterThan("timestamp", adapter.lastTimestamp)
+//                                .get()
+//                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                        ArrayList<Comment> newComments = new ArrayList<>();
+//
+//                                        if (task.isSuccessful()) {
+//                                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                                Comment comment = document.toObject(Comment.class);
+//                                                newComments.add(comment);
+//
+//                                            }
+//                                            adapter.swapList(newComments);
+//                                            commentRecyclerView.smoothScrollToPosition(adapter.getItemCount());
+//                                        }
+//                                    }
+//                                });
+//                    }
+//                } else {
+//                }
+//            }
+//        });
     }
 
     private void getAllInteraction() {
 
-        firestore.collection("users")
-                .document(sharedPreferences.getString("userFireId", ""))
-                .collection("postInteractions")
-                .document(postId)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        realtimeRef.child("users")
+                .child(sharedPreferences.getString("userFireId", ""))
+                .child("postInteractions")
+                .child(postId)
+                .addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        if (task.isSuccessful()) {
+                        if(dataSnapshot.exists()) {
 
-                            DocumentSnapshot document = task.getResult();
+                            PostInteraction postInteraction = dataSnapshot.getValue(PostInteraction.class);
 
-                            if(document.exists()) {
-
-                                switch (String.valueOf(document.get("like"))) {
-                                    case "-1":
-                                        dislikesImageView.setImageResource(R.drawable.ic_thumb_down_accent_28dp);
-                                        likeCode = -1;
-                                        break;
-                                    case "1":
-                                        likesImageView.setImageResource(R.drawable.ic_thumb_up_accent_28dp);
-                                        likeCode = 1;
-                                        break;
-                                    default:
-                                        break;
-                                }
-
-                                    if (document.getBoolean("comment"))
-                                    interactionImageView.setImageResource(R.drawable.ic_comment_accent_28dp);
-
+                            switch (String.valueOf(postInteraction.like)) {
+                                case "-1":
+                                    dislikesImageView.setImageResource(R.drawable.ic_thumb_down_accent_28dp);
+                                    likeCode = -1;
+                                    break;
+                                case "1":
+                                    likesImageView.setImageResource(R.drawable.ic_thumb_up_accent_28dp);
+                                    likeCode = 1;
+                                    break;
+                                default:
+                                    break;
                             }
+
+                            if (postInteraction.comment)
+                                interactionImageView.setImageResource(R.drawable.ic_comment_accent_28dp);
 
                         }
 
                     }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
                 });
+
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//
+//                        if (task.isSuccessful()) {
+//
+//                            DocumentSnapshot document = task.getResult();
+//
+//                            if(document.exists()) {
+//
+//                                switch (String.valueOf(document.get("like"))) {
+//                                    case "-1":
+//                                        dislikesImageView.setImageResource(R.drawable.ic_thumb_down_accent_28dp);
+//                                        likeCode = -1;
+//                                        break;
+//                                    case "1":
+//                                        likesImageView.setImageResource(R.drawable.ic_thumb_up_accent_28dp);
+//                                        likeCode = 1;
+//                                        break;
+//                                    default:
+//                                        break;
+//                                }
+//
+//                                    if (document.getBoolean("comment"))
+//                                    interactionImageView.setImageResource(R.drawable.ic_comment_accent_28dp);
+//
+//                            }
+//
+//                        }
+//
+//                    }
+//                });
 
     }
 
@@ -312,46 +440,85 @@ public class CommentDetailFragment extends Fragment {
         setInteractions.put("like", 0);
         setInteractions.put("comment", false);
 
-        firestore.collection("users")
-                .document(sharedPreferences.getString("userFireId", ""))
-                .collection("postInteractions")
-                .document(postId)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        realtimeRef.child("users")
+                .child(sharedPreferences.getString("userFireId", ""))
+                .child("postInteractions")
+                .child(postId)
+                .addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                            if(!document.exists()) {
+                        if(dataSnapshot.exists()) {
 
-                                firestore.collection("users")
-                                        .document(sharedPreferences.getString("userFireId", ""))
-                                        .collection("postInteractions")
-                                        .document(postId)
-                                        .set(setInteractions)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
+                            realtimeRef.child("users")
+                                    .child(sharedPreferences.getString("userFireId", ""))
+                                    .child("postInteractions")
+                                    .child(postId)
+                                    .setValue(setInteractions)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
 
-                                                if(type.equals("comment"))
-                                                    addComment();
-                                                else
-                                                    likeInteraction(i1,i2);
-                                            }
-                                        });
+                                            if(type.equals("comment"))
+                                                addComment();
+                                            else
+                                                likeInteraction(i1,i2);
+                                        }
+                                    });
 
-                            } else {
+                        } else {
 
-                                if(type.equals("comment"))
-                                    addComment();
-                                else
-                                    likeInteraction(i1,i2);
+                            if(type.equals("comment"))
+                                addComment();
+                            else
+                                likeInteraction(i1,i2);
 
-                            }
                         }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                     }
                 });
+
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                        if(task.isSuccessful()) {
+//                            DocumentSnapshot document = task.getResult();
+//
+//                            if(!document.exists()) {
+//
+//                                realtimeRef.collection("users")
+//                                        .document(sharedPreferences.getString("userFireId", ""))
+//                                        .collection("postInteractions")
+//                                        .document(postId)
+//                                        .set(setInteractions)
+//                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                            @Override
+//                                            public void onComplete(@NonNull Task<Void> task) {
+//
+//                                                if(type.equals("comment"))
+//                                                    addComment();
+//                                                else
+//                                                    likeInteraction(i1,i2);
+//                                            }
+//                                        });
+//
+//                            } else {
+//
+//                                if(type.equals("comment"))
+//                                    addComment();
+//                                else
+//                                    likeInteraction(i1,i2);
+//
+//                            }
+//                        }
+//                    }
+//                });
     }
 
 
@@ -367,26 +534,26 @@ public class CommentDetailFragment extends Fragment {
 
         if(!commentEntry.equals("")) {
 
-            DocumentReference commentRef = firestore.collection("posts")
-                    .document(postId)
-                    .collection("comments")
-                    .document(String.valueOf(System.nanoTime()));
+            DatabaseReference commentRef = realtimeRef.child("posts")
+                    .child(postId)
+                    .child("comments")
+                    .child(String.valueOf(System.nanoTime()));
 
-            DocumentReference postInteractionRef = firestore.collection("posts")
-                    .document(postId);
+            DatabaseReference postInteractionRef = realtimeRef.child("posts")
+                    .child(postId);
 
-            DocumentReference userInteractRef = firestore.collection("users")
-                    .document(sharedPreferences.getString("userFireId", ""))
-                    .collection("postInteractions")
-                    .document(postId);
-
-
-            DocumentReference userRef = firestore.collection("users")
-                    .document(sharedPreferences.getString("userFireId", ""));
+            DatabaseReference userInteractRef = realtimeRef.child("users")
+                    .child(sharedPreferences.getString("userFireId", ""))
+                    .child("postInteractions")
+                    .child(postId);
 
 
-            DocumentReference posterRef = firestore.collection("users")
-                    .document(postUserId);
+            DatabaseReference userRef = realtimeRef.child("users")
+                    .child(sharedPreferences.getString("userFireId", ""));
+
+
+            DatabaseReference posterRef = realtimeRef.child("users")
+                    .child(postUserId);
 
             Map<String, Object> comments = new HashMap<>();
             comments.put("comment", commentEntry);
@@ -394,48 +561,101 @@ public class CommentDetailFragment extends Fragment {
             comments.put("timestamp", System.currentTimeMillis());
             commentEditText.setText("");
 
-            userInteractRef
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            commentRef.setValue(comments);
+
+            Map<String, Object> comment = new HashMap<>();
+            comment.put("comment", true);
+
+            userInteractRef.setValue(comment);
+
+            postInteractionRef
+                    .addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if(task.isSuccessful()) {
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                                interactionCountTextView.setText(String.valueOf(Integer.valueOf(interactionCountTextView.getText().toString()) + 1));
-                                interactionImageView.setImageResource(R.drawable.ic_comment_accent_28dp);
+                            if(dataSnapshot.exists()) {
+                                Post post = dataSnapshot.getValue(Post.class);
 
-                                firestore.runTransaction(new Transaction.Function<Void>() {
-                                    @Override
-                                    public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+                                Map<String, Object> interaction = new HashMap<>();
+                                interaction.put("interactionCount", post.interactionCount + 1);
 
-                                        DocumentSnapshot snapshot1 = transaction.get(postInteractionRef);
-                                        DocumentSnapshot snapshot2 = transaction.get(posterRef);
-
-                                        int newPostInteract = (int) (snapshot1.getLong("interactionCount") + 1);
-                                        int newPosterInteract = (int) (snapshot2.getLong("comments") + 1);
-                                        transaction.update(posterRef, "comments", newPosterInteract);
-                                        transaction.update(postInteractionRef, "interactionCount", newPostInteract);
-                                        transaction.update(userInteractRef, "comment", true);
-                                        transaction.set(commentRef, comments);
-
-                                        return null;
-                                    }
-                                }).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-
-                                    }
-                                })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-
-                                            }
-                                        });
+                                postInteractionRef.setValue(interaction);
 
                             }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
                         }
                     });
+
+            posterRef
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            if(dataSnapshot.exists()) {
+                                User user = dataSnapshot.getValue(User.class);
+
+                                Map<String, Object> comment = new HashMap<>();
+                                comment.put("comments", user.comments + 1);
+
+                                posterRef.setValue(comment);
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+//            userInteractRef TODO: Remove if above is working
+//                    .get()
+//                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                            if(task.isSuccessful()) {
+//
+//                                interactionCountTextView.setText(String.valueOf(Integer.valueOf(interactionCountTextView.getText().toString()) + 1));
+//                                interactionImageView.setImageResource(R.drawable.ic_comment_accent_28dp);
+//
+//                                realtimeRef.runTransaction(new Transaction.Function<Void>() {
+//                                    @Override
+//                                    public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+//
+//                                        DocumentSnapshot snapshot1 = transaction.get(postInteractionRef);
+//                                        DocumentSnapshot snapshot2 = transaction.get(posterRef);
+//
+//                                        int newPostInteract = (int) (snapshot1.getLong("interactionCount") + 1);
+//                                        int newPosterInteract = (int) (snapshot2.getLong("comments") + 1);
+//                                        transaction.update(posterRef, "comments", newPosterInteract);
+//                                        transaction.update(postInteractionRef, "interactionCount", newPostInteract);
+//                                        transaction.update(userInteractRef, "comment", true);
+//                                        transaction.set(commentRef, comments);
+//
+//                                        return null;
+//                                    }
+//                                }).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                    @Override
+//                                    public void onSuccess(Void aVoid) {
+//
+//                                    }
+//                                })
+//                                        .addOnFailureListener(new OnFailureListener() {
+//                                            @Override
+//                                            public void onFailure(@NonNull Exception e) {
+//
+//                                            }
+//                                        });
+//
+//                            }
+//                        }
+//                    });
 
         }
     }
@@ -506,59 +726,112 @@ public class CommentDetailFragment extends Fragment {
         setInteractions.put("like", 0);
         setInteractions.put("comment", false);
 
-        DocumentReference postInteractionRef = firestore.collection("posts")
-                .document(postId);
+        DatabaseReference postInteractionRef = realtimeRef.child("posts")
+                .child(postId);
 
-        DocumentReference userInteractRef = firestore.collection("users")
-                .document(sharedPreferences.getString("userFireId", ""))
-                .collection("postInteractions")
-                .document(postId);
+        DatabaseReference userInteractRef = realtimeRef.child("users")
+                .child(sharedPreferences.getString("userFireId", ""))
+                .child("postInteractions")
+                .child(postId);
 
-        DocumentReference userRef = firestore.collection("users")
-                .document(postUserId);
+        DatabaseReference userRef = realtimeRef.child("users")
+                .child(postUserId);
 
-        userInteractRef
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        Map<String, Object> code = new HashMap<>();
+        code.put("like", likeCode);
+
+        userInteractRef.setValue(code);
+
+        postInteractionRef
+                .addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()) {
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                            firestore.runTransaction(new Transaction.Function<Void>() {
-                                @Override
-                                public Void apply(Transaction transaction) throws FirebaseFirestoreException {
-                                    DocumentSnapshot snapshot1 = transaction.get(userRef);
-                                    DocumentSnapshot snapshot2 = transaction.get(postInteractionRef);
+                        if(dataSnapshot.exists()) {
+                            Post post = dataSnapshot.getValue(Post.class);
 
-                                    int newUserLikes = (int) (snapshot1.getLong("likes") + like);
-                                    int newUserDislikes = (int) (snapshot1.getLong("dislikes") + dislike);
-                                    transaction.update(userRef, "likes", newUserLikes);
-                                    transaction.update(userRef, "dislikes", newUserDislikes);
+                            Map<String, Object> likes = new HashMap<>();
+                            likes.put("likes", post.likes + like);
+                            likes.put("dislikes", post.likes + dislike);
 
-
-                                    transaction.update(userInteractRef, "like", likeCode);
-
-                                    int newPostLikes = (int) (snapshot2.getLong("likes") + like);
-                                    int newPostDislikes = (int) (snapshot2.getLong("dislikes") + dislike);
-                                    transaction.update(postInteractionRef, "likes", newPostLikes);
-                                    transaction.update(postInteractionRef, "dislikes", newPostDislikes);
-
-                                    return null;
-                                }
-                            }).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                }
-                            })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                        }
-                                    });
+                            postInteractionRef.setValue(likes);
 
                         }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                     }
                 });
+
+        userRef
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        if(dataSnapshot.exists()) {
+                            User user = dataSnapshot.getValue(User.class);
+
+                            Map<String, Object> likes = new HashMap<>();
+                            likes.put("likes", user.likes + like);
+                            likes.put("dislikes", user.dislikes + dislike);
+
+                            userRef.setValue(likes);
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+//        userInteractRef
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                        if(task.isSuccessful()) {
+//
+//                            realtimeRef.runTransaction(new Transaction.Function<Void>() {
+//                                @Override
+//                                public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+//                                    DocumentSnapshot snapshot1 = transaction.get(userRef);
+//                                    DocumentSnapshot snapshot2 = transaction.get(postInteractionRef);
+//
+//                                    int newUserLikes = (int) (snapshot1.getLong("likes") + like);
+//                                    int newUserDislikes = (int) (snapshot1.getLong("dislikes") + dislike);
+//                                    transaction.update(userRef, "likes", newUserLikes);
+//                                    transaction.update(userRef, "dislikes", newUserDislikes);
+//
+//
+//                                    transaction.update(userInteractRef, "like", likeCode);
+//
+//                                    int newPostLikes = (int) (snapshot2.getLong("likes") + like);
+//                                    int newPostDislikes = (int) (snapshot2.getLong("dislikes") + dislike);
+//                                    transaction.update(postInteractionRef, "likes", newPostLikes);
+//                                    transaction.update(postInteractionRef, "dislikes", newPostDislikes);
+//
+//                                    return null;
+//                                }
+//                            }).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                @Override
+//                                public void onSuccess(Void aVoid) {
+//                                }
+//                            })
+//                                    .addOnFailureListener(new OnFailureListener() {
+//                                        @Override
+//                                        public void onFailure(@NonNull Exception e) {
+//                                        }
+//                                    });
+//
+//                        }
+//                    }
+//                });
 
     }
 
@@ -569,11 +842,11 @@ public class CommentDetailFragment extends Fragment {
 
     private void deletePost() {
 
-        DocumentReference docRef = firestore.collection("posts")
-                .document(postId);
+        DatabaseReference docRef = realtimeRef.child("posts")
+                .child(postId);
 
         docRef
-                .delete()
+                .removeValue()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

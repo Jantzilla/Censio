@@ -16,6 +16,11 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -33,7 +38,7 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
     private FragmentManager fragmentManager;
 
     private UserPollsAdapter adapter;
-    private FirebaseFirestore firestore;
+    private DatabaseReference realtimeRef;
     private FirebaseAuth auth;
 
     public PollsFragment() {}
@@ -62,7 +67,7 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
             twoPane = true;
         }
 
-        firestore = FirebaseFirestore.getInstance();
+        realtimeRef = FirebaseDatabase.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
 
         pollsList = view.findViewById(R.id.rv_user_polls);
@@ -83,25 +88,47 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
 
         ArrayList<Post> postArrayList = new ArrayList<>();
 
-        firestore.collection("posts")
-                .whereEqualTo("author", auth.getUid())
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        realtimeRef.child("posts")
+                .orderByChild("author")
+                .equalTo(auth.getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Post post = document.toObject(Post.class);
-                                post.firestoreId = document.getId();
+                        if(dataSnapshot.exists()) {
+
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                Post post = snapshot.getValue(Post.class);
+                                post.firestoreId = snapshot.getKey();
                                 postArrayList.add(post);
 
                             }
                             loadAdapter(postArrayList);
+
                         }
                     }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
                 });
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                Post post = document.toObject(Post.class);
+//                                post.firestoreId = document.getId();
+//                                postArrayList.add(post);
+//
+//                            }
+//                            loadAdapter(postArrayList);
+//                        }
+//                    }
+//                });
     }
 
     public void loadAdapter(ArrayList<Post> postArrayList) {

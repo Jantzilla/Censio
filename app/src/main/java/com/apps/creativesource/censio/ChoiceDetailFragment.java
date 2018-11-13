@@ -27,6 +27,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -58,7 +63,7 @@ public class ChoiceDetailFragment extends Fragment {
     private FloatingActionButton fab;
     private RadioGroupPlus choicesRadioGroup;
     private SharedPreferences sharedPreferences;
-    private FirebaseFirestore firestore;
+    private DatabaseReference realtimeRef;
     private String postId;
     private String postUserId;
     private String chosenRadioButton;
@@ -91,7 +96,7 @@ public class ChoiceDetailFragment extends Fragment {
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-        firestore = FirebaseFirestore.getInstance();
+        realtimeRef = FirebaseDatabase.getInstance().getReference();
 
         circleImageView = view.findViewById(R.id.iv_profile);
         interactionImageView = view.findViewById(R.id.iv_comments);
@@ -180,65 +185,67 @@ public class ChoiceDetailFragment extends Fragment {
 
     private void getAllChoices() {
 
-        firestore.collection("posts")
-                .document(postId)
-                .collection("choices")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        realtimeRef.child("posts")
+                .child(postId)
+                .child("choices")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                createRadioButton(document);
-
-                            }
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            Choice choice = snapshot.getValue(Choice.class);          //TODO: CREATE OBJECT
+                            createRadioButton(choice, dataSnapshot.getRef());
                         }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                     }
                 });
     }
 
     private void getAllInteraction() {
 
-        firestore.collection("users")
-                .document(sharedPreferences.getString("userFireId", ""))
-                .collection("postInteractions")
-                .document(postId)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        realtimeRef.child("users")
+                .child(sharedPreferences.getString("userFireId", ""))
+                .child("postInteractions")
+                .child(postId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
+                        if(dataSnapshot.exists()) {
+                            PostInteraction postInteraction = dataSnapshot.getValue(PostInteraction.class);
 
-                            if(document.exists()) {
+                            chosenRadioButton = postInteraction.choice;
 
-                                chosenRadioButton = document.getString("choice");
-
-                                switch (String.valueOf(document.get("like"))) {
-                                    case "-1":
-                                        dislikesImageView.setImageResource(R.drawable.ic_thumb_down_accent_28dp);
-                                        likeCode = -1;
-                                        break;
-                                    case "1":
-                                        likesImageView.setImageResource(R.drawable.ic_thumb_up_accent_28dp);
-                                        likeCode = 1;
-                                        break;
-                                    default:
-                                        break;
-                                }
-
-
-                                if(!chosenRadioButton.equals("null"))
-                                    interactionImageView.setImageResource(R.drawable.ic_touch_app_accent_28dp);
-
+                            switch (String.valueOf(postInteraction.like)) {
+                                case "-1":
+                                    dislikesImageView.setImageResource(R.drawable.ic_thumb_down_accent_28dp);
+                                    likeCode = -1;
+                                    break;
+                                case "1":
+                                    likesImageView.setImageResource(R.drawable.ic_thumb_up_accent_28dp);
+                                    likeCode = 1;
+                                    break;
+                                default:
+                                    break;
                             }
+
+
+                            if(!chosenRadioButton.equals("null"))
+                                interactionImageView.setImageResource(R.drawable.ic_touch_app_accent_28dp);
 
                         }
 
-                        getAllChoices();
+
+                    getAllChoices();
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                     }
                 });
 
@@ -250,59 +257,112 @@ public class ChoiceDetailFragment extends Fragment {
         setInteractions.put("like", 0);
         setInteractions.put("choice", null);
 
-        DocumentReference postInteractionRef = firestore.collection("posts")
-                .document(postId);
+        DatabaseReference postInteractionRef = realtimeRef.child("posts")
+                .child(postId);
 
-        DocumentReference userInteractRef = firestore.collection("users")
-                .document(sharedPreferences.getString("userFireId", ""))
-                .collection("postInteractions")
-                .document(postId);
+        DatabaseReference userInteractRef = realtimeRef.child("users")
+                .child(sharedPreferences.getString("userFireId", ""))
+                .child("postInteractions")
+                .child(postId);
 
-        DocumentReference userRef = firestore.collection("users")
-                .document(postUserId);
+        DatabaseReference userRef = realtimeRef.child("users")
+                .child(postUserId);
 
-        userInteractRef
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        Map<String, Object> code = new HashMap<>();
+        code.put("like", likeCode);
+
+        userInteractRef.setValue(code);
+
+        postInteractionRef
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()) {
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                            firestore.runTransaction(new Transaction.Function<Void>() {
-                                @Override
-                                public Void apply(Transaction transaction) throws FirebaseFirestoreException {
-                                    DocumentSnapshot snapshot1 = transaction.get(userRef);
-                                    DocumentSnapshot snapshot2 = transaction.get(postInteractionRef);
+                        if(dataSnapshot.exists()) {
+                            Post post = dataSnapshot.getValue(Post.class);
 
-                                    int newUserLikes = (int) (snapshot1.getLong("likes") + like);
-                                    int newUserDislikes = (int) (snapshot1.getLong("dislikes") + dislike);
-                                    transaction.update(userRef, "likes", newUserLikes);
-                                    transaction.update(userRef, "dislikes", newUserDislikes);
+                            Map<String, Object> likes = new HashMap<>();
+                            likes.put("likes", post.likes + like);
+                            likes.put("dislikes", post.likes + dislike);
 
-
-                                    transaction.update(userInteractRef, "like", likeCode);
-
-                                    int newPostLikes = (int) (snapshot2.getLong("likes") + like);
-                                    int newPostDislikes = (int) (snapshot2.getLong("dislikes") + dislike);
-                                    transaction.update(postInteractionRef, "likes", newPostLikes);
-                                    transaction.update(postInteractionRef, "dislikes", newPostDislikes);
-
-                                    return null;
-                                }
-                            }).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                }
-                            })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                        }
-                                    });
+                            postInteractionRef.setValue(likes);
 
                         }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                     }
                 });
+
+        userRef
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        if(dataSnapshot.exists()) {
+                            User user = dataSnapshot.getValue(User.class);
+
+                            Map<String, Object> likes = new HashMap<>();
+                            likes.put("likes", user.likes + like);
+                            likes.put("dislikes", user.dislikes + dislike);
+
+                            userRef.setValue(likes);
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+//        userInteractRef
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                        if(task.isSuccessful()) {
+//
+//                            realtimeRef.runTransaction(new Transaction.Function<Void>() {
+//                                @Override
+//                                public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+//                                    DocumentSnapshot snapshot1 = transaction.get(userRef);
+//                                    DocumentSnapshot snapshot2 = transaction.get(postInteractionRef);
+//
+//                                    int newUserLikes = (int) (snapshot1.getLong("likes") + like);
+//                                    int newUserDislikes = (int) (snapshot1.getLong("dislikes") + dislike);
+//                                    transaction.update(userRef, "likes", newUserLikes);
+//                                    transaction.update(userRef, "dislikes", newUserDislikes);
+//
+//
+//                                    transaction.update(userInteractRef, "like", likeCode);
+//
+//                                    int newPostLikes = (int) (snapshot2.getLong("likes") + like);
+//                                    int newPostDislikes = (int) (snapshot2.getLong("dislikes") + dislike);
+//                                    transaction.update(postInteractionRef, "likes", newPostLikes);
+//                                    transaction.update(postInteractionRef, "dislikes", newPostDislikes);
+//
+//                                    return null;
+//                                }
+//                            }).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                @Override
+//                                public void onSuccess(Void aVoid) {
+//                                }
+//                            })
+//                                    .addOnFailureListener(new OnFailureListener() {
+//                                        @Override
+//                                        public void onFailure(@NonNull Exception e) {
+//                                        }
+//                                    });
+//
+//                        }
+//                    }
+//                });
 
     }
 
@@ -312,46 +372,84 @@ public class ChoiceDetailFragment extends Fragment {
         setInteractions.put("like", 0);
         setInteractions.put("choice", "null");
 
-        firestore.collection("users")
-                .document(sharedPreferences.getString("userFireId", ""))
-                .collection("postInteractions")
-                .document(postId)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        realtimeRef.child("users")
+                .child(sharedPreferences.getString("userFireId", ""))
+                .child("postInteractions")
+                .child(postId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                            if(!document.exists()) {
+                        if(dataSnapshot.exists()) {
 
-                                firestore.collection("users")
-                                        .document(sharedPreferences.getString("userFireId", ""))
-                                        .collection("postInteractions")
-                                        .document(postId)
-                                        .set(setInteractions)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
+                            realtimeRef.child("users")
+                                    .child(sharedPreferences.getString("userFireId", ""))
+                                    .child("postInteractions")
+                                    .child(postId)
+                                    .setValue(setInteractions)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
 
-                                                if(type.equals("choice"))
-                                                    makechoice();
-                                                else
-                                                    likeInteraction(i1,i2);
-                                            }
-                                        });
+                                            if(type.equals("choice"))
+                                                makechoice();
+                                            else
+                                                likeInteraction(i1,i2);
+                                        }
+                                    });
 
-                            } else {
+                        } else {
 
-                                if(type.equals("choice"))
-                                    makechoice();
-                                else
-                                    likeInteraction(i1,i2);
+                            if(type.equals("choice"))
+                                makechoice();
+                            else
+                                likeInteraction(i1,i2);
 
-                            }
                         }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                     }
                 });
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                        if(task.isSuccessful()) {
+//                            DocumentSnapshot document = task.getResult();
+//
+//                            if(!document.exists()) {
+//
+//                                realtimeRef.child("users")
+//                                        .child(sharedPreferences.getString("userFireId", ""))
+//                                        .child("postInteractions")
+//                                        .child(postId)
+//                                        .set(setInteractions)
+//                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                            @Override
+//                                            public void onComplete(@NonNull Task<Void> task) {
+//
+//                                                if(type.equals("choice"))
+//                                                    makechoice();
+//                                                else
+//                                                    likeInteraction(i1,i2);
+//                                            }
+//                                        });
+//
+//                            } else {
+//
+//                                if(type.equals("choice"))
+//                                    makechoice();
+//                                else
+//                                    likeInteraction(i1,i2);
+//
+//                            }
+//                        }
+//                    }
+//                });
     }
 
     private void makechoice() {
@@ -361,136 +459,441 @@ public class ChoiceDetailFragment extends Fragment {
         } else {
         }
 
-        firestore.collection("users")
-                .document(sharedPreferences.getString("userFireId", ""))
-                .collection("postInteractions")
-                .document(postId)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        realtimeRef.child("users")
+                .child(sharedPreferences.getString("userFireId", ""))
+                .child("postInteractions")
+                .child(postId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                            firestore.collection("posts")
-                                    .document(postId)
-                                    .collection("choices")
-                                    .whereEqualTo("title",document.getString("choice"))
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        if(dataSnapshot.exists()) {
+                            PostInteraction postInteraction = dataSnapshot.getValue(PostInteraction.class);
+
+                            realtimeRef.child("posts")
+                                    .child(postId)
+                                    .child("choices")
+                                    .equalTo("title",postInteraction.choice)
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                                                    DocumentReference choiceCountRef = firestore.collection("posts")
-                                                            .document(postId)
-                                                            .collection("choices")
-                                                            .document(document.getId());
+                                            if(dataSnapshot.exists()) {
 
-                                                    firestore.runTransaction(new Transaction.Function<Void>() {
-                                                        @Override
-                                                        public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+                                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                    Choice choice = snapshot.getValue(Choice.class);
 
-                                                            DocumentSnapshot snapshot1 = transaction.get(choiceCountRef);
+                                                    DatabaseReference choiceCountRef = realtimeRef.child("posts")
+                                                            .child(postId)
+                                                            .child("choices")
+                                                            .child(snapshot.getKey());
 
-                                                            int newChoiceCount = (int) (snapshot1.getLong("count") - 1);
-                                                            transaction.update(choiceCountRef, "count", newChoiceCount);
-
-                                                            return null;
-                                                        }
-                                                    }).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                        @Override
-                                                        public void onSuccess(Void aVoid) {
-
-                                                        }
-                                                    })
-                                                            .addOnFailureListener(new OnFailureListener() {
+                                                    choiceCountRef
+                                                            .addListenerForSingleValueEvent(new ValueEventListener() {
                                                                 @Override
-                                                                public void onFailure(@NonNull Exception e) {
+                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                                                    if(dataSnapshot.exists()) {
+                                                                        Choice choice = dataSnapshot.getValue(Choice.class);
+                                                                        Map<String, Object> choiceMap = new HashMap<>();
+                                                                        choiceMap.put("like", choice.count - 1);
+                                                                        choiceCountRef.setValue(choiceMap);
+                                                                    }
+
+                                                                }
+
+                                                                @Override
+                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
 
                                                                 }
                                                             });
 
+//                                                    realtimeRef.runTransaction(new Transaction.Function<Void>() {
+//                                                        @Override
+//                                                        public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+//
+//                                                            DocumentSnapshot snapshot1 = transaction.get(choiceCountRef);
+//
+//                                                            int newChoiceCount = (int) (snapshot1.getLong("count") - 1);
+//                                                            transaction.update(choiceCountRef, "count", newChoiceCount);
+//
+//                                                            return null;
+//                                                        }
+//                                                    }).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                                        @Override
+//                                                        public void onSuccess(Void aVoid) {
+//
+//                                                        }
+//                                                    })
+//                                                            .addOnFailureListener(new OnFailureListener() {
+//                                                                @Override
+//                                                                public void onFailure(@NonNull Exception e) {
+//
+//                                                                }
+//                                                            });
+
                                                 }
+
                                             }
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
                                         }
                                     });
+
+//                                    .get()
+//                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                        @Override
+//                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                            if (task.isSuccessful()) {
+//                                                for (QueryDocumentSnapshot document : task.getResult()) {
+//
+//                                                    DatabaseReference choiceCountRef = realtimeRef.child("posts")
+//                                                            .child(postId)
+//                                                            .child("choices")
+//                                                            .child(document.getId());
+//
+//                                                    realtimeRef.runTransaction(new Transaction.Function<Void>() {
+//                                                        @Override
+//                                                        public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+//
+//                                                            DocumentSnapshot snapshot1 = transaction.get(choiceCountRef);
+//
+//                                                            int newChoiceCount = (int) (snapshot1.getLong("count") - 1);
+//                                                            transaction.update(choiceCountRef, "count", newChoiceCount);
+//
+//                                                            return null;
+//                                                        }
+//                                                    }).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                                        @Override
+//                                                        public void onSuccess(Void aVoid) {
+//
+//                                                        }
+//                                                    })
+//                                                            .addOnFailureListener(new OnFailureListener() {
+//                                                                @Override
+//                                                                public void onFailure(@NonNull Exception e) {
+//
+//                                                                }
+//                                                            });
+//
+//                                                }
+//                                            }
+//                                        }
+//                                    });
+
                         }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                     }
                 });
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            DocumentSnapshot document = task.getResult();
+//
+//                            realtimeRef.child("posts")
+//                                    .child(postId)
+//                                    .child("choices")
+//                                    .equalTo("title",document.getString("choice"))
+//                                    .get()
+//                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                        @Override
+//                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                            if (task.isSuccessful()) {
+//                                                for (QueryDocumentSnapshot document : task.getResult()) {
+//
+//                                                    DatabaseReference choiceCountRef = realtimeRef.child("posts")
+//                                                            .child(postId)
+//                                                            .child("choices")
+//                                                            .child(document.getId());
+//
+//                                                    realtimeRef.runTransaction(new Transaction.Function<Void>() {
+//                                                        @Override
+//                                                        public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+//
+//                                                            DocumentSnapshot snapshot1 = transaction.get(choiceCountRef);
+//
+//                                                            int newChoiceCount = (int) (snapshot1.getLong("count") - 1);
+//                                                            transaction.update(choiceCountRef, "count", newChoiceCount);
+//
+//                                                            return null;
+//                                                        }
+//                                                    }).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                                        @Override
+//                                                        public void onSuccess(Void aVoid) {
+//
+//                                                        }
+//                                                    })
+//                                                            .addOnFailureListener(new OnFailureListener() {
+//                                                                @Override
+//                                                                public void onFailure(@NonNull Exception e) {
+//
+//                                                                }
+//                                                            });
+//
+//                                                }
+//                                            }
+//                                        }
+//                                    });
+//                        }
+//                    }
+//                });
 
-        firestore.collection("posts")
-                .document(postId)
-                .collection("choices")
-                .whereEqualTo("title", chosenRadioButton)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        realtimeRef.child("posts")
+                .child(postId)
+                .child("choices")
+                .equalTo("title", chosenRadioButton)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                                DocumentReference choiceCountRef = firestore.collection("posts")
-                                        .document(postId)
-                                        .collection("choices")
-                                        .document(document.getId());
+                        if(dataSnapshot.exists()) {
 
-                                DocumentReference postInteractionRef = firestore.collection("posts")
-                                        .document(postId);
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                Choice choice = snapshot.getValue(Choice.class);
 
-                                DocumentReference userInteractRef = firestore.collection("users")
-                                        .document(sharedPreferences.getString("userFireId", ""))
-                                        .collection("postInteractions")
-                                        .document(postId);
+                                DatabaseReference choiceCountRef = realtimeRef.child("posts")
+                                        .child(postId)
+                                        .child("choices")
+                                        .child(snapshot.getKey());
 
-                                DocumentReference posterRef = firestore.collection("users")
-                                        .document(postUserId);
+                                DatabaseReference postInteractionRef = realtimeRef.child("posts")
+                                        .child(postId);
 
-                                firestore.runTransaction(new Transaction.Function<Void>() {
-                                    @Override
-                                    public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+                                DatabaseReference userInteractRef = realtimeRef.child("users")
+                                        .child(sharedPreferences.getString("userFireId", ""))
+                                        .child("postInteractions")
+                                        .child(postId);
 
-                                        DocumentSnapshot snapshot3 = transaction.get(userInteractRef);
-                                        DocumentSnapshot snapshot1 = transaction.get(choiceCountRef);
+                                DatabaseReference posterRef = realtimeRef.child("users")
+                                        .child(postUserId);
 
-
-                                        if(snapshot3.getString("choice").equals("null")) {
-                                            DocumentSnapshot snapshot2 = transaction.get(postInteractionRef);
-                                            DocumentSnapshot snapshot4 = transaction.get(posterRef);
-
-                                            interactionCountTextView.setText(String.valueOf(Integer.valueOf(interactionCountTextView.getText().toString()) + 1));
-                                            interactionImageView.setImageResource(R.drawable.ic_touch_app_accent_28dp);
-
-                                            int newPosterInteract = (int) (snapshot4.getLong("votes") + 1);
-                                            int newPostInteract = (int) (snapshot2.getLong("interactionCount") + 1);
-                                            transaction.update(posterRef, "votes", newPosterInteract);
-                                            transaction.update(postInteractionRef, "interactionCount", newPostInteract);
-
-                                        }
-
-                                        int newChoiceCount = (int) (snapshot1.getLong("count") + 1);
-                                        transaction.update(choiceCountRef, "count", newChoiceCount);
-
-                                        transaction.update(userInteractRef, "choice", chosenRadioButton);
-
-                                        return null;
-                                    }
-                                }).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-
-                                    }
-                                })
-                                        .addOnFailureListener(new OnFailureListener() {
+                                userInteractRef
+                                        .addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
-                                            public void onFailure(@NonNull Exception e) {
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                                if(dataSnapshot.exists()) {
+                                                    PostInteraction postInteraction = dataSnapshot.getValue(PostInteraction.class);
+
+                                                    if(postInteraction.choice.equals("null")) {
+
+                                                        interactionCountTextView.setText(String.valueOf(Integer.valueOf(interactionCountTextView.getText().toString()) + 1));
+                                                        interactionImageView.setImageResource(R.drawable.ic_touch_app_accent_28dp);
+
+                                                        postInteractionRef
+                                                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                                                        if(dataSnapshot.exists()) {
+                                                                            Post post = dataSnapshot.getValue(Post.class);
+
+                                                                            Map<String, Object> interaction = new HashMap<>();
+                                                                            interaction.put("interactionCount", post.interactionCount + 1);
+
+                                                                            postInteractionRef.setValue(interaction);
+                                                                        }
+
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                    }
+                                                                });
+
+                                                        posterRef
+                                                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                                                        if(dataSnapshot.exists()) {
+                                                                            User user = dataSnapshot.getValue(User.class);
+
+                                                                            Map<String, Object> vote = new HashMap<>();
+                                                                            vote.put("votes", user.votes + 1);
+
+                                                                            posterRef.setValue(vote);
+                                                                        }
+
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                    }
+                                                                });
+
+                                                    }
+
+                                                    choiceCountRef
+                                                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                                                    if(dataSnapshot.exists()) {
+                                                                        Choice choice = dataSnapshot.getValue(Choice.class);
+
+                                                                        Map<String, Object> choiceMap = new HashMap<>();
+                                                                        choiceMap.put("count", choice.count + 1);
+
+                                                                        choiceCountRef.setValue(choiceMap);
+                                                                    }
+
+                                                                }
+
+                                                                @Override
+                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                }
+                                                            });
+
+                                                    Map<String, Object> choiceMap = new HashMap<>();
+                                                    choiceMap.put("choice", chosenRadioButton);
+
+                                                    userInteractRef.setValue(choiceMap);
+
+                                                }
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
                                             }
                                         });
+
+//                                realtimeRef.runTransaction(new Transaction.Function<Void>() {
+//                                    @Override
+//                                    public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+//
+//                                        DocumentSnapshot snapshot3 = transaction.get(userInteractRef);
+//                                        DocumentSnapshot snapshot1 = transaction.get(choiceCountRef);
+//
+//
+//                                        if(snapshot3.getString("choice").equals("null")) {
+//                                            DocumentSnapshot snapshot2 = transaction.get(postInteractionRef);
+//                                            DocumentSnapshot snapshot4 = transaction.get(posterRef);
+//
+//                                            interactionCountTextView.setText(String.valueOf(Integer.valueOf(interactionCountTextView.getText().toString()) + 1));
+//                                            interactionImageView.setImageResource(R.drawable.ic_touch_app_accent_28dp);
+//
+//                                            int newPosterInteract = (int) (snapshot4.getLong("votes") + 1);
+//                                            int newPostInteract = (int) (snapshot2.getLong("interactionCount") + 1);
+//                                            transaction.update(posterRef, "votes", newPosterInteract);
+//                                            transaction.update(postInteractionRef, "interactionCount", newPostInteract);
+//
+//                                        }
+//
+//                                        int newChoiceCount = (int) (snapshot1.getLong("count") + 1);
+//                                        transaction.update(choiceCountRef, "count", newChoiceCount);
+//
+//                                        transaction.update(userInteractRef, "choice", chosenRadioButton);
+//
+//                                        return null;
+//                                    }
+//                                }).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                    @Override
+//                                    public void onSuccess(Void aVoid) {
+//
+//                                    }
+//                                })
+//                                        .addOnFailureListener(new OnFailureListener() {
+//                                            @Override
+//                                            public void onFailure(@NonNull Exception e) {
+//                                            }
+//                                        });
+
                             }
+
                         }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                     }
                 });
+
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//
+//                                DatabaseReference choiceCountRef = realtimeRef.child("posts")
+//                                        .child(postId)
+//                                        .child("choices")
+//                                        .child(document.getId());
+//
+//                                DatabaseReference postInteractionRef = realtimeRef.child("posts")
+//                                        .child(postId);
+//
+//                                DatabaseReference userInteractRef = realtimeRef.child("users")
+//                                        .child(sharedPreferences.getString("userFireId", ""))
+//                                        .child("postInteractions")
+//                                        .child(postId);
+//
+//                                DatabaseReference posterRef = realtimeRef.child("users")
+//                                        .child(postUserId);
+//
+//                                realtimeRef.runTransaction(new Transaction.Function<Void>() {
+//                                    @Override
+//                                    public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+//
+//                                        DocumentSnapshot snapshot3 = transaction.get(userInteractRef);
+//                                        DocumentSnapshot snapshot1 = transaction.get(choiceCountRef);
+//
+//
+//                                        if(snapshot3.getString("choice").equals("null")) {
+//                                            DocumentSnapshot snapshot2 = transaction.get(postInteractionRef);
+//                                            DocumentSnapshot snapshot4 = transaction.get(posterRef);
+//
+//                                            interactionCountTextView.setText(String.valueOf(Integer.valueOf(interactionCountTextView.getText().toString()) + 1));
+//                                            interactionImageView.setImageResource(R.drawable.ic_touch_app_accent_28dp);
+//
+//                                            int newPosterInteract = (int) (snapshot4.getLong("votes") + 1);
+//                                            int newPostInteract = (int) (snapshot2.getLong("interactionCount") + 1);
+//                                            transaction.update(posterRef, "votes", newPosterInteract);
+//                                            transaction.update(postInteractionRef, "interactionCount", newPostInteract);
+//
+//                                        }
+//
+//                                        int newChoiceCount = (int) (snapshot1.getLong("count") + 1);
+//                                        transaction.update(choiceCountRef, "count", newChoiceCount);
+//
+//                                        transaction.update(userInteractRef, "choice", chosenRadioButton);
+//
+//                                        return null;
+//                                    }
+//                                }).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                    @Override
+//                                    public void onSuccess(Void aVoid) {
+//
+//                                    }
+//                                })
+//                                        .addOnFailureListener(new OnFailureListener() {
+//                                            @Override
+//                                            public void onFailure(@NonNull Exception e) {
+//                                            }
+//                                        });
+//                            }
+//                        }
+//                    }
+//                });
 
     }
 
@@ -545,7 +948,7 @@ public class ChoiceDetailFragment extends Fragment {
         });
     }
 
-    private void createRadioButton(QueryDocumentSnapshot document) {
+    private void createRadioButton(Choice choice, DatabaseReference ref) {
         View radioButtonLayout = getLayoutInflater().inflate(R.layout.radio_button, null);
         ConstraintLayout constraintLayout = radioButtonLayout.findViewById(R.id.cl_option);
         RadioButton radioButton = radioButtonLayout.findViewById(R.id.rb_choice);
@@ -553,28 +956,45 @@ public class ChoiceDetailFragment extends Fragment {
         if(constraintLayout.getParent()!=null)
             ((ViewGroup)constraintLayout.getParent()).removeView(constraintLayout);
 
-        DocumentReference docRef = document.getReference();
-
-        ListenerRegistration registration = docRef.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    return;
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.exists()) {
+                    Choice innerChoice = dataSnapshot.getValue(Choice.class);
+
+                    textView.setText(String.valueOf((int)(innerChoice.count / Float.valueOf(interactionCountTextView.getText().toString()) * 100)) + "%");
+
                 }
 
-                if (snapshot != null && snapshot.exists()) {
-                    textView.setText(String.valueOf((int)(snapshot.getLong("count") / Float.valueOf(interactionCountTextView.getText().toString()) * 100)) + "%");
-                } else {
-                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
 
-        registrations.add(registration);
+//        ListenerRegistration registration = docRef.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable DocumentSnapshot snapshot,
+//                                @Nullable FirebaseFirestoreException e) {
+//                if (e != null) {
+//                    return;
+//                }
+//
+//                if (snapshot != null && snapshot.exists()) {
+//                    textView.setText(String.valueOf((int)(snapshot.getLong("count") / Float.valueOf(interactionCountTextView.getText().toString()) * 100)) + "%");
+//                } else {
+//                }
+//            }
+//        });
+//
+//        registrations.add(registration);
 
-        radioButton.setText(document.getString("title"));
+        radioButton.setText(choice.title);
         radioButton.setId((int) System.currentTimeMillis());
-        textView.setText(String.valueOf((int)(document.getLong("count") / Float.valueOf(interactionCountTextView.getText().toString()) * 100)) + "%");
+        textView.setText(String.valueOf((int)(choice.count / Float.valueOf(interactionCountTextView.getText().toString()) * 100)) + "%");
 
         choicesRadioGroup.addView(constraintLayout);
         choicesRadioGroup.setOnCheckedChangeListener(new RadioGroupPlus.OnCheckedChangeListener() {
@@ -587,17 +1007,17 @@ public class ChoiceDetailFragment extends Fragment {
 
         });
 
-        if(document.getString("title").equals(chosenRadioButton))
+        if(choice.title.equals(chosenRadioButton))
             radioButton.setChecked(true);
     }
 
     private void deletePost() {
 
-        DocumentReference docRef = firestore.collection("posts")
-                .document(postId);
+        DatabaseReference docRef = realtimeRef.child("posts")
+                .child(postId);
 
         docRef
-                .delete()
+                .removeValue()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

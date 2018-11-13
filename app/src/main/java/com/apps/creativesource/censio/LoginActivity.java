@@ -166,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
 
         realtimeRef.child("users")
                 .child(auth.getUid())
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 

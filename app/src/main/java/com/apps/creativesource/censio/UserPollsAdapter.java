@@ -12,6 +12,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,7 +29,7 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
     private Context context;
     private String profileUri;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
-    private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    private DatabaseReference realtimeRef = FirebaseDatabase.getInstance().getReference();
     private ListItemClickListener clickListener;
     private String userRef;
 
@@ -67,22 +72,49 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
         pollsViewHolder.postTypeId = postArrayList.get(i).postTypeId;
         userRef = postArrayList.get(i).userRef;
 
-        DocumentReference documentReference = firestore.collection("users").document(userRef);
+        DatabaseReference documentReference = realtimeRef.child("users").child(userRef);
 
-        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                pollsViewHolder.postFireUserId = documentSnapshot.getId();
-                profileUri = documentSnapshot.getString("profileUri");
-                Glide.with(context).load(profileUri).into(pollsViewHolder.profileImageView);
-                pollsViewHolder.profileTextView.setText(documentSnapshot.getString("name"));
+        documentReference.
+                addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {    //TODO: User Object
 
-                if(twoPane && i == 0 && !(postArrayList.get(i).author.equals(auth.getUid()))) {
-                    pollsViewHolder.itemView.performClick();
-                }
+                        if(dataSnapshot.exists()) {
+                            User user = dataSnapshot.getValue(User.class);
 
-            }
-        });
+                            pollsViewHolder.postFireUserId = user.id;
+                            profileUri = user.profileUri;
+                            Glide.with(context).load(profileUri).into(pollsViewHolder.profileImageView);
+                            pollsViewHolder.profileTextView.setText(user.name);
+
+                            if(twoPane && i == 0 && !(postArrayList.get(i).author.equals(auth.getUid()))) {
+                                pollsViewHolder.itemView.performClick();
+                            }
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+//        get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                pollsViewHolder.postFireUserId = documentSnapshot.getId();
+//                profileUri = documentSnapshot.getString("profileUri");
+//                Glide.with(context).load(profileUri).into(pollsViewHolder.profileImageView);
+//                pollsViewHolder.profileTextView.setText(documentSnapshot.getString("name"));
+//
+//                if(twoPane && i == 0 && !(postArrayList.get(i).author.equals(auth.getUid()))) {
+//                    pollsViewHolder.itemView.performClick();
+//                }
+//
+//            }
+//        });
 
         pollsViewHolder.statementTextView.setText(pollsViewHolder.postTitle);
         pollsViewHolder.interactionTextView.setText(String.valueOf(pollsViewHolder.interactionCount));

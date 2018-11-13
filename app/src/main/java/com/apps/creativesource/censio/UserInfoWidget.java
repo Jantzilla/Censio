@@ -19,6 +19,11 @@ import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -36,14 +41,14 @@ public class UserInfoWidget extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.rl_main, pendingIntent);
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseFirestore firestore;
+        DatabaseReference realtimeRef;
 
         if(auth.getCurrentUser() != null) {
 
             views.setViewVisibility(R.id.tv_no_active_user, View.GONE);
             views.setViewVisibility(R.id.pb_widget, View.VISIBLE);
 
-            firestore = FirebaseFirestore.getInstance();
+            realtimeRef = FirebaseDatabase.getInstance().getReference();
 
             Uri profileUri = Uri.parse(auth.getCurrentUser().getPhotoUrl().toString());
 
@@ -66,31 +71,60 @@ public class UserInfoWidget extends AppWidgetProvider {
                     .apply(options)
                     .into(awt);
 
-            firestore.collection("users")
-                    .whereEqualTo("id", auth.getUid())
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            realtimeRef.child("users")
+                    .child(auth.getUid())
+                    .addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if(task.isSuccessful()) {
-                                for(QueryDocumentSnapshot document : task.getResult()) {
-                                    views.setTextViewText(R.id.tv_likes_count,String.valueOf(document.getLong("likes")));
-                                    views.setTextViewText(R.id.tv_dislikes_count, String.valueOf(document.getLong("dislikes")));
-                                    views.setTextViewText(R.id.tv_votes_count, String.valueOf(document.getLong("votes")));
-                                    views.setTextViewText(R.id.tv_comments_count, String.valueOf(document.getLong("comments")));
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                                    views.setViewVisibility(R.id.tv_no_active_user, View.GONE);
-                                    views.setViewVisibility(R.id.pb_widget, View.GONE);
-                                    views.setViewVisibility(R.id.ll_image, View.VISIBLE);
-                                    views.setViewVisibility(R.id.tv_username, View.VISIBLE);
-                                    views.setViewVisibility(R.id.ll_data, View.VISIBLE);
+                            if(dataSnapshot.exists()) {
+                                User user = dataSnapshot.getValue(User.class);
 
-                                    appWidgetManager.updateAppWidget(appWidgetId, views);
+                                views.setTextViewText(R.id.tv_likes_count,String.valueOf(user.likes));
+                                views.setTextViewText(R.id.tv_dislikes_count, String.valueOf(user.dislikes));
+                                views.setTextViewText(R.id.tv_votes_count, String.valueOf(user.votes));
+                                views.setTextViewText(R.id.tv_comments_count, String.valueOf(user.comments));
 
-                                }
+                                views.setViewVisibility(R.id.tv_no_active_user, View.GONE);
+                                views.setViewVisibility(R.id.pb_widget, View.GONE);
+                                views.setViewVisibility(R.id.ll_image, View.VISIBLE);
+                                views.setViewVisibility(R.id.tv_username, View.VISIBLE);
+                                views.setViewVisibility(R.id.ll_data, View.VISIBLE);
+
+                                appWidgetManager.updateAppWidget(appWidgetId, views);
+
                             }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
                         }
                     });
+//                    .get()   TODO: Remove code if above is working
+//                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                            if(task.isSuccessful()) {
+//                                for(QueryDocumentSnapshot document : task.getResult()) {
+//                                    views.setTextViewText(R.id.tv_likes_count,String.valueOf(document.getLong("likes")));
+//                                    views.setTextViewText(R.id.tv_dislikes_count, String.valueOf(document.getLong("dislikes")));
+//                                    views.setTextViewText(R.id.tv_votes_count, String.valueOf(document.getLong("votes")));
+//                                    views.setTextViewText(R.id.tv_comments_count, String.valueOf(document.getLong("comments")));
+//
+//                                    views.setViewVisibility(R.id.tv_no_active_user, View.GONE);
+//                                    views.setViewVisibility(R.id.pb_widget, View.GONE);
+//                                    views.setViewVisibility(R.id.ll_image, View.VISIBLE);
+//                                    views.setViewVisibility(R.id.tv_username, View.VISIBLE);
+//                                    views.setViewVisibility(R.id.ll_data, View.VISIBLE);
+//
+//                                    appWidgetManager.updateAppWidget(appWidgetId, views);
+//
+//                                }
+//                            }
+//                        }
+//                    });
 
         } else {
 

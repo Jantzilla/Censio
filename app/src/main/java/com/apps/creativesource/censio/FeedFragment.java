@@ -16,9 +16,14 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
+import com.google.firebase.database.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -33,7 +38,7 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
 
     private UserPollsAdapter adapter;
     private FirebaseAuth auth;
-    private FirebaseFirestore firestore;
+    private DatabaseReference realtimeRef;
 
     private boolean twoPane = false;
 
@@ -62,7 +67,7 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
             twoPane = true;
         }
 
-        firestore = FirebaseFirestore.getInstance();
+        realtimeRef = FirebaseDatabase.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
 
         pollsList = view.findViewById(R.id.rv_polls_feed);
@@ -82,43 +87,46 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
 
         ArrayList<Post> postArrayList = new ArrayList<>();
 
-        Query firstQuery = firestore.collection("posts")
-                .whereLessThan("author", Objects.requireNonNull(auth.getUid()))
-                .orderBy("author")
-                .orderBy("timestamp", Query.Direction.DESCENDING);
+        realtimeRef.child("posts")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
 
-        Query secondQuery = firestore.collection("posts")
-                .whereGreaterThan("author", auth.getUid())
-                .orderBy("author")
-                .orderBy("timestamp", Query.Direction.DESCENDING);
+                        if(dataSnapshot.exists()) {
 
-        firstQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                Post post = snapshot.getValue(Post.class);
+                                post.firestoreId = snapshot.getKey();
+                                if(!post.author.equals(auth.getUid()))
+                                    postArrayList.add(post);
 
-                if (task.isSuccessful()) {
-                    for (DocumentSnapshot document : task.getResult()) {
-                        Post post = document.toObject(Post.class);
-                        post.firestoreId = document.getId();
-                        postArrayList.add(post);
+                            }
+                            loadAdapter(postArrayList);
+
+                        }
                     }
 
-                    secondQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (DocumentSnapshot document : task.getResult()) {
-                                    Post post = document.toObject(Post.class);
-                                    post.firestoreId = document.getId();
-                                    postArrayList.add(post);
-                                }
-                                loadAdapter(postArrayList);
-                            }
-                        }
-                    });
-                }
-            }
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                Post post = document.toObject(Post.class);
+//                                post.firestoreId = document.getId();
+//                                postArrayList.add(post);
+//
+//                            }
+//                            loadAdapter(postArrayList);
+//                        }
+//                    }
+//                });
     }
 
     public void loadAdapter(ArrayList<Post> postArrayList) {

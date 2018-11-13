@@ -181,16 +181,21 @@ public class MainFragment extends Fragment {
     private void getInteractions() {
         realtimeRef.child("users")
                 .child(auth.getUid())
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        User user = dataSnapshot.getValue(User.class);
 
-                        likesTextView.setText(String.valueOf(user.likes));
-                        dislikesTextView.setText(String.valueOf(user.dislikes));
-                        votesTextView.setText(String.valueOf(user.votes));
-                        commentsTextView.setText(String.valueOf(user.comments));
+                        if(dataSnapshot.exists()) {
 
+                            User user = dataSnapshot.getValue(User.class);
+
+                            likesTextView.setText(String.valueOf(user.likes));
+                            dislikesTextView.setText(String.valueOf(user.dislikes));
+                            votesTextView.setText(String.valueOf(user.votes));
+                            commentsTextView.setText(String.valueOf(user.comments));
+
+
+                        }
                     }
 
                     @Override

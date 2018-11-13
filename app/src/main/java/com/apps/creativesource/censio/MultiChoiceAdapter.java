@@ -12,7 +12,6 @@ import android.widget.ImageView;
 public class MultiChoiceAdapter extends RecyclerView.Adapter<MultiChoiceAdapter.ChoiceViewHolder> {
     private int itemCount;
     private final ListItemClickListener onClickListener;
-    private String option;
 
     public interface ListItemClickListener {
         void onListItemClick(int clickedItemIndex);

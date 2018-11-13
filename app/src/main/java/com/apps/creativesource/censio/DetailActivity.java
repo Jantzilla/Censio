@@ -17,13 +17,15 @@ import android.view.MenuItem;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class DetailActivity extends AppCompatActivity {
     private boolean userPost;
     private String postId;
-    private FirebaseFirestore firestore;
+    private DatabaseReference realtimeRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +34,7 @@ public class DetailActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
 
-        firestore = FirebaseFirestore.getInstance();
+        realtimeRef = FirebaseDatabase.getInstance().getReference();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment;
@@ -113,11 +115,11 @@ public class DetailActivity extends AppCompatActivity {
 
     private void deletePost() {
 
-        DocumentReference docRef = firestore.collection("posts")
-                .document(postId);
+        DatabaseReference docRef = realtimeRef.child("posts")
+                .child(postId);
 
         docRef
-                .delete()
+                .removeValue()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
