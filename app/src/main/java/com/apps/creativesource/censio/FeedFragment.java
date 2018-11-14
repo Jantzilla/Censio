@@ -139,7 +139,7 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
 
     @Override
     public void onListItemClicked(int clickedItemIndex, String profileUri, String username, String statement,
-                                  String interactionCount, int likes, int dislikes, int postTypeId, String id, String postFireUserId, TextView statementTextView) {
+                                  String interactionCount, int likes, int dislikes, int postTypeId, String id, String postFireUserId, ImageView profileImageView) {
 
 
         if(twoPane) {
@@ -188,8 +188,8 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
                 Bundle bundle = ActivityOptions
-                        .makeSceneTransitionAnimation(getActivity(), statementTextView,
-                                statementTextView.getTransitionName())
+                        .makeSceneTransitionAnimation(getActivity(), profileImageView,
+                                profileImageView.getTransitionName())
                         .toBundle();
 
                 startActivity(detailIntent, bundle);

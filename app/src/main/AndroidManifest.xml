@@ -64,6 +64,9 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/user_info_widget_info" />
         </receiver>
+        <service
+            android:name=".PostService"
+            android:exported="false"/>
     </application>
 
 </manifest>

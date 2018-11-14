@@ -31,7 +31,7 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
 
     public interface ListItemClickListener{
         void onListItemClicked(int clickedItemIndex, String profileUri, String username, String statement,
-                               String interactionCount, int likes, int dislikes, int postTypeId, String id, String postFireUserId, TextView statementTextView);
+                               String interactionCount, int likes, int dislikes, int postTypeId, String id, String postFireUserId, ImageView profileImageView);
     }
 
 
@@ -154,7 +154,7 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
         public void onClick(View v) {
             int clickedPosition = getAdapterPosition();
             clickListener.onListItemClicked(clickedPosition, profileUri, profileTextView.getText().toString()
-                    , postTitle, String.valueOf(interactionCount), likes, dislikes, postTypeId, postFireId, postFireUserId, statementTextView);
+                    , postTitle, String.valueOf(interactionCount), likes, dislikes, postTypeId, postFireId, postFireUserId, profileImageView);
         }
     }
 }

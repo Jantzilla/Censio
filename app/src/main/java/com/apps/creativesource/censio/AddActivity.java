@@ -221,22 +221,20 @@ public class AddActivity extends AppCompatActivity {
 
                             for(int i = 0; i < choices.size(); i++) {
 
-                                Map<String, Object> choice = new HashMap<>();
-                                choice.put("title", choices.get(i));
-                                choice.put("count", 0);
+                                String title = choices.get(i);
 
-                                createNewChoice(choice, postId);
+                                Intent serviceIntent = new Intent(getApplicationContext(), PostService.class);
+                                serviceIntent.putExtra("title", title);
+                                serviceIntent.putExtra("count", 0);
+                                serviceIntent.putExtra("postId", postId);
+
+                                getApplication().startService(serviceIntent);
+
 
                             }
                         }
                     }
                 });
-    }
-
-    private void createNewChoice(Map<String, Object> choice, Long postId) {
-
-        realtimeRef.child("posts").child(String.valueOf(postId)).child("choices").child(String.valueOf(System.nanoTime())).setValue(choice);
-
     }
 
 }
