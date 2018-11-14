@@ -170,6 +170,7 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
             detailIntent.putExtra("firestoreId", id);
             detailIntent.putExtra("postFireUserId", postFireUserId);
             detailIntent.putExtra("userPost", true);
+            detailIntent.putExtra("twoPane", twoPane);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 

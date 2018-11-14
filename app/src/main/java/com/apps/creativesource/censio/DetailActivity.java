@@ -24,6 +24,7 @@ public class DetailActivity extends AppCompatActivity {
     private boolean userPost;
     private String postId;
     private DatabaseReference realtimeRef;
+    private boolean twoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,8 @@ public class DetailActivity extends AppCompatActivity {
 
         userPost = initialIntent.getBooleanExtra("userPost", false);
         postId = initialIntent.getStringExtra("firestoreId");
+        twoPane = initialIntent.getBooleanExtra("twoPane", false);
+
 
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -60,7 +63,7 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && twoPane) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();

@@ -168,6 +168,7 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
             detailIntent.putExtra("firestoreId", id);
             detailIntent.putExtra("postFireUserId", postFireUserId);
             detailIntent.putExtra("userPost", false);
+            detailIntent.putExtra("twoPane", twoPane);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
