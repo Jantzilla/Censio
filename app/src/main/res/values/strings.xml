@@ -66,4 +66,5 @@
     <string name="vote_count_icon">Vote count icon.</string>
     <string name="delete_focused_choice_field">Delete focused choice field.</string>
     <string name="post_type_icon">Post type icon.</string>
+    <string name="post_statment">post statement</string>
 </resources>

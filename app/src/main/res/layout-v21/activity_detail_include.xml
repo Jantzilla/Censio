@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="0dp"
+        android:layout_height="275dp"
+        android:background="@color/colorPrimaryDark"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/iv_profile"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/post_author_profile_image"
+            app:layout_constraintBottom_toTopOf="@+id/tv_statement"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread_inside" />
+
+        <TextView
+            android:id="@+id/tv_statement"
+            android:transitionName="@string/post_statment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/statement_background"
+            android:gravity="center"
+            android:padding="16dp"
+            android:textColor="#ffffff"
+            android:textSize="28sp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_profile" />
+
+        <TextView
+            android:id="@+id/tv_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_profile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_profile" />
+
+        <ImageView
+            android:id="@+id/iv_comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_comment_primary_28dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_comments_count"
+            app:layout_constraintEnd_toStartOf="@+id/tv_comments_count"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="@+id/tv_comments_count"
+            android:contentDescription="@string/post_interaction_type_icon" />
+
+        <TextView
+            android:id="@+id/tv_comments_count"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_likes"
+            app:layout_constraintStart_toEndOf="@+id/iv_comments"
+            app:layout_constraintTop_toTopOf="@+id/iv_likes" />
+
+        <ImageView
+            android:id="@+id/iv_likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_thumb_up_primary_28dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_likes_count"
+            app:layout_constraintEnd_toStartOf="@+id/tv_likes_count"
+            app:layout_constraintStart_toEndOf="@+id/tv_comments_count"
+            app:layout_constraintTop_toTopOf="@+id/tv_likes_count"
+            android:contentDescription="@string/thumbs_up_icon_button" />
+
+        <TextView
+            android:id="@+id/tv_likes_count"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_dislikes"
+            app:layout_constraintEnd_toStartOf="@+id/iv_dislikes"
+            app:layout_constraintStart_toEndOf="@+id/iv_likes"
+            app:layout_constraintTop_toTopOf="@+id/iv_dislikes" />
+
+        <ImageView
+            android:id="@+id/iv_dislikes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_thumb_down_primary_28dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_dislikes_count"
+            app:layout_constraintEnd_toStartOf="@+id/tv_dislikes_count"
+            app:layout_constraintStart_toEndOf="@+id/tv_likes_count"
+            app:layout_constraintTop_toTopOf="@+id/tv_dislikes_count"
+            android:contentDescription="@string/thumbs_down_icon_button" />
+
+        <TextView
+            android:id="@+id/tv_dislikes_count"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            app:layout_constraintBottom_toTopOf="@+id/tv_statement"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_dislikes"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.9" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_close_dark_32dp"
+            app:fabSize="mini"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>

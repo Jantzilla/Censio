@@ -1,6 +1,8 @@
 package com.apps.creativesource.censio;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -10,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -136,7 +139,7 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
 
     @Override
     public void onListItemClicked(int clickedItemIndex, String profileUri, String username, String statement,
-                                  String interactionCount, int likes, int dislikes, int postTypeId, String id, String postFireUserId) {
+                                  String interactionCount, int likes, int dislikes, int postTypeId, String id, String postFireUserId, TextView statementTextView) {
 
 
         if(twoPane) {
@@ -181,7 +184,18 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
             detailIntent.putExtra("firestoreId", id);
             detailIntent.putExtra("postFireUserId", postFireUserId);
             detailIntent.putExtra("userPost", false);
-            startActivity(detailIntent);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+                Bundle bundle = ActivityOptions
+                        .makeSceneTransitionAnimation(getActivity(), statementTextView,
+                                statementTextView.getTransitionName())
+                        .toBundle();
+
+                startActivity(detailIntent, bundle);
+
+            } else
+                startActivity(detailIntent);
         }
     }
 }
