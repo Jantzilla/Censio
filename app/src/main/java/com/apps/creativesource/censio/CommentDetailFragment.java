@@ -221,21 +221,6 @@ public class CommentDetailFragment extends Fragment {
 
                     }
                 });
-//                .get() //TODO: REMOVE COMMENT
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                Comment comment = document.toObject(Comment.class);
-//                                commentArrayList.add(comment);
-//
-//                            }
-//                            loadAdapter(commentArrayList);
-//                        }
-//                    }
-//                });
     }
 
     private void newCommentListener() {
@@ -281,23 +266,6 @@ public class CommentDetailFragment extends Fragment {
 
                                     }
                                 });
-//                                .get()
-//                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                                        ArrayList<Comment> newComments = new ArrayList<>();
-//
-//                                        if (task.isSuccessful()) {
-//                                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                                Comment comment = document.toObject(Comment.class);
-//                                                newComments.add(comment);
-//
-//                                            }
-//                                            adapter.swapList(newComments);
-//                                            commentRecyclerView.smoothScrollToPosition(adapter.getItemCount());
-//                                        }
-//                                    }
-//                                });
 
                     }
 
@@ -311,41 +279,6 @@ public class CommentDetailFragment extends Fragment {
             }
         });
 
-//        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() { TODO: REMOVE COMMENT
-//            @Override
-//            public void onEvent(@Nullable DocumentSnapshot snapshot,
-//                                @Nullable FirebaseFirestoreException e) {
-//                if (e != null) {
-//                    return;
-//                }
-//
-//                if (snapshot != null && snapshot.exists()) {
-//                    if(snapshot.getLong("interactionCount") > adapter.getItemCount()) {
-//
-//                        docRef.collection("comments")
-//                                .whereGreaterThan("timestamp", adapter.lastTimestamp)
-//                                .get()
-//                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                                        ArrayList<Comment> newComments = new ArrayList<>();
-//
-//                                        if (task.isSuccessful()) {
-//                                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                                Comment comment = document.toObject(Comment.class);
-//                                                newComments.add(comment);
-//
-//                                            }
-//                                            adapter.swapList(newComments);
-//                                            commentRecyclerView.smoothScrollToPosition(adapter.getItemCount());
-//                                        }
-//                                    }
-//                                });
-//                    }
-//                } else {
-//                }
-//            }
-//        });
     }
 
     private void getAllInteraction() {
@@ -388,39 +321,6 @@ public class CommentDetailFragment extends Fragment {
                     }
                 });
 
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//
-//                        if (task.isSuccessful()) {
-//
-//                            DocumentSnapshot document = task.getResult();
-//
-//                            if(document.exists()) {
-//
-//                                switch (String.valueOf(document.get("like"))) {
-//                                    case "-1":
-//                                        dislikesImageView.setImageResource(R.drawable.ic_thumb_down_accent_28dp);
-//                                        likeCode = -1;
-//                                        break;
-//                                    case "1":
-//                                        likesImageView.setImageResource(R.drawable.ic_thumb_up_accent_28dp);
-//                                        likeCode = 1;
-//                                        break;
-//                                    default:
-//                                        break;
-//                                }
-//
-//                                    if (document.getBoolean("comment"))
-//                                    interactionImageView.setImageResource(R.drawable.ic_comment_accent_28dp);
-//
-//                            }
-//
-//                        }
-//
-//                    }
-//                });
 
     }
 
@@ -473,42 +373,6 @@ public class CommentDetailFragment extends Fragment {
                     }
                 });
 
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                        if(task.isSuccessful()) {
-//                            DocumentSnapshot document = task.getResult();
-//
-//                            if(!document.exists()) {
-//
-//                                realtimeRef.collection("users")
-//                                        .document(sharedPreferences.getString("userFireId", ""))
-//                                        .collection("postInteractions")
-//                                        .document(postId)
-//                                        .set(setInteractions)
-//                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                            @Override
-//                                            public void onComplete(@NonNull Task<Void> task) {
-//
-//                                                if(type.equals("comment"))
-//                                                    addComment();
-//                                                else
-//                                                    likeInteraction(i1,i2);
-//                                            }
-//                                        });
-//
-//                            } else {
-//
-//                                if(type.equals("comment"))
-//                                    addComment();
-//                                else
-//                                    likeInteraction(i1,i2);
-//
-//                            }
-//                        }
-//                    }
-//                });
     }
 
 
@@ -536,10 +400,6 @@ public class CommentDetailFragment extends Fragment {
                     .child(sharedPreferences.getString("userFireId", ""))
                     .child("postInteractions")
                     .child(postId);
-
-
-//            DatabaseReference userRef = realtimeRef.child("users")      //TODO: IF BELOW WORKS
-//                    .child(sharedPreferences.getString("userFireId", ""));
 
 
             DatabaseReference posterRef = realtimeRef.child("users")
@@ -604,48 +464,6 @@ public class CommentDetailFragment extends Fragment {
                         }
                     });
 
-//            userInteractRef TODO: Remove if above is working
-//                    .get()
-//                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                            if(task.isSuccessful()) {
-//
-//                                interactionCountTextView.setText(String.valueOf(Integer.valueOf(interactionCountTextView.getText().toString()) + 1));
-//                                interactionImageView.setImageResource(R.drawable.ic_comment_accent_28dp);
-//
-//                                realtimeRef.runTransaction(new Transaction.Function<Void>() {
-//                                    @Override
-//                                    public Void apply(Transaction transaction) throws FirebaseFirestoreException {
-//
-//                                        DocumentSnapshot snapshot1 = transaction.get(postInteractionRef);
-//                                        DocumentSnapshot snapshot2 = transaction.get(posterRef);
-//
-//                                        int newPostInteract = (int) (snapshot1.getLong("interactionCount") + 1);
-//                                        int newPosterInteract = (int) (snapshot2.getLong("comments") + 1);
-//                                        transaction.update(posterRef, "comments", newPosterInteract);
-//                                        transaction.update(postInteractionRef, "interactionCount", newPostInteract);
-//                                        transaction.update(userInteractRef, "comment", true);
-//                                        transaction.set(commentRef, comments);
-//
-//                                        return null;
-//                                    }
-//                                }).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                    @Override
-//                                    public void onSuccess(Void aVoid) {
-//
-//                                    }
-//                                })
-//                                        .addOnFailureListener(new OnFailureListener() {
-//                                            @Override
-//                                            public void onFailure(@NonNull Exception e) {
-//
-//                                            }
-//                                        });
-//
-//                            }
-//                        }
-//                    });
 
         }
     }
@@ -780,48 +598,6 @@ public class CommentDetailFragment extends Fragment {
                     }
                 });
 
-//        userInteractRef
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                        if(task.isSuccessful()) {
-//
-//                            realtimeRef.runTransaction(new Transaction.Function<Void>() {
-//                                @Override
-//                                public Void apply(Transaction transaction) throws FirebaseFirestoreException {
-//                                    DocumentSnapshot snapshot1 = transaction.get(userRef);
-//                                    DocumentSnapshot snapshot2 = transaction.get(postInteractionRef);
-//
-//                                    int newUserLikes = (int) (snapshot1.getLong("likes") + like);
-//                                    int newUserDislikes = (int) (snapshot1.getLong("dislikes") + dislike);
-//                                    transaction.update(userRef, "likes", newUserLikes);
-//                                    transaction.update(userRef, "dislikes", newUserDislikes);
-//
-//
-//                                    transaction.update(userInteractRef, "like", likeCode);
-//
-//                                    int newPostLikes = (int) (snapshot2.getLong("likes") + like);
-//                                    int newPostDislikes = (int) (snapshot2.getLong("dislikes") + dislike);
-//                                    transaction.update(postInteractionRef, "likes", newPostLikes);
-//                                    transaction.update(postInteractionRef, "dislikes", newPostDislikes);
-//
-//                                    return null;
-//                                }
-//                            }).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                @Override
-//                                public void onSuccess(Void aVoid) {
-//                                }
-//                            })
-//                                    .addOnFailureListener(new OnFailureListener() {
-//                                        @Override
-//                                        public void onFailure(@NonNull Exception e) {
-//                                        }
-//                                    });
-//
-//                        }
-//                    }
-//                });
 
     }
 

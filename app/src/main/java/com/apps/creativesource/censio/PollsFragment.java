@@ -109,22 +109,6 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
 
                     }
                 });
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                Post post = document.toObject(Post.class);
-//                                post.firestoreId = document.getId();
-//                                postArrayList.add(post);
-//
-//                            }
-//                            loadAdapter(postArrayList);
-//                        }
-//                    }
-//                });
     }
 
     public void loadAdapter(ArrayList<Post> postArrayList) {

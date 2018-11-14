@@ -80,15 +80,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                     }
                 });
 
-//                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() { TODO: Remove Comment
-//            @Override
-//            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                profileUri = documentSnapshot.getString("profileUri");
-//                Glide.with(context).load(profileUri).into(commentViewHolder.profileImageView);
-//                commentViewHolder.usernameTextView.setText(documentSnapshot.getString("name"));
-//            }
-//        });
-
         commentViewHolder.commentTextView.setText(comment);
 
     }

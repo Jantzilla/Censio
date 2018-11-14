@@ -97,21 +97,6 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
                     }
                 });
 
-//        get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//            @Override
-//            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                pollsViewHolder.postFireUserId = documentSnapshot.getId();
-//                profileUri = documentSnapshot.getString("profileUri");
-//                Glide.with(context).load(profileUri).into(pollsViewHolder.profileImageView);
-//                pollsViewHolder.profileTextView.setText(documentSnapshot.getString("name"));
-//
-//                if(twoPane && i == 0 && !(postArrayList.get(i).author.equals(auth.getUid()))) {
-//                    pollsViewHolder.itemView.performClick();
-//                }
-//
-//            }
-//        });
-
         pollsViewHolder.statementTextView.setText(pollsViewHolder.postTitle);
         pollsViewHolder.interactionTextView.setText(String.valueOf(pollsViewHolder.interactionCount));
         pollsViewHolder.itemView.setTag(pollsViewHolder.postFireId);

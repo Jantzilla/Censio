@@ -97,29 +97,6 @@ public class UserInfoWidget extends AppWidgetProvider {
 
                         }
                     });
-//                    .get()   TODO: Remove code if above is working
-//                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                            if(task.isSuccessful()) {
-//                                for(QueryDocumentSnapshot document : task.getResult()) {
-//                                    views.setTextViewText(R.id.tv_likes_count,String.valueOf(document.getLong("likes")));
-//                                    views.setTextViewText(R.id.tv_dislikes_count, String.valueOf(document.getLong("dislikes")));
-//                                    views.setTextViewText(R.id.tv_votes_count, String.valueOf(document.getLong("votes")));
-//                                    views.setTextViewText(R.id.tv_comments_count, String.valueOf(document.getLong("comments")));
-//
-//                                    views.setViewVisibility(R.id.tv_no_active_user, View.GONE);
-//                                    views.setViewVisibility(R.id.pb_widget, View.GONE);
-//                                    views.setViewVisibility(R.id.ll_image, View.VISIBLE);
-//                                    views.setViewVisibility(R.id.tv_username, View.VISIBLE);
-//                                    views.setViewVisibility(R.id.ll_data, View.VISIBLE);
-//
-//                                    appWidgetManager.updateAppWidget(appWidgetId, views);
-//
-//                                }
-//                            }
-//                        }
-//                    });
 
         } else {
 

@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
 //                                    }
 //                                });
 
-//                                        AuthUI.getInstance()              //              TODO: reauthenticate user to delete
+//                                        AuthUI.getInstance()
 //                        .delete(MainActivity.this)
 //                        .addOnCompleteListener(new OnCompleteListener<Void>() {
 //                            @Override
@@ -239,8 +239,6 @@ public class MainActivity extends AppCompatActivity {
 
     private Task<String> mintAdminToken (String uid) {
 
-//        Map<String, String> data = new HashMap<>();
-//        data.put("uid", uid);
 
         return functions
                 .getHttpsCallable("mintAdminToken")

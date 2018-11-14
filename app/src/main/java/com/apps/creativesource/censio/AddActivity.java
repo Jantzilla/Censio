@@ -140,63 +140,6 @@ public class AddActivity extends AppCompatActivity {
         }
     }
 
-//    private void addNewPost(String statement) {
-//
-//        Map<String, Object> posts = new HashMap<>();
-//        posts.put("author", Objects.requireNonNull(auth.getUid()));
-//        posts.put("statement", statement);
-//        posts.put("postTypeId", postTypeId);
-//        posts.put("likes", 0);
-//        posts.put("dislikes", 0);
-//        posts.put("interactionCount", 0);
-//        posts.put("userRef", sharedPreferences.getString("userFireId", ""));
-//        posts.put("timestamp", System.currentTimeMillis());
-//
-//        realtimeRef.child("posts")
-//                .add(posts)
-//                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                    @Override
-//                    public void onSuccess(DocumentReference documentReference) {
-//                        if(getPostTypeId() == R.drawable.ic_touch_app_primary_28dp) {
-//
-//                            choices.addAll(clickListener.myAction());
-//                            WriteBatch batch = realtimeRef.batch();
-//
-//                            for(int i = 0; i < choices.size(); i++) {
-//                                DocumentReference choiceRef = realtimeRef.collection("posts").document(documentReference.getId())
-//                                        .collection("choices")
-//                                        .document(String.valueOf(System.nanoTime()));
-//
-//
-//                                Map<String, Object> choice = new HashMap<>();
-//                                choice.put("title", choices.get(i));
-//                                choice.put("count", 0);
-//
-//                                batch.set(choiceRef, choice);
-//                            }
-//
-//                            batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<Void> task) {
-//
-//                                }
-//                            })
-//                                    .addOnFailureListener(new OnFailureListener() {
-//                                        @Override
-//                                        public void onFailure(@NonNull Exception e) {
-//
-//                                        }
-//                                    });
-//                        }
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                    }
-//                });
-//    }
-
     private void addNewPost(String statement){
 
         Long postId = System.nanoTime();
