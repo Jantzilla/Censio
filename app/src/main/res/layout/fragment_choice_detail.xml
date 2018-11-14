@@ -8,18 +8,25 @@
 
     <include layout="@layout/activity_detail_include"/>
 
-    <worker8.com.github.radiogroupplus.RadioGroupPlus
-        android:id="@+id/rg_choices"
-        android:layout_width="0dp"
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:fillViewport="true">
+
+    <worker8.com.github.radiogroupplus.RadioGroupPlus
+        android:id="@+id/rg_choices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
         android:background="@color/colorPrimary">
 
     </worker8.com.github.radiogroupplus.RadioGroupPlus>
+
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
