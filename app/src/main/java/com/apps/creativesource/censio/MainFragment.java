@@ -73,19 +73,27 @@ public class MainFragment extends Fragment {
             assert firebaseUser != null;
             for (UserInfo profile : firebaseUser.getProviderData()) {
 
-                String name = profile.getDisplayName();
-                if(name.split("\\w+").length>1){
+                if(!profile.getDisplayName().isEmpty()) {
 
-                    lastNameTextView.setText(name.substring(name.lastIndexOf(" ")+1));
-                    firstNameTextView.setText(name.substring(0, name.lastIndexOf(' ')));
-                }
-                else{
-                    firstNameTextView.setText(name);
+                    String name = profile.getDisplayName();
+                    if(name.split("\\w+").length>1){
+
+                        lastNameTextView.setText(name.substring(name.lastIndexOf(" ")+1));
+                        firstNameTextView.setText(name.substring(0, name.lastIndexOf(' ')));
+                    }
+                    else{
+                        firstNameTextView.setText(name);
+                    }
+
                 }
 
-                profileUri = Uri.parse(profile.getPhotoUrl().toString());
+                if(profile.getPhotoUrl() != null) {
+
+                    profileUri = Uri.parse(profile.getPhotoUrl().toString());
+                    Glide.with(this).load(profileUri.toString()).into(profileImageView);
+
+                }
             }
-            Glide.with(this).load(profileUri.toString()).into(profileImageView);
 
         }
 

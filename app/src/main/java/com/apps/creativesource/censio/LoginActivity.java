@@ -163,13 +163,23 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+                        String photoUrl;
+
+                        if(auth.getCurrentUser().getPhotoUrl() != null) {
+
+                            photoUrl = auth.getCurrentUser().getPhotoUrl().toString();
+
+                        } else
+                            photoUrl = null;
+
                         if(!dataSnapshot.exists()) {
 
-                            createNewUser(auth.getUid(),auth.getCurrentUser().getDisplayName(),auth.getCurrentUser().getPhotoUrl().toString(),token);
+                            createNewUser(auth.getUid(),auth.getCurrentUser().getDisplayName(),photoUrl,token);
+
 
                             editor.putString("userFireId",auth.getUid());
                             editor.putString("name", auth.getCurrentUser().getDisplayName());
-                            editor.putString("profileUri", auth.getCurrentUser().getPhotoUrl().toString());
+                            editor.putString("profileUri", photoUrl);
                             editor.apply();
 
                             progressBar.setVisibility(View.GONE);
@@ -180,7 +190,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             editor.putString("userFireId",auth.getUid());
                             editor.putString("name", auth.getCurrentUser().getDisplayName());
-                            editor.putString("profileUri", auth.getCurrentUser().getPhotoUrl().toString());
+                            editor.putString("profileUri", photoUrl);
                             editor.apply();
 
                             toMainActivity();
