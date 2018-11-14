@@ -45,26 +45,30 @@ public class UserInfoWidget extends AppWidgetProvider {
 
             realtimeRef = FirebaseDatabase.getInstance().getReference();
 
-            Uri profileUri = Uri.parse(auth.getCurrentUser().getPhotoUrl().toString());
-
             views.setTextViewText(R.id.tv_username, auth.getCurrentUser().getDisplayName());
 
-            AppWidgetTarget awt = new AppWidgetTarget(context, R.id.iv_profile, views, appWidgetId) {
-                @Override
-                public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                    super.onResourceReady(resource, transition);
-                }
-            };
+            if(auth.getCurrentUser().getPhotoUrl() != null) {
 
-            RequestOptions options = new RequestOptions().
-                    override(300, 300).placeholder(R.drawable.ic_person_gray_100dp).error(R.drawable.ic_person_gray_100dp);
+                Uri profileUri = Uri.parse(auth.getCurrentUser().getPhotoUrl().toString());
+
+                AppWidgetTarget awt = new AppWidgetTarget(context, R.id.iv_profile, views, appWidgetId) {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        super.onResourceReady(resource, transition);
+                    }
+                };
+
+                RequestOptions options = new RequestOptions().
+                        override(300, 300).placeholder(R.drawable.ic_person_gray_100dp).error(R.drawable.ic_person_gray_100dp);
 
 
-            Glide.with(context.getApplicationContext())
-                    .asBitmap()
-                    .load(profileUri)
-                    .apply(options)
-                    .into(awt);
+                Glide.with(context.getApplicationContext())
+                        .asBitmap()
+                        .load(profileUri)
+                        .apply(options)
+                        .into(awt);
+
+            }
 
             realtimeRef.child("users")
                     .child(auth.getUid())

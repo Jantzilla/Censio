@@ -1,6 +1,6 @@
 package com.apps.creativesource.censio;
 
 class Choice {
-    int count;
-    String title = "";
+    public int count;
+    public String title = "";
 }
