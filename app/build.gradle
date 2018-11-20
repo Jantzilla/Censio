@@ -7,7 +7,7 @@ android {
         releaseConfig {
             keyAlias 'UdacityKey'
             keyPassword 'abcd1234'
-            storeFile file('/UdacityReleaseKey.jks')
+            storeFile file('./UdacityReleaseKey.jks')
             storePassword 'abcd1234'
         }
     }
