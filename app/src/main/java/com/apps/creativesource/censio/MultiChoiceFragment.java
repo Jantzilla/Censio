@@ -18,8 +18,6 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
     private RecyclerView multiChoiceList;
     private FloatingActionButton fab;
 
-    public MultiChoiceFragment() {}
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

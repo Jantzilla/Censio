@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
 
-//                        mintAdminToken(auth.getUid())
+//                        mintAdminToken(auth.getUid())      TODO: CREATE USER DELETION
 //                                .addOnCompleteListener(new OnCompleteListener<String>() {
 //                                    @Override
 //                                    public void onComplete(@NonNull Task<String> task) {

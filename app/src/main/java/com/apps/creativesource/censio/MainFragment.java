@@ -44,8 +44,6 @@ public class MainFragment extends Fragment {
 
     private DatabaseReference realtimeRef;
 
-    public MainFragment() {}
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

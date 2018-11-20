@@ -8,9 +8,6 @@ import android.view.ViewGroup;
 
 public class CommentFragment extends Fragment {
 
-    public CommentFragment() {
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

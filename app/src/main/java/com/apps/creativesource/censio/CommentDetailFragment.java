@@ -69,10 +69,6 @@ public class CommentDetailFragment extends Fragment {
 
     private InterstitialAd interstitialAd;
 
-    public CommentDetailFragment() {
-
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_comment_detail, container, false);
@@ -381,7 +377,6 @@ public class CommentDetailFragment extends Fragment {
 
         if (interstitialAd.isLoaded()) {
             interstitialAd.show();
-        } else {
         }
 
         commentEntry = commentEditText.getText().toString();

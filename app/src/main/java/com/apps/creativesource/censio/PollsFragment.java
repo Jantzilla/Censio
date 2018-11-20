@@ -37,8 +37,6 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
     private DatabaseReference realtimeRef;
     private FirebaseAuth auth;
 
-    public PollsFragment() {}
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

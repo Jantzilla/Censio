@@ -60,10 +60,6 @@ public class ChoiceDetailFragment extends Fragment {
     private boolean userPost;
     private InterstitialAd interstitialAd;
 
-    public ChoiceDetailFragment() {
-
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -178,7 +174,7 @@ public class ChoiceDetailFragment extends Fragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            Choice choice = snapshot.getValue(Choice.class);          //TODO: CREATE OBJECT
+                            Choice choice = snapshot.getValue(Choice.class);
                             createRadioButton(choice, snapshot.getRef());
                         }
                     }
@@ -364,7 +360,6 @@ public class ChoiceDetailFragment extends Fragment {
 
         if (interstitialAd.isLoaded()) {
             interstitialAd.show();
-        } else {
         }
 
         realtimeRef.child("users")
@@ -390,7 +385,6 @@ public class ChoiceDetailFragment extends Fragment {
                                             if(dataSnapshot.exists()) {
 
                                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                                    Choice choice = snapshot.getValue(Choice.class);
 
                                                     DatabaseReference choiceCountRef = realtimeRef.child("posts")
                                                             .child(postId)
@@ -452,7 +446,6 @@ public class ChoiceDetailFragment extends Fragment {
                         if(dataSnapshot.exists()) {
 
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                Choice choice = snapshot.getValue(Choice.class);
 
                                 DatabaseReference choiceCountRef = realtimeRef.child("posts")
                                         .child(postId)

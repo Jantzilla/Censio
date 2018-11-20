@@ -73,7 +73,7 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
         documentReference.
                 addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {    //TODO: User Object
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                         if(dataSnapshot.exists()) {
                             User user = dataSnapshot.getValue(User.class);
