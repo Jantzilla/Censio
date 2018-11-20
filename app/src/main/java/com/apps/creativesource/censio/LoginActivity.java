@@ -125,10 +125,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean isUserLogin() {
-        if(auth.getCurrentUser() != null) {
-            return true;
-        }
-        return false;
+        return auth.getCurrentUser() != null;
     }
 
     private void toMainActivity() {
