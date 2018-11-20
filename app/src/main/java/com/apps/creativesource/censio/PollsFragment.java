@@ -38,12 +38,6 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
     private FirebaseAuth auth;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         getAllPosts();
