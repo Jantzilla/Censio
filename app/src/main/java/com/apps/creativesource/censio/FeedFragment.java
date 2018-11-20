@@ -39,11 +39,6 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
     private boolean twoPane = false;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         getAllPosts();
