@@ -117,7 +117,6 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("AuthToken", idpResponse.getIdpToken());
                 loginUser();
             } if(resultCode == RESULT_CANCELED) {
-                Toast.makeText(this,getString(R.string.login_cancelled), Toast.LENGTH_LONG).show();
             }
             return;
         }
