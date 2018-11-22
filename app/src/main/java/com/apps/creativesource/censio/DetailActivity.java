@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,6 +26,14 @@ public class DetailActivity extends AppCompatActivity {
     private String postId;
     private DatabaseReference realtimeRef;
     private boolean twoPane;
+    private String profileUri;
+    private String username;
+    private String statement;
+    private String interactionCount;
+    private int likes;
+    private int dislikes;
+    private int postTypeId;
+    private String postFireUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +63,15 @@ public class DetailActivity extends AppCompatActivity {
         postId = initialIntent.getStringExtra("firestoreId");
         twoPane = initialIntent.getBooleanExtra("twoPane", false);
 
+        profileUri = initialIntent.getStringExtra("profileUri");
+        username = initialIntent.getStringExtra("username");
+        statement = initialIntent.getStringExtra("statement");
+        interactionCount = initialIntent.getStringExtra("interactionCount");
+        likes = initialIntent.getIntExtra("firestoreId", 0);
+        dislikes = initialIntent.getIntExtra("twoPane", 0);
+        postTypeId = initialIntent.getIntExtra("userPost", 0);
+        postFireUserId = initialIntent.getStringExtra("firestoreId");
+
 
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -63,9 +81,25 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && twoPane) {
+        View view = getLayoutInflater().inflate(R.layout.activity_main, null);
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && view.findViewById(R.id.detail_container) != null) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+            finish();
+        } else {
+            Intent detailIntent = new Intent(this, DetailActivity.class);
+            detailIntent.putExtra("profileUri", profileUri);
+            detailIntent.putExtra("username", username);
+            detailIntent.putExtra("statement", statement);
+            detailIntent.putExtra("interactionCount", interactionCount);
+            detailIntent.putExtra("likes", likes);
+            detailIntent.putExtra("dislikes", dislikes);
+            detailIntent.putExtra("postTypeId", postTypeId);
+            detailIntent.putExtra("firestoreId", postId);
+            detailIntent.putExtra("postFireUserId", postFireUserId);
+            detailIntent.putExtra("userPost", userPost);
+            detailIntent.putExtra("twoPane", twoPane);
+            startActivity(detailIntent);
             finish();
         }
     }
