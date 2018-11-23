@@ -51,7 +51,7 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
 
         fragmentManager = getActivity().getSupportFragmentManager();
 
-        if(getActivity().findViewById(R.id.detail_container) != null) {
+        if(getActivity().findViewById(R.id.detail_container) != null) {  //Todo: Might not be working.
             twoPane = true;
         }
 
