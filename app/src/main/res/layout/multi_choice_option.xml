@@ -7,16 +7,17 @@
 
     <ImageView
         android:id="@+id/iv_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/et_multi_choice"
+        android:contentDescription="@string/delete_focused_choice_field"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/et_multi_choice"
         app:layout_constraintTop_toTopOf="@+id/et_multi_choice"
-        app:srcCompat="@android:drawable/ic_notification_clear_all"
-        android:contentDescription="@string/delete_focused_choice_field" />
+        android:src="@drawable/multi_choice_delete_icon" />
 
     <EditText
         android:id="@+id/et_multi_choice"
