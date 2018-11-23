@@ -262,6 +262,30 @@ public class CommentDetailFragment extends Fragment {
 
     private void getAllInteraction() {
 
+
+        realtimeRef.child("posts")
+                .child(postId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        if(dataSnapshot.exists()) {
+
+                            Post post = dataSnapshot.getValue(Post.class);
+
+                            dislikesCountTextView.setText(String.valueOf(post.dislikes));
+                            likesCountTextView.setText(String.valueOf(post.likes));
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
         realtimeRef.child("users")
                 .child(sharedPreferences.getString("userFireId", ""))
                 .child("postInteractions")
