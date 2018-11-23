@@ -52,7 +52,6 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
     @Override
     public void onListItemClick(int clickedItemIndex) {
         if(optionCount > 2) {
-            Toast.makeText(getContext(), "option # " + clickedItemIndex, Toast.LENGTH_LONG).show();
             MultiChoiceAdapter adapter2 = new MultiChoiceAdapter(optionCount -= 1, MultiChoiceFragment.this);
             multiChoiceList.swapAdapter(adapter2, true);
         }
