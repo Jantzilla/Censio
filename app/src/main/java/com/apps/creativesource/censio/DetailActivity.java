@@ -67,9 +67,9 @@ public class DetailActivity extends AppCompatActivity {
         username = initialIntent.getStringExtra("username");
         statement = initialIntent.getStringExtra("statement");
         interactionCount = initialIntent.getStringExtra("interactionCount");
-        likes = initialIntent.getIntExtra("firestoreId", 0);
-        dislikes = initialIntent.getIntExtra("twoPane", 0);
-        postTypeId = initialIntent.getIntExtra("userPost", 0);
+        likes = initialIntent.getIntExtra("likes", 0);
+        dislikes = initialIntent.getIntExtra("dislikes", 0);
+        postTypeId = initialIntent.getIntExtra("postTypeId", 0);
         postFireUserId = initialIntent.getStringExtra("firestoreId");
 
 
