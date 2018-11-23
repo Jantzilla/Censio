@@ -15,6 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -37,6 +41,7 @@ public class AddActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private int postTypeId;
     private PublishClickListener clickListener;
+    private InterstitialAd interstitialAd;
 
     public interface PublishClickListener {
         ArrayList<String> myAction();
@@ -92,6 +97,20 @@ public class AddActivity extends AppCompatActivity {
         viewPager.setAdapter(tabAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
+        MobileAds.initialize(this, getString(R.string.app_id_test_mob));
+
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getString(R.string.ad_id_test_mob));
+        interstitialAd.loadAd(new AdRequest.Builder().build());
+
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                interstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+
+        });
+
         publishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,6 +126,10 @@ public class AddActivity extends AppCompatActivity {
                         Intent returnIntent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(returnIntent);
                         finish();
+
+                        if (interstitialAd.isLoaded()) {
+                            interstitialAd.show();
+                        }
 
                     }
                 }

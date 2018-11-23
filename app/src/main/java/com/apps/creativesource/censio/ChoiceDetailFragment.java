@@ -58,26 +58,11 @@ public class ChoiceDetailFragment extends Fragment {
     private String chosenRadioButton;
     private int likeCode = 0;
     private boolean userPost;
-    private InterstitialAd interstitialAd;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_choice_detail, container, false);
-
-        MobileAds.initialize(getContext(), getString(R.string.app_id_test_mob));
-
-        interstitialAd = new InterstitialAd(getContext());
-        interstitialAd.setAdUnitId(getString(R.string.ad_id_test_mob));
-        interstitialAd.loadAd(new AdRequest.Builder().build());
-
-        interstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                interstitialAd.loadAd(new AdRequest.Builder().build());
-            }
-
-        });
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
@@ -357,10 +342,6 @@ public class ChoiceDetailFragment extends Fragment {
     }
 
     private void makechoice() {
-
-        if (interstitialAd.isLoaded()) {
-            interstitialAd.show();
-        }
 
         realtimeRef.child("users")
                 .child(sharedPreferences.getString("userFireId", ""))

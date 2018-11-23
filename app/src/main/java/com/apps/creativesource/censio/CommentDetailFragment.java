@@ -67,26 +67,9 @@ public class CommentDetailFragment extends Fragment {
     private String postUserId;
     private boolean userPost;
 
-    private InterstitialAd interstitialAd;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_comment_detail, container, false);
-
-
-        MobileAds.initialize(getContext(), getString(R.string.app_id_test_mob));
-
-        interstitialAd = new InterstitialAd(getContext());
-        interstitialAd.setAdUnitId(getString(R.string.ad_id_test_mob));
-        interstitialAd.loadAd(new AdRequest.Builder().build());
-
-        interstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                interstitialAd.loadAd(new AdRequest.Builder().build());
-            }
-
-        });
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
@@ -374,10 +357,6 @@ public class CommentDetailFragment extends Fragment {
 
 
     public void addComment() {
-
-        if (interstitialAd.isLoaded()) {
-            interstitialAd.show();
-        }
 
         commentEntry = commentEditText.getText().toString();
 
