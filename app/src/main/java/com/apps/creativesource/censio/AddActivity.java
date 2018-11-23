@@ -175,7 +175,7 @@ public class AddActivity extends AppCompatActivity {
         posts.put("dislikes", 0);
         posts.put("interactionCount", 0);
         posts.put("userRef", sharedPreferences.getString("userFireId", ""));
-        posts.put("timestamp", System.currentTimeMillis());
+        posts.put("timestamp", System.currentTimeMillis() * -1);
 
         realtimeRef.child("posts").child(String.valueOf(postId)).setValue(posts)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

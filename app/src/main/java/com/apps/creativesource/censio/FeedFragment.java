@@ -76,6 +76,7 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
         ArrayList<Post> postArrayList = new ArrayList<>();
 
         realtimeRef.child("posts")
+                .orderByChild("timestamp")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

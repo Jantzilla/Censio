@@ -77,8 +77,7 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
         ArrayList<Post> postArrayList = new ArrayList<>();
 
         realtimeRef.child("posts")
-                .orderByChild("author")
-                .equalTo(auth.getUid())
+                .orderByChild("timestamp")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -88,7 +87,8 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 Post post = snapshot.getValue(Post.class);
                                 post.firestoreId = snapshot.getKey();
-                                postArrayList.add(post);
+                                if(post.author.equals(auth.getUid()))
+                                    postArrayList.add(post);
 
                             }
                             loadAdapter(postArrayList);
