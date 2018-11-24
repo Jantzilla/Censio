@@ -342,7 +342,7 @@ public class CommentDetailFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        if(dataSnapshot.exists()) {
+                        if(!dataSnapshot.exists()) {
 
                             realtimeRef.child("users")
                                     .child(sharedPreferences.getString("userFireId", ""))
