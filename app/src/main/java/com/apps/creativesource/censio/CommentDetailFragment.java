@@ -190,8 +190,9 @@ public class CommentDetailFragment extends Fragment {
                                 commentArrayList.add(comment);
                             }
 
-                            loadAdapter(commentArrayList);
                         }
+
+                        loadAdapter(commentArrayList);
 
                     }
 
