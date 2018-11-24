@@ -23,6 +23,15 @@
         app:layout_constraintEnd_toEndOf="@id/tv_comment"
         app:layout_constraintTop_toTopOf="@+id/tv_username" />
 
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/comment_background"
+        app:layout_constraintBottom_toBottomOf="@id/tv_comment"
+        app:layout_constraintStart_toStartOf="@+id/tv_username"
+        app:layout_constraintEnd_toEndOf="@id/tv_username"
+        app:layout_constraintTop_toTopOf="@+id/tv_username" />
+
     <TextView
         android:id="@+id/tv_comment"
         android:layout_width="0dp"
