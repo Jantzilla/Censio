@@ -276,6 +276,7 @@ public class CommentDetailFragment extends Fragment {
 
                             dislikesCountTextView.setText(String.valueOf(post.dislikes));
                             likesCountTextView.setText(String.valueOf(post.likes));
+                            interactionCountTextView.setText(String.valueOf(post.interactionCount));
                         }
 
                     }
