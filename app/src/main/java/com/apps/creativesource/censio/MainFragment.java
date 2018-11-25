@@ -132,7 +132,7 @@ public class MainFragment extends Fragment {
     private void getInteractions() {
         realtimeRef.child("users")
                 .child(auth.getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
