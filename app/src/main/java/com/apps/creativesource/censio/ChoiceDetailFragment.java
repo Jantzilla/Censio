@@ -666,8 +666,11 @@ public class ChoiceDetailFragment extends Fragment {
             @Override
             public void onCheckedChanged(RadioGroupPlus radioGroupPlus, int i) {
                 RadioButton rb = radioGroupPlus.findViewById(i);
+
+                if(!rb.getText().toString().equals(chosenRadioButton))
+                    createPostInteractions(0,0,"choice");
+
                 chosenRadioButton = rb.getText().toString();
-                createPostInteractions(0,0,"choice");
             }
 
         });
