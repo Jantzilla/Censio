@@ -266,7 +266,7 @@ public class CommentDetailFragment extends Fragment {
 
         realtimeRef.child("posts")
                 .child(postId)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -292,7 +292,7 @@ public class CommentDetailFragment extends Fragment {
                 .child(sharedPreferences.getString("userFireId", ""))
                 .child("postInteractions")
                 .child(postId)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
