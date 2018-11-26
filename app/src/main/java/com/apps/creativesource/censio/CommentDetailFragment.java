@@ -601,11 +601,6 @@ public class CommentDetailFragment extends Fragment {
 
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
     private void deletePost() {
 
         DatabaseReference docRef = realtimeRef.child("posts")
