@@ -638,24 +638,40 @@ public class ChoiceDetailFragment extends Fragment {
         if(constraintLayout.getParent()!=null)
             ((ViewGroup)constraintLayout.getParent()).removeView(constraintLayout);
 
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        realtimeRef.child("posts")
+                .child(postId)
+                .child("choices")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if(dataSnapshot.exists()) {
-                    Choice innerChoice = dataSnapshot.getValue(Choice.class);
+                        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    textView.setText(String.valueOf((int)(innerChoice.count / Float.valueOf(interactionCountTextView.getText().toString()) * 100)) + "%");
+                                if(dataSnapshot.exists()) {
+                                    Choice innerChoice = dataSnapshot.getValue(Choice.class);
 
-                }
+                                    textView.setText(String.valueOf((int)(innerChoice.count / Float.valueOf(interactionCountTextView.getText().toString()) * 100)) + "%");
 
-            }
+                                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                            }
 
-            }
-        });
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
 
         radioButton.setText(choice.title);
         radioButton.setId((int) System.currentTimeMillis());
