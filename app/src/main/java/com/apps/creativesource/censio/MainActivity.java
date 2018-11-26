@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private String id;
     private String postFireUserId;
     private boolean userPost;
+    public static int tabIndex = 0;
 
 
     @Override

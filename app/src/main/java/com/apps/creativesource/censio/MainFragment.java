@@ -119,6 +119,8 @@ public class MainFragment extends Fragment {
         viewPager.setAdapter(tabAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
+        viewPager.setCurrentItem(MainActivity.tabIndex);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,6 +132,17 @@ public class MainFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        MainActivity.tabIndex = viewPager.getCurrentItem();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        viewPager.setCurrentItem(MainActivity.tabIndex);
+    }
 
     private boolean isUserLogin() {
         if(auth.getCurrentUser() != null) {
