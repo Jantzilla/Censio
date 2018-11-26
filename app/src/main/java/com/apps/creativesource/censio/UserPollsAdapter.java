@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.PollsViewHolder> {
+    private boolean first;
     private ArrayList<Post> postArrayList = new ArrayList<>();
     private boolean twoPane;
     private Context context;
@@ -35,11 +36,12 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
     }
 
 
-    public UserPollsAdapter(Context context, ArrayList<Post> postArrayList, boolean twoPane, ListItemClickListener clickListener) {
+    public UserPollsAdapter(Context context, ArrayList<Post> postArrayList,boolean first, boolean twoPane, ListItemClickListener clickListener) {
         this.postArrayList.addAll(postArrayList);
         this.clickListener = clickListener;
         this.twoPane = twoPane;
         this.context = context;
+        this.first = first;
     }
 
     @NonNull
@@ -83,7 +85,7 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
                             Glide.with(context).load(profileUri).into(pollsViewHolder.profileImageView);
                             pollsViewHolder.profileTextView.setText(user.name);
 
-                            if(twoPane && i == 0 && !(postArrayList.get(i).author.equals(auth.getUid()))) {
+                            if(first && twoPane && i == 0 && !(postArrayList.get(i).author.equals(auth.getUid()))) {
                                 pollsViewHolder.itemView.performClick();
                             }
 

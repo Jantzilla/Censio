@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -41,6 +43,18 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private DatabaseReference realtimeRef;
+    private FragmentManager fragmentManager;
+    private Fragment fragment;
+    private String profileUri;
+    private String username;
+    private String statement;
+    private String interactionCount;
+    private int likes;
+    private int dislikes;
+    private int postTypeId;
+    private String id;
+    private String postFireUserId;
+    private boolean userPost;
 
 
     @Override
@@ -50,6 +64,51 @@ public class MainActivity extends AppCompatActivity {
         realtimeRef = FirebaseDatabase.getInstance().getReference();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
+
+        if(findViewById(R.id.detail_container) != null) {
+
+            Intent detailIntent = getIntent();
+
+            if(detailIntent.hasExtra("orientation")) {
+
+                profileUri = detailIntent.getStringExtra("profileUri");
+                username = detailIntent.getStringExtra("username");
+                statement = detailIntent.getStringExtra("statement");
+                interactionCount = detailIntent.getStringExtra("interactionCount");
+                likes = detailIntent.getIntExtra("likes", 0);
+                dislikes = detailIntent.getIntExtra("dislikes", 0);
+                postTypeId = detailIntent.getIntExtra("postTypeId", 0);
+                id = detailIntent.getStringExtra("firestoreId");
+                postFireUserId = detailIntent.getStringExtra("postFireUserId");
+                userPost = detailIntent.getBooleanExtra("userPost", false);
+
+                if (postTypeId == R.drawable.ic_touch_app_primary_28dp)
+                    fragment = new ChoiceDetailFragment();
+                else
+                    fragment = new CommentDetailFragment();
+
+                Bundle args = new Bundle();
+
+                args.putString("profileUri", profileUri);
+                args.putString("username", username);
+                args.putString("statement", statement);
+                args.putString("interactionCount", interactionCount);
+                args.putInt("likes", likes);
+                args.putInt("dislikes", dislikes);
+                args.putInt("postTypeId", postTypeId);
+                args.putString("firestoreId", id);
+                args.putString("postFireUserId", postFireUserId);
+                args.putBoolean("userPost", userPost);
+
+                fragment.setArguments(args);
+
+                fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.detail_container, fragment)
+                        .commit();
+            }
+        }
+
     }
 
     @Override

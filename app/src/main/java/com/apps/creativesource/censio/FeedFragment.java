@@ -37,6 +37,7 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
     private DatabaseReference realtimeRef;
 
     private boolean twoPane = false;
+    private boolean first = true;
 
     @Override
     public void onResume() {
@@ -57,6 +58,8 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
 
         realtimeRef = FirebaseDatabase.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
+
+        first = getArguments().getBoolean("first");
 
         pollsList = view.findViewById(R.id.rv_polls_feed);
         progressBar = view.findViewById(R.id.pb_polls_feed);
@@ -104,7 +107,7 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
 
     public void loadAdapter(ArrayList<Post> postArrayList) {
         if(!postArrayList.isEmpty()) {
-            adapter = new UserPollsAdapter(getActivity().getApplicationContext(), postArrayList,twoPane, FeedFragment.this);
+            adapter = new UserPollsAdapter(getActivity().getApplicationContext(), postArrayList, first, twoPane, FeedFragment.this);
             pollsList.setAdapter(adapter);
             pollsList.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
@@ -162,6 +165,7 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
             detailIntent.putExtra("postFireUserId", postFireUserId);
             detailIntent.putExtra("userPost", false);
             detailIntent.putExtra("twoPane", twoPane);
+            detailIntent.putExtra("portrait", true);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 

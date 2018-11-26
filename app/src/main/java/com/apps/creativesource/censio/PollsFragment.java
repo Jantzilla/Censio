@@ -36,6 +36,7 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
     private UserPollsAdapter adapter;
     private DatabaseReference realtimeRef;
     private FirebaseAuth auth;
+    private boolean first = true;
 
     @Override
     public void onResume() {
@@ -57,6 +58,8 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
 
         realtimeRef = FirebaseDatabase.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
+
+        first = getArguments().getBoolean("first");
 
         pollsList = view.findViewById(R.id.rv_user_polls);
         progressBar = view.findViewById(R.id.pb_user_polls);
@@ -105,7 +108,7 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
 
     public void loadAdapter(ArrayList<Post> postArrayList) {
         if(!postArrayList.isEmpty()) {
-            adapter = new UserPollsAdapter(getActivity().getApplicationContext(), postArrayList,twoPane, PollsFragment.this);
+            adapter = new UserPollsAdapter(getActivity().getApplicationContext(), postArrayList, first, twoPane, PollsFragment.this);
             pollsList.setAdapter(adapter);
             pollsList.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE );
@@ -163,6 +166,7 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
             detailIntent.putExtra("postFireUserId", postFireUserId);
             detailIntent.putExtra("userPost", true);
             detailIntent.putExtra("twoPane", twoPane);
+            detailIntent.putExtra("portrait", true);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 

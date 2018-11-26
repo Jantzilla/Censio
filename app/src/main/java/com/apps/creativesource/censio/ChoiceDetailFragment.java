@@ -82,7 +82,7 @@ public class ChoiceDetailFragment extends Fragment {
 
         Intent initialIntent = getActivity().getIntent();
 
-        if(initialIntent.hasExtra("statement")) {
+        if(initialIntent.hasExtra("portrait")) {
             Glide.with(this).load(initialIntent.getStringExtra("profileUri")).into(circleImageView);
             statementTextView.setText(initialIntent.getStringExtra("statement"));
             usernameTextView.setText(initialIntent.getStringExtra("username"));

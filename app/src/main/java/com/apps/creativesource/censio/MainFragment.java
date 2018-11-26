@@ -43,6 +43,7 @@ public class MainFragment extends Fragment {
     private FirebaseUser firebaseUser;
 
     private DatabaseReference realtimeRef;
+    private boolean first = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,6 +62,13 @@ public class MainFragment extends Fragment {
         commentsTextView = view.findViewById(R.id.tv_comments);
 
         realtimeRef = FirebaseDatabase.getInstance().getReference();
+
+        if(getActivity().getIntent().hasExtra("orientation")) {
+            first = false;
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("first", first);
 
         auth = FirebaseAuth.getInstance();
 
@@ -98,8 +106,15 @@ public class MainFragment extends Fragment {
         getInteractions();
 
         tabAdapter = new TabAdapter(getActivity().getSupportFragmentManager());
-        tabAdapter.addFragment(new FeedFragment(), getString(R.string.feed));
-        tabAdapter.addFragment(new PollsFragment(), getString(R.string.polls));
+
+        FeedFragment feedFragment = new FeedFragment();
+        feedFragment.setArguments(bundle);
+
+        PollsFragment pollsFragment = new PollsFragment();
+        pollsFragment.setArguments(bundle);
+
+        tabAdapter.addFragment(feedFragment, getString(R.string.feed));
+        tabAdapter.addFragment(pollsFragment, getString(R.string.polls));
 
         viewPager.setAdapter(tabAdapter);
         tabLayout.setupWithViewPager(viewPager);

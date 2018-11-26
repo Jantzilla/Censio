@@ -84,6 +84,17 @@ public class DetailActivity extends AppCompatActivity {
         View view = getLayoutInflater().inflate(R.layout.activity_main, null);
         if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && view.findViewById(R.id.detail_container) != null) {
             Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("profileUri", profileUri);
+            intent.putExtra("username", username);
+            intent.putExtra("statement", statement);
+            intent.putExtra("interactionCount", interactionCount);
+            intent.putExtra("likes", likes);
+            intent.putExtra("dislikes", dislikes);
+            intent.putExtra("postTypeId", postTypeId);
+            intent.putExtra("firestoreId", postId);
+            intent.putExtra("postFireUserId", postFireUserId);
+            intent.putExtra("userPost", userPost);
+            intent.putExtra("orientation", "twoPane");
             startActivity(intent);
             finish();
         } else {
