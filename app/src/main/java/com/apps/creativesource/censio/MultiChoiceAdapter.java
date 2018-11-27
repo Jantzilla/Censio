@@ -9,9 +9,12 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+
 public class MultiChoiceAdapter extends RecyclerView.Adapter<MultiChoiceAdapter.ChoiceViewHolder> {
-    private int itemCount;
+    public static int itemCount;
     private final ListItemClickListener onClickListener;
+    private ArrayList<String> options;
 
     public interface ListItemClickListener {
         void onListItemClick(int clickedItemIndex);
@@ -65,6 +68,8 @@ public class MultiChoiceAdapter extends RecyclerView.Adapter<MultiChoiceAdapter.
         public void onClick(View v) {
             int clickedPosition = getAdapterPosition();
             onClickListener.onListItemClick(clickedPosition);
+            multiChoiceEditText.setText("");
+            deleteImageView.setVisibility(View.GONE);
         }
 
         @Override
@@ -79,5 +84,9 @@ public class MultiChoiceAdapter extends RecyclerView.Adapter<MultiChoiceAdapter.
             }
 
         }
+    }
+
+    public void addOptionText(String string) {
+        options.add(string);
     }
 }

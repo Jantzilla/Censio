@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,14 +35,14 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
 
         adapter = new MultiChoiceAdapter(optionCount,this);
         multiChoiceList.setAdapter(adapter);
-        multiChoiceList.setItemViewCacheSize(6);
+//        multiChoiceList.setItemViewCacheSize(6);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(optionCount < 6) {
-                    adapter = new MultiChoiceAdapter(optionCount += 1, MultiChoiceFragment.this);
-                    multiChoiceList.swapAdapter(adapter, true);
+                if(adapter.itemCount < 6) {
+                    adapter.itemCount += 1;
+                    adapter.notifyItemInserted(adapter.itemCount);
                 }
             }
         });
@@ -51,9 +52,19 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
-        if(optionCount > 2) {
-            MultiChoiceAdapter adapter2 = new MultiChoiceAdapter(optionCount -= 1, MultiChoiceFragment.this);
-            multiChoiceList.swapAdapter(adapter2, true);
+        if(adapter.itemCount > 2) {
+            adapter.itemCount -= 1;
+            adapter.notifyItemRemoved(clickedItemIndex);
+            resetEditTextHint();
+        }
+    }
+
+    private void resetEditTextHint() {
+        for(int i=0;i<adapter.getItemCount();i++){
+            MultiChoiceAdapter.ChoiceViewHolder viewHolder = (MultiChoiceAdapter.ChoiceViewHolder)
+                    multiChoiceList.findViewHolderForAdapterPosition(i);
+            if(!viewHolder.multiChoiceEditText.getHint().equals("Option " + (i + 1)))
+                viewHolder.multiChoiceEditText.setHint("Option " + (i + 1));
         }
     }
 
