@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class DetailActivity extends AppCompatActivity {
     private boolean userPost;
     private String postId;
+    private LinearLayout linearLayout;
     private DatabaseReference realtimeRef;
     private boolean twoPane;
     private String profileUri;
@@ -42,6 +44,8 @@ public class DetailActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        linearLayout = findViewById(R.id.ll_transparent);
 
         realtimeRef = FirebaseDatabase.getInstance().getReference();
 
@@ -144,6 +148,7 @@ public class DetailActivity extends AppCompatActivity {
                 builder.setNegativeButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        linearLayout.setVisibility(View.VISIBLE);
                         deletePost();
                         Intent homeIntent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(homeIntent);

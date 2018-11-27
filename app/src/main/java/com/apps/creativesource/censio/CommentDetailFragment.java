@@ -20,6 +20,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -48,6 +49,7 @@ public class CommentDetailFragment extends Fragment {
     private ArrayList<Comment> commentArrayList = new ArrayList<>();
     private String commentEntry;
     private EditText commentEditText;
+    private LinearLayout linearLayout;
     private TextView statementTextView;
     private TextView usernameTextView;
     private TextView interactionCountTextView;
@@ -85,6 +87,7 @@ public class CommentDetailFragment extends Fragment {
         likesCountTextView = view.findViewById(R.id.tv_likes_count);
         dislikesCountTextView = view.findViewById(R.id.tv_dislikes_count);
         fab = view.findViewById(R.id.fab_delete);
+        linearLayout = view.findViewById(R.id.ll_transparent);
 
         commentEditText = view.findViewById(R.id.et_comment_post);
         commentRecyclerView = view.findViewById(R.id.rv_comment_list);
@@ -156,6 +159,7 @@ public class CommentDetailFragment extends Fragment {
                 builder.setNegativeButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        linearLayout.setVisibility(View.VISIBLE);
                         deletePost();
                         Intent homeIntent = new Intent(getContext(), MainActivity.class);
                         startActivity(homeIntent);

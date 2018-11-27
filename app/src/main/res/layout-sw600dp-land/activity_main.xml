@@ -43,4 +43,16 @@
             android:layout_gravity="center"/>
     </FrameLayout>
 
+    <LinearLayout
+        android:id="@+id/ll_transparent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@drawable/transparent_background"
+        android:visibility="gone">
+        <ProgressBar
+            android:layout_width="75dp"
+            android:layout_height="75dp"/>
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>

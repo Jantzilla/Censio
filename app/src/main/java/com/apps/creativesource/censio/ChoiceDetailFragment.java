@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -45,6 +46,7 @@ public class ChoiceDetailFragment extends Fragment {
     private TextView interactionCountTextView;
     private TextView likesCountTextView;
     private TextView dislikesCountTextView;
+    private LinearLayout linearLayout;
     private CircleImageView circleImageView;
     private ImageView interactionImageView;
     private ImageView likesImageView;
@@ -79,6 +81,7 @@ public class ChoiceDetailFragment extends Fragment {
         dislikesCountTextView = view.findViewById(R.id.tv_dislikes_count);
         choicesRadioGroup = view.findViewById(R.id.rg_choices);
         fab = view.findViewById(R.id.fab_delete);
+        linearLayout = view.findViewById(R.id.ll_transparent);
 
         Intent initialIntent = getActivity().getIntent();
 
@@ -125,6 +128,7 @@ public class ChoiceDetailFragment extends Fragment {
                 builder.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        linearLayout.setVisibility(View.VISIBLE);
                         deletePost();
                         Intent homeIntent = new Intent(getContext(), MainActivity.class);
                         startActivity(homeIntent);

@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private DatabaseReference realtimeRef;
+    private LinearLayout linearLayout;
     private FragmentManager fragmentManager;
     private Fragment fragment;
     private String profileUri;
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         realtimeRef = FirebaseDatabase.getInstance().getReference();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
+        linearLayout = findViewById(R.id.ll_transparent);
 
         if(findViewById(R.id.detail_container) != null) {
 
@@ -126,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (selectedMenuItem) {
             case R.id.it_sign_out:
+                linearLayout.setVisibility(View.VISIBLE);
                 AuthUI.getInstance()
                         .signOut(this)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -139,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
                         });
                 break;
             case R.id.it_close_account:
-
                 Context context = this;
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -154,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 builder.setNegativeButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        linearLayout.setVisibility(View.VISIBLE);
                         functions = FirebaseFunctions.getInstance();
                         auth = FirebaseAuth.getInstance();
 
