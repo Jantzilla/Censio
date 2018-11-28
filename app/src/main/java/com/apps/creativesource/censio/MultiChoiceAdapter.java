@@ -3,6 +3,9 @@ package com.apps.creativesource.censio;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +17,7 @@ import java.util.ArrayList;
 public class MultiChoiceAdapter extends RecyclerView.Adapter<MultiChoiceAdapter.ChoiceViewHolder> {
     public static int itemCount;
     private final ListItemClickListener onClickListener;
-    private ArrayList<String> options;
+    public static ArrayList<String> options = new ArrayList<>();
 
     public interface ListItemClickListener {
         void onListItemClick(int clickedItemIndex);
@@ -22,6 +25,10 @@ public class MultiChoiceAdapter extends RecyclerView.Adapter<MultiChoiceAdapter.
 
     public MultiChoiceAdapter(int numberOfOptions, ListItemClickListener listener) {
         itemCount = numberOfOptions;
+
+        options.add("");
+        options.add("");
+
         onClickListener = listener;
 
     }
@@ -42,6 +49,29 @@ public class MultiChoiceAdapter extends RecyclerView.Adapter<MultiChoiceAdapter.
     @Override
     public void onBindViewHolder(@NonNull ChoiceViewHolder choiceViewHolder, int i) {
         choiceViewHolder.multiChoiceEditText.setHint("Option" + " " + (i + 1));
+
+        choiceViewHolder.multiChoiceEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if(choiceViewHolder.getAdapterPosition() != -1) {
+                    options.set(choiceViewHolder.getAdapterPosition(), s.toString());
+                }
+
+                Log.d("Debug Index", "Index is " + choiceViewHolder.getAdapterPosition());
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     @Override
@@ -62,6 +92,7 @@ public class MultiChoiceAdapter extends RecyclerView.Adapter<MultiChoiceAdapter.
 
             deleteImageView.setOnClickListener(this);
             multiChoiceEditText.setOnFocusChangeListener(this);
+
         }
 
         @Override

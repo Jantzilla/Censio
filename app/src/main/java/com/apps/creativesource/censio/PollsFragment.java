@@ -70,7 +70,6 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
         pollsList.setLayoutManager(layoutManager);
         pollsList.setHasFixedSize(true);
 
-        getAllPosts();
 
         return view;
     }
@@ -108,7 +107,7 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
 
     public void loadAdapter(ArrayList<Post> postArrayList) {
         if(!postArrayList.isEmpty()) {
-            adapter = new UserPollsAdapter(getActivity().getApplicationContext(), postArrayList, first, twoPane, PollsFragment.this);
+            adapter = new UserPollsAdapter(getActivity(), postArrayList, first, twoPane, PollsFragment.this);
             pollsList.setAdapter(adapter);
             pollsList.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE );

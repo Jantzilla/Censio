@@ -41,6 +41,7 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
             @Override
             public void onClick(View v) {
                 if(adapter.itemCount < 6) {
+                    adapter.options.add("");
                     adapter.itemCount += 1;
                     adapter.notifyItemInserted(adapter.itemCount);
                 }
@@ -54,6 +55,7 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
     public void onListItemClick(int clickedItemIndex) {
         if(adapter.itemCount > 2) {
             adapter.itemCount -= 1;
+            adapter.options.remove(clickedItemIndex);
             adapter.notifyItemRemoved(clickedItemIndex);
             resetEditTextHint();
         }
@@ -63,7 +65,7 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
         for(int i=0;i<adapter.getItemCount();i++){
             MultiChoiceAdapter.ChoiceViewHolder viewHolder = (MultiChoiceAdapter.ChoiceViewHolder)
                     multiChoiceList.findViewHolderForAdapterPosition(i);
-            if(!viewHolder.multiChoiceEditText.getHint().equals("Option " + (i + 1)))
+            if(viewHolder != null && !adapter.options.get(i).equals("Option " + (i + 1)))
                 viewHolder.multiChoiceEditText.setHint("Option " + (i + 1));
         }
     }
@@ -73,11 +75,17 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
         for(int i=0;i<adapter.getItemCount();i++){
             MultiChoiceAdapter.ChoiceViewHolder viewHolder = (MultiChoiceAdapter.ChoiceViewHolder)
                     multiChoiceList.findViewHolderForAdapterPosition(i);
-            if(viewHolder.multiChoiceEditText.getText().toString().isEmpty()) {
-                viewHolder.multiChoiceEditText.setError(getString(R.string.please_enter_choice));
+            if(adapter.options.get(i).equals("")) {
+                if(viewHolder != null)
+                    viewHolder.multiChoiceEditText.setError(getString(R.string.please_enter_choice));
+                else
+                    Toast.makeText(getActivity(),R.string.please_enter_choice,Toast.LENGTH_LONG);
                 result = false;
-            } if(viewHolder.multiChoiceEditText.getText().toString().length() > 150) {
-                viewHolder.multiChoiceEditText.setError(getString(R.string.cannot_exceed_150_chars));
+            } if(adapter.options.get(i).length() > 150) {
+                if(viewHolder != null)
+                    viewHolder.multiChoiceEditText.setError(getString(R.string.cannot_exceed_150_chars));
+                else
+                    Toast.makeText(getActivity(),R.string.cannot_exceed_150_chars,Toast.LENGTH_LONG);
                 result = false;
             }
         }
@@ -85,23 +93,23 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
         return result;
     }
 
-    private ArrayList<String> getAllEditText() {
-        ArrayList<String> editTextStrings = new ArrayList<>();
-
-        for(int i=0;i<adapter.getItemCount();i++){
-            MultiChoiceAdapter.ChoiceViewHolder viewHolder = (MultiChoiceAdapter.ChoiceViewHolder)
-                    multiChoiceList.findViewHolderForAdapterPosition(i);
-
-            editTextStrings.add(viewHolder.multiChoiceEditText.getText().toString());
-        }
-
-        return editTextStrings;
-    }
+//    private ArrayList<String> getAllEditText() {
+//        ArrayList<String> editTextStrings = new ArrayList<>();
+//
+//        for(int i=0;i<adapter.getItemCount();i++){
+//            MultiChoiceAdapter.ChoiceViewHolder viewHolder = (MultiChoiceAdapter.ChoiceViewHolder)
+//                    multiChoiceList.findViewHolderForAdapterPosition(i);
+//
+//            editTextStrings.add(viewHolder.multiChoiceEditText.getText().toString());
+//        }
+//
+//        return editTextStrings;
+//    }
 
     @Override
     public ArrayList<String> myAction() {
         if(isEditTextFinished())
-            return getAllEditText();
+            return adapter.options;
         else
             return null;
 

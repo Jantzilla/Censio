@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,7 +129,6 @@ public class CommentDetailFragment extends Fragment {
         commentRecyclerView.setLayoutManager(layoutManager);
         commentRecyclerView.setHasFixedSize(true);
 
-        getAllComments();
 
         commentEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
 
@@ -161,9 +161,9 @@ public class CommentDetailFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         linearLayout.setVisibility(View.VISIBLE);
                         deletePost();
+                        getActivity().finish();
                         Intent homeIntent = new Intent(getContext(), MainActivity.class);
                         startActivity(homeIntent);
-                        getActivity().finish();
                         dialog.cancel();
                     }
                 });
@@ -171,10 +171,22 @@ public class CommentDetailFragment extends Fragment {
             }
         });
 
+        return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("Debug", "Fragment Context is " + getContext());
+        getAllComments();
         getAllInteraction();
         setLikeClickListeners();
+    }
 
-        return view;
+    @Override
+    public void onDestroy() {
+        Log.d("Debug", "Destroyed Context is " + getContext());
+        super.onDestroy();
     }
 
     private void getAllComments() {

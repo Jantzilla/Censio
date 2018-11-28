@@ -69,7 +69,6 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
         pollsList.setLayoutManager(layoutManager);
         pollsList.setHasFixedSize(true);
 
-        getAllPosts();
 
         return view;
     }

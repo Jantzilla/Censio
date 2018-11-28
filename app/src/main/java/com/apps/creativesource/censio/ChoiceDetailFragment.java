@@ -130,9 +130,9 @@ public class ChoiceDetailFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         linearLayout.setVisibility(View.VISIBLE);
                         deletePost();
+                        getActivity().finish();
                         Intent homeIntent = new Intent(getContext(), MainActivity.class);
                         startActivity(homeIntent);
-                        getActivity().finish();
                         dialog.cancel();
                     }
                 });
