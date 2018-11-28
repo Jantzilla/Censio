@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class MultiChoiceAdapter extends RecyclerView.Adapter<MultiChoiceAdapter.ChoiceViewHolder> {
     public static int itemCount;
     private final ListItemClickListener onClickListener;
-    public static ArrayList<String> options = new ArrayList<>();
+    public ArrayList<String> options = new ArrayList<>();
 
     public interface ListItemClickListener {
         void onListItemClick(int clickedItemIndex);
