@@ -44,6 +44,7 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
                     adapter.options.add("");
                     adapter.itemCount += 1;
                     adapter.notifyItemInserted(adapter.itemCount);
+                    multiChoiceList.smoothScrollToPosition(adapter.itemCount);
                 }
             }
         });
