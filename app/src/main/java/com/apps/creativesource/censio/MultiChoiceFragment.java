@@ -40,12 +40,13 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(adapter.itemCount < 6) {
+                if(adapter.itemCount < 10) {
                     adapter.options.add("");
                     adapter.itemCount += 1;
                     adapter.notifyItemInserted(adapter.itemCount);
                     multiChoiceList.smoothScrollToPosition(adapter.itemCount);
-                }
+                } else
+                    Toast.makeText(getActivity(),"You have reached the multi-choice limit.",Toast.LENGTH_LONG).show();
             }
         });
 
@@ -77,16 +78,22 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
             MultiChoiceAdapter.ChoiceViewHolder viewHolder = (MultiChoiceAdapter.ChoiceViewHolder)
                     multiChoiceList.findViewHolderForAdapterPosition(i);
             if(adapter.options.get(i).equals("")) {
-                if(viewHolder != null)
+                if(viewHolder != null) {
+                    viewHolder.multiChoiceEditText.clearFocus();
                     viewHolder.multiChoiceEditText.setError(getString(R.string.please_enter_choice));
+                    Toast.makeText(getActivity(), R.string.please_enter_choice, Toast.LENGTH_LONG).show();
+                }
                 else
-                    Toast.makeText(getActivity(),R.string.please_enter_choice,Toast.LENGTH_LONG);
+                    Toast.makeText(getActivity(),R.string.please_enter_choice,Toast.LENGTH_LONG).show();
                 result = false;
             } if(adapter.options.get(i).length() > 150) {
-                if(viewHolder != null)
+                if(viewHolder != null) {
+                    viewHolder.multiChoiceEditText.clearFocus();
                     viewHolder.multiChoiceEditText.setError(getString(R.string.cannot_exceed_150_chars));
+                    Toast.makeText(getActivity(),R.string.cannot_exceed_150_chars,Toast.LENGTH_LONG).show();
+                }
                 else
-                    Toast.makeText(getActivity(),R.string.cannot_exceed_150_chars,Toast.LENGTH_LONG);
+                    Toast.makeText(getActivity(),R.string.cannot_exceed_150_chars,Toast.LENGTH_LONG).show();
                 result = false;
             }
         }

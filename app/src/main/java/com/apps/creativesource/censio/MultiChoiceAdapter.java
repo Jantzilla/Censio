@@ -25,7 +25,6 @@ public class MultiChoiceAdapter extends RecyclerView.Adapter<MultiChoiceAdapter.
 
     public MultiChoiceAdapter(int numberOfOptions, ListItemClickListener listener) {
         itemCount = numberOfOptions;
-
         options.add("");
         options.add("");
 
@@ -100,6 +99,7 @@ public class MultiChoiceAdapter extends RecyclerView.Adapter<MultiChoiceAdapter.
             int clickedPosition = getAdapterPosition();
             onClickListener.onListItemClick(clickedPosition);
             multiChoiceEditText.setText("");
+            multiChoiceEditText.setError(null);
             deleteImageView.setVisibility(View.GONE);
         }
 
@@ -107,12 +107,13 @@ public class MultiChoiceAdapter extends RecyclerView.Adapter<MultiChoiceAdapter.
         public void onFocusChange(View v, boolean hasFocus) {
             int focusedPosition = getAdapterPosition();
 
-            if(focusedPosition > 1) {
-                if (hasFocus)
-                    deleteImageView.setVisibility(View.VISIBLE);
+                if (hasFocus) {
+                    if (focusedPosition > 1)
+                        deleteImageView.setVisibility(View.VISIBLE);
+                    multiChoiceEditText.setError(null);
+                }
                 else
                     deleteImageView.setVisibility(View.GONE);
-            }
 
         }
     }
