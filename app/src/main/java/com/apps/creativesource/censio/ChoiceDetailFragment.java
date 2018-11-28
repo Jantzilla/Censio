@@ -656,7 +656,8 @@ public class ChoiceDetailFragment extends Fragment {
                                 if(dataSnapshot.exists()) {
                                     Choice innerChoice = dataSnapshot.getValue(Choice.class);
 
-                                    textView.setText(String.valueOf((int)(innerChoice.count / Float.valueOf(interactionCountTextView.getText().toString()) * 100)) + "%");
+                                    String value = String.valueOf((int)(innerChoice.count / Float.valueOf(interactionCountTextView.getText().toString()) * 100)) + "%";
+                                    textView.setText(value);
 
                                 }
 
@@ -679,7 +680,8 @@ public class ChoiceDetailFragment extends Fragment {
 
         radioButton.setText(choice.title);
         radioButton.setId((int) System.currentTimeMillis());
-        textView.setText(String.valueOf((int)(choice.count / Float.valueOf(interactionCountTextView.getText().toString()) * 100)) + "%");
+        String value = String.valueOf((int)(choice.count / Float.valueOf(interactionCountTextView.getText().toString()) * 100)) + "%";
+        textView.setText(value);
 
         choicesRadioGroup.addView(constraintLayout);
         choicesRadioGroup.setOnCheckedChangeListener(new RadioGroupPlus.OnCheckedChangeListener() {

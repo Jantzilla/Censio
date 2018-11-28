@@ -49,6 +49,11 @@ public class MultiChoiceAdapter extends RecyclerView.Adapter<MultiChoiceAdapter.
     public void onBindViewHolder(@NonNull ChoiceViewHolder choiceViewHolder, int i) {
         choiceViewHolder.multiChoiceEditText.setHint("Option" + " " + (i + 1));
 
+        choiceViewHolder.multiChoiceEditText.setText(options.get(choiceViewHolder.getAdapterPosition()));
+
+        if(!options.get(choiceViewHolder.getAdapterPosition()).equals(""))
+            choiceViewHolder.multiChoiceEditText.setError(null);
+
         choiceViewHolder.multiChoiceEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
