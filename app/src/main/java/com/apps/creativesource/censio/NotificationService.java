@@ -5,27 +5,46 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class NotificationService extends FirebaseMessagingService {
     private final String CHANNEL_ID = "Censio";
+    private DatabaseReference databaseReference;
+    private SharedPreferences sharedPreferences;
+    private String userId;
     String notificationTitle = null, notificationBody = null;
     String dataTitle = null, dataMessage = null;
+    private boolean notifications;
+    private String messageUserId;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         createNotificationChannel();
 
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        userId = sharedPreferences.getString("userFireId","null");
+        notifications = sharedPreferences.getBoolean("notifications", true);
+
+        messageUserId = remoteMessage.getData().get("userId");
         notificationTitle = remoteMessage.getData().get("title");
         notificationBody = remoteMessage.getData().get("body");
 
-        sendNotification(notificationTitle, notificationBody, dataTitle, dataMessage);
+        if(notifications && messageUserId.equals(userId))
+            sendNotification(notificationTitle, notificationBody, dataTitle, dataMessage);
 
         super.onMessageReceived(remoteMessage);
     }
@@ -51,6 +70,32 @@ public class NotificationService extends FirebaseMessagingService {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+    }
+
+    @Override
+    public void onNewToken(String s) {
+        sendRegistrationToServer(s);
+    }
+
+    private void sendRegistrationToServer(String s) {
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        userId = sharedPreferences.getString("userFireId","null");
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("AuthToken", s);
+        editor.apply();
+
+        Log.d("NewAuthToken", s); //TODO: Remove when complete
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        DatabaseReference userRef = databaseReference.child("users")
+                .child(userId);
+
+        Map<String, Object> token = new HashMap<>();
+        token.put("token", s);
+
+        userRef.updateChildren(token);
+
     }
 
     private void createNotificationChannel() {

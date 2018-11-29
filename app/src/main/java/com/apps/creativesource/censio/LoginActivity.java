@@ -109,12 +109,16 @@ public class LoginActivity extends AppCompatActivity {
 
         if(requestCode == RC_SIGN_IN) {
             if(resultCode == RESULT_OK) {
-                IdpResponse idpResponse = IdpResponse.fromResultIntent(data);
-
-                if(idpResponse.getIdpToken() == null)
-                    editor.putString("AuthToken", null);
-                else
-                    editor.putString("AuthToken", idpResponse.getIdpToken());
+//                IdpResponse idpResponse = IdpResponse.fromResultIntent(data);
+//
+//                if(idpResponse.getIdpToken() == null) {
+//                    editor.putString("AuthToken", null);
+//                    editor.apply();
+//                }
+//                else {
+//                    editor.putString("AuthToken", idpResponse.getIdpToken());
+//                    editor.apply();
+//                }
                 loginUser();
             } if(resultCode == RESULT_CANCELED) {
             }
@@ -158,6 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
 
                         String photoUrl;
 
@@ -176,6 +181,8 @@ public class LoginActivity extends AppCompatActivity {
                             editor.putString("userFireId",auth.getUid());
                             editor.putString("name", auth.getCurrentUser().getDisplayName());
                             editor.putString("profileUri", photoUrl);
+                            editor.putString("AuthToken", token);
+                            editor.putBoolean("notifications", true);
                             editor.apply();
 
                             progressBar.setVisibility(View.GONE);
@@ -184,9 +191,19 @@ public class LoginActivity extends AppCompatActivity {
 
                         } else {
 
+                            DatabaseReference userRef = realtimeRef.child("users")
+                                    .child(auth.getUid());
+
+                            Map<String, Object> tokenRef = new HashMap<>();
+                            tokenRef.put("token", token);
+
+                            userRef.updateChildren(tokenRef);
+
                             editor.putString("userFireId",auth.getUid());
                             editor.putString("name", auth.getCurrentUser().getDisplayName());
                             editor.putString("profileUri", photoUrl);
+                            editor.putString("AuthToken", token);
+                            editor.putBoolean("notifications", user.notifications);
                             editor.apply();
 
                             toMainActivity();
@@ -215,6 +232,7 @@ public class LoginActivity extends AppCompatActivity {
         user.put("comments", 0);
         user.put("votes", 0);
         user.put("token", token);
+        user.put("notifications", true);
 
         realtimeRef.child("users").child(id).setValue(user);
     }
