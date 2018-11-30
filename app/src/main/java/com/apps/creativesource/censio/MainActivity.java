@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                         final EditText input = new EditText(context);
 
 
-                        String token = sharedPreferences.getString("AuthToken", null);
+                        String token = sharedPreferences.getString("GoogleToken", null);
 
 
                         if (token == null) {
@@ -321,7 +321,7 @@ public class MainActivity extends AppCompatActivity {
     private void removeUserAuth(DialogInterface dialog, EditText input) {
 
         if (auth.getCurrentUser() != null) {
-            String token = sharedPreferences.getString("AuthToken", null);
+            String token = sharedPreferences.getString("GoogleToken", null);
             String password = input.getText().toString();
 
             AuthCredential credential;
@@ -341,7 +341,7 @@ public class MainActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         //Ok, user remove
-                                        editor.putString("AuthToken", null);
+                                        editor.putString("GoogleToken", null);
                                         if(dialog != null)
                                             dialog.cancel();
                                         deleteFirestoreUser();

@@ -109,16 +109,16 @@ public class LoginActivity extends AppCompatActivity {
 
         if(requestCode == RC_SIGN_IN) {
             if(resultCode == RESULT_OK) {
-//                IdpResponse idpResponse = IdpResponse.fromResultIntent(data);
-//
-//                if(idpResponse.getIdpToken() == null) {
-//                    editor.putString("AuthToken", null);
-//                    editor.apply();
-//                }
-//                else {
-//                    editor.putString("AuthToken", idpResponse.getIdpToken());
-//                    editor.apply();
-//                }
+                IdpResponse idpResponse = IdpResponse.fromResultIntent(data);
+
+                if(idpResponse.getIdpToken() == null) {
+                    editor.putString("GoogleToken", null);
+                    editor.apply();
+                }
+                else {
+                    editor.putString("GoogleToken", idpResponse.getIdpToken());
+                    editor.apply();
+                }
                 loginUser();
             } if(resultCode == RESULT_CANCELED) {
             }
