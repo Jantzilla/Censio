@@ -97,10 +97,10 @@ public class AddActivity extends AppCompatActivity {
         viewPager.setAdapter(tabAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        MobileAds.initialize(this, getString(R.string.app_id_test_mob));
+        MobileAds.initialize(this, getString(R.string.app_id_mob));
 
         interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId(getString(R.string.ad_id_test_mob));
+        interstitialAd.setAdUnitId(getString(R.string.ad_id_mob));
         interstitialAd.loadAd(new AdRequest.Builder().build());
 
         interstitialAd.setAdListener(new AdListener() {

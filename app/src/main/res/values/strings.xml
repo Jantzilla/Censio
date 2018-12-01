@@ -31,8 +31,6 @@
     <string name="delete_post_confirm">Delete this post?</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
-    <string name="app_id_test_mob">ca-app-pub-3940256099942544~3347511713</string>
-    <string name="ad_id_test_mob">ca-app-pub-3940256099942544/1033173712</string>
     <string name="login_cancelled">Login Cancelled</string>
     <string name="unknown_response">Unknown Response</string>
     <string name="sign_out_failed">Sign out failed.</string>
