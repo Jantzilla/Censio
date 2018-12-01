@@ -26,10 +26,10 @@ public class NotificationService extends FirebaseMessagingService {
     private DatabaseReference databaseReference;
     private SharedPreferences sharedPreferences;
     private String userId;
-    String notificationTitle = null, notificationBody = null;
+    String notificationTitle = "", notificationBody = "";
     String dataTitle = null, dataMessage = null;
     private boolean notifications;
-    private String messageUserId;
+    private String messageUserId = "";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -39,7 +39,9 @@ public class NotificationService extends FirebaseMessagingService {
         userId = sharedPreferences.getString("userFireId","null");
         notifications = sharedPreferences.getBoolean("notifications", true);
 
-        messageUserId = remoteMessage.getData().get("userId");
+        if(remoteMessage.getData().get("userId") != null)
+            messageUserId = remoteMessage.getData().get("userId");
+
         notificationTitle = remoteMessage.getData().get("title");
         notificationBody = remoteMessage.getData().get("body");
 

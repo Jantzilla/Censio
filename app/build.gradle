@@ -32,6 +32,7 @@ android {
             signingConfig signingConfigs.releaseConfig
         }
     }
+    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
 }
 
 dependencies {

@@ -2,6 +2,7 @@ package com.apps.creativesource.censio;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -37,10 +38,11 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private DatabaseReference realtimeRef;
 
+    Typeface typeface;
     String token;
 
     private Button loginButton;
-    private TextView signUpButton;
+    private TextView signUpButton, logoTextView;
     private ConstraintLayout signInLayout;
     private ProgressBar progressBar;
 
@@ -52,15 +54,20 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        typeface = Typeface.createFromAsset(getAssets(), "ColorTube.otf");
+
         auth = FirebaseAuth.getInstance();
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
 
+        logoTextView = findViewById(R.id.tv_logo);
         loginButton = findViewById(R.id.btn_login);
         signUpButton = findViewById(R.id.tv_sign_up);
         signInLayout = findViewById(R.id.cl_sign_in);
         progressBar = findViewById(R.id.pb_sign_in);
+
+        logoTextView.setTypeface(typeface);
 
         if(isUserLogin()) {
             toMainActivity();
