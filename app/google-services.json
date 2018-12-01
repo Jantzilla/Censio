@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "106375141746-j0jufr5vdbke95ve36k6gp8b8rjdhn02.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apps.creativesource.censio",
+            "certificate_hash": "3b4b8d08274eb20e008f7ac2ba080a8591270193"
+          }
+        },
+        {
           "client_id": "106375141746-asckk2oboko0qjof6btk63cgbfb6ld1k.apps.googleusercontent.com",
           "client_type": 3
         }
