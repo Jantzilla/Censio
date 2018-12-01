@@ -88,15 +88,19 @@ public class NotificationService extends FirebaseMessagingService {
 
         Log.d("NewAuthToken", s); //TODO: Remove when complete
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        if(!userId.equals("null")) {
 
-        DatabaseReference userRef = databaseReference.child("users")
-                .child(userId);
+            databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        Map<String, Object> token = new HashMap<>();
-        token.put("token", s);
+            DatabaseReference userRef = databaseReference.child("users")
+                    .child(userId);
 
-        userRef.updateChildren(token);
+            Map<String, Object> token = new HashMap<>();
+            token.put("token", s);
+
+            userRef.updateChildren(token);
+
+        }
 
     }
 
