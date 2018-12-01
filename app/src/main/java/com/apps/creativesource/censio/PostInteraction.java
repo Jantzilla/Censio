@@ -1,7 +1,7 @@
 package com.apps.creativesource.censio;
 
 public class PostInteraction {
-    String choice = "";
-    int like;
-    boolean comment;
+    public String choice = "";
+    public int like;
+    public boolean comment;
 }
