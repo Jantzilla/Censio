@@ -5,7 +5,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
     private MultiChoiceAdapter adapter;
     private RecyclerView multiChoiceList;
     private FloatingActionButton fab;
+    private String optionString;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -25,6 +25,8 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
         View view = inflater.inflate(R.layout.fragment_multi_choice, container, false);
 
         multiChoiceList = view.findViewById(R.id.rv_multi_choice);
+
+        optionString = getString(R.string.option);
 
 
         fab = view.findViewById(R.id.fab_add);
@@ -35,7 +37,6 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
 
         adapter = new MultiChoiceAdapter(optionCount,this);
         multiChoiceList.setAdapter(adapter);
-//        multiChoiceList.setItemViewCacheSize(6);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,7 +47,7 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
                     adapter.notifyItemInserted(adapter.itemCount);
                     multiChoiceList.smoothScrollToPosition(adapter.itemCount);
                 } else
-                    Toast.makeText(getActivity(),"You have reached the multi-choice limit.",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(),getString(R.string.multi_choice_limit_reached),Toast.LENGTH_LONG).show();
             }
         });
 
@@ -67,8 +68,8 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
         for(int i=0;i<adapter.getItemCount();i++){
             MultiChoiceAdapter.ChoiceViewHolder viewHolder = (MultiChoiceAdapter.ChoiceViewHolder)
                     multiChoiceList.findViewHolderForAdapterPosition(i);
-            if(viewHolder != null && !adapter.options.get(i).equals("Option " + (i + 1)))
-                viewHolder.multiChoiceEditText.setHint("Option " + (i + 1));
+            if(viewHolder != null && !adapter.options.get(i).equals(optionString + " " + (i + 1)))
+                viewHolder.multiChoiceEditText.setHint(optionString + " " + (i + 1));
         }
     }
 
@@ -100,19 +101,6 @@ public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.
 
         return result;
     }
-
-//    private ArrayList<String> getAllEditText() {
-//        ArrayList<String> editTextStrings = new ArrayList<>();
-//
-//        for(int i=0;i<adapter.getItemCount();i++){
-//            MultiChoiceAdapter.ChoiceViewHolder viewHolder = (MultiChoiceAdapter.ChoiceViewHolder)
-//                    multiChoiceList.findViewHolderForAdapterPosition(i);
-//
-//            editTextStrings.add(viewHolder.multiChoiceEditText.getText().toString());
-//        }
-//
-//        return editTextStrings;
-//    }
 
     @Override
     public ArrayList<String> myAction() {

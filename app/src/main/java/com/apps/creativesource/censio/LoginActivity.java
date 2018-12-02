@@ -131,7 +131,6 @@ public class LoginActivity extends AppCompatActivity {
             }
             return;
         }
-        Toast.makeText(this,getString(R.string.unknown_response), Toast.LENGTH_LONG).show();
     }
 
     private boolean isUserLogin() {

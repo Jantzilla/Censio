@@ -25,10 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -177,7 +173,6 @@ public class CommentDetailFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.d("Debug", "Fragment Context is " + getContext());
         getAllComments();
         getAllInteraction();
         setLikeClickListeners();
@@ -185,7 +180,6 @@ public class CommentDetailFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        Log.d("Debug", "Destroyed Context is " + getContext());
         super.onDestroy();
     }
 

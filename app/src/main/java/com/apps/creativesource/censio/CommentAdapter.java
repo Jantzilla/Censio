@@ -3,7 +3,6 @@ package com.apps.creativesource.censio;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +67,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                             User user = dataSnapshot.getValue(User.class);
 
                             profileUri = user.profileUri;
-                            Log.d("Debug", "Adapter context is " + context);
                             Glide.with(context).load(profileUri).into(commentViewHolder.profileImageView);
                             commentViewHolder.usernameTextView.setText(user.name);
 

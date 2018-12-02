@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,8 +66,6 @@ public class MultiChoiceAdapter extends RecyclerView.Adapter<MultiChoiceAdapter.
                     options.set(choiceViewHolder.getAdapterPosition(), s.toString());
                 }
 
-                Log.d("Debug Index", "Index is " + choiceViewHolder.getAdapterPosition());
-
             }
 
             @Override
@@ -121,9 +118,5 @@ public class MultiChoiceAdapter extends RecyclerView.Adapter<MultiChoiceAdapter.
                     deleteImageView.setVisibility(View.GONE);
 
         }
-    }
-
-    public void addOptionText(String string) {
-        options.add(string);
     }
 }

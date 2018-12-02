@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -85,8 +84,6 @@ public class NotificationService extends FirebaseMessagingService {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("AuthToken", s);
         editor.apply();
-
-        Log.d("NewAuthToken", s); //TODO: Remove when complete
 
         if(!userId.equals("null")) {
 

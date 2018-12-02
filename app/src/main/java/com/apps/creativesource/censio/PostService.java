@@ -11,11 +11,13 @@ import java.util.Map;
 
 public class PostService extends IntentService {
     private DatabaseReference realtimeRef = FirebaseDatabase.getInstance().getReference();
+
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
      * @param name Used to name the worker thread, important only for debugging.
      */
+
     public PostService(String name) {
         super(name);
     }
