@@ -41,7 +41,6 @@
     <string name="field_is_empty">Field is empty.</string>
     <string name="invalid_password">Invalid Password</string>
     <string name="feed">Feed</string>
-    <string name="polls">Polls</string>
     <string name="select_picture">Select Picture</string>
     <string name="please_enter_choice">Options cannot be empty.</string>
     <string name="post_a_comment">Post a comment</string>
@@ -71,4 +70,5 @@
     <string name="off">Off</string>
     <string name="multi_choice_limit_reached">You have reached the multi-choice limit.</string>
     <string name="option">Option</string>
+    <string name="posts">Posts</string>
 </resources>

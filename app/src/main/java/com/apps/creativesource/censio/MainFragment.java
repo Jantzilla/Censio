@@ -114,7 +114,7 @@ public class MainFragment extends Fragment {
         pollsFragment.setArguments(bundle);
 
         tabAdapter.addFragment(feedFragment, getString(R.string.feed));
-        tabAdapter.addFragment(pollsFragment, getString(R.string.polls));
+        tabAdapter.addFragment(pollsFragment, getString(R.string.posts));
 
         viewPager.setAdapter(tabAdapter);
         tabLayout.setupWithViewPager(viewPager);
