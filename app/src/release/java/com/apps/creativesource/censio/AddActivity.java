@@ -9,7 +9,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.widget.TextView;
 import android.view.MenuItem;
+import android.graphics.Typeface;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,7 +45,7 @@ public class AddActivity extends AppCompatActivity {
     private int postTypeId;
     private PublishClickListener clickListener;
     private InterstitialAd interstitialAd;
-    private Typeface = typeface;
+    private Typeface typeface;
 
     public interface PublishClickListener {
         ArrayList<String> myAction();
