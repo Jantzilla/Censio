@@ -24,7 +24,6 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
     private ArrayList<Post> postArrayList = new ArrayList<>();
     private boolean twoPane;
     private Context context;
-    private String profileUri;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private DatabaseReference realtimeRef = FirebaseDatabase.getInstance().getReference();
     private ListItemClickListener clickListener;
@@ -81,8 +80,8 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
                             User user = dataSnapshot.getValue(User.class);
 
                             pollsViewHolder.postFireUserId = user.id;
-                            profileUri = user.profileUri;
-                            Glide.with(context).load(profileUri).into(pollsViewHolder.profileImageView);
+                            pollsViewHolder.profileUri = user.profileUri;
+                            Glide.with(context).load(pollsViewHolder.profileUri).into(pollsViewHolder.profileImageView);
                             pollsViewHolder.profileTextView.setText(user.name);
 
                             if(first && twoPane && i == 0 && !(postArrayList.get(i).author.equals(auth.getUid()))) {
@@ -113,6 +112,7 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
 
 
     class PollsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public String profileUri;
         private TextView statementTextView;
         private TextView profileTextView;
         private TextView interactionTextView;
