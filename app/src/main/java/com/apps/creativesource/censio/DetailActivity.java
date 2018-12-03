@@ -3,6 +3,7 @@ package com.apps.creativesource.censio;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,11 +12,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,6 +39,7 @@ public class DetailActivity extends AppCompatActivity {
     private int dislikes;
     private int postTypeId;
     private String postFireUserId;
+    private Typeface typeface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,15 @@ public class DetailActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        typeface = Typeface.createFromAsset(getAssets(), "ColorTube.otf");
+        View view = LayoutInflater.from(this).inflate(R.layout.title_bar,null);
+        TextView textView = view.findViewById(R.id.tv_title);
+        textView.setText(this.getTitle());
+        textView.setTypeface(typeface);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(view);
 
         linearLayout = findViewById(R.id.ll_transparent);
 

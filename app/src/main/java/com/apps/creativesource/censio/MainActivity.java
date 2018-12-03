@@ -1,16 +1,20 @@
 package com.apps.creativesource.censio;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private String postFireUserId;
     private boolean userPost;
     public static int tabIndex = 0;
+    private Typeface typeface;
 
 
     @Override
@@ -39,6 +44,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         linearLayout = findViewById(R.id.ll_transparent);
+        typeface = Typeface.createFromAsset(getAssets(), "ColorTube.otf");
+        View view = LayoutInflater.from(this).inflate(R.layout.title_bar,null);
+        TextView textView = view.findViewById(R.id.tv_title);
+        textView.setText(this.getTitle());
+        textView.setTypeface(typeface);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setCustomView(view);
 
         if(findViewById(R.id.detail_container) != null) {
 

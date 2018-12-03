@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
@@ -11,11 +12,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -35,6 +38,7 @@ public class SettingActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private LinearLayout linearLayout;
     private SharedPreferences.Editor editor;
+    private Typeface typeface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,15 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
         Context context = this;
         ActionBar actionBar = getSupportActionBar();
+        typeface = Typeface.createFromAsset(getAssets(), "ColorTube.otf");
+        View view = LayoutInflater.from(this).inflate(R.layout.title_bar,null);
+        TextView textView = view.findViewById(R.id.tv_title);
+        textView.setText(this.getTitle());
+        textView.setTypeface(typeface);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(view);
+
         removeButton = findViewById(R.id.btn_remove_account);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();

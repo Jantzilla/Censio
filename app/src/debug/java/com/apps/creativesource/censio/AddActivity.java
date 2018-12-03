@@ -2,6 +2,7 @@ package com.apps.creativesource.censio;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.NavUtils;
@@ -9,10 +10,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
@@ -42,6 +45,7 @@ public class AddActivity extends AppCompatActivity {
     private int postTypeId;
     private PublishClickListener clickListener;
     private InterstitialAd interstitialAd;
+    private Typeface typeface;
 
     public interface PublishClickListener {
         ArrayList<String> myAction();
@@ -70,7 +74,14 @@ public class AddActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        setTitle(R.string.create);
+        typeface = Typeface.createFromAsset(getAssets(), "ColorTube.otf");
+        View view = LayoutInflater.from(this).inflate(R.layout.title_bar,null);
+        TextView textView = view.findViewById(R.id.tv_title);
+        textView.setText(R.string.create);
+        textView.setTypeface(typeface);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setCustomView(view);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 

@@ -42,6 +42,7 @@ public class AddActivity extends AppCompatActivity {
     private int postTypeId;
     private PublishClickListener clickListener;
     private InterstitialAd interstitialAd;
+    private Typeface = typeface;
 
     public interface PublishClickListener {
         ArrayList<String> myAction();
@@ -66,11 +67,18 @@ public class AddActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add);
         ActionBar actionBar = getSupportActionBar();
 
+        typeface = Typeface.createFromAsset(getAssets(), "ColorTube.otf");
+        View view = LayoutInflater.from(this).inflate(R.layout.title_bar,null);
+        TextView textView = view.findViewById(R.id.tv_title);
+        textView.setText(R.string.create);
+        textView.setTypeface(typeface);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setCustomView(view);
+
         if(actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        setTitle(R.string.create);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
