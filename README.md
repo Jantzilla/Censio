@@ -1,1 +1,1 @@
-# Censio
+![](static/banner.png)
