@@ -8,6 +8,8 @@
 
 **The app also allows users to create traditional comment posts, so that others can freely reply and communicate to a post in a simple unrestricted manner.**
 
+![](static/censio_main_small.png)![](static/censio_choice_small.png)![](static/censio_create_small.png)
+
 ## Built With
 
 * [Firebase](https://firebase.google.com/) - *Services:* Firestore, Auth-UI, & Messaging
