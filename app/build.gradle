@@ -66,7 +66,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-functions:16.1.2'
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
     implementation 'com.google.android.gms:play-services-ads:17.1.0'
-    implementation 'com.github.worker8:RadioGroupPlus:v1.0.1'
+    implementation 'com.github.worker8:radiogroupplus:v1.0.1'
     implementation 'com.android.support:multidex:1.0.3'
 }
 
