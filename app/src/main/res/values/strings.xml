@@ -71,4 +71,5 @@
     <string name="multi_choice_limit_reached">You have reached the multi-choice limit.</string>
     <string name="option">Option</string>
     <string name="posts">Posts</string>
+    <string name="privacy_policy">Privacy Policy</string>
 </resources>
