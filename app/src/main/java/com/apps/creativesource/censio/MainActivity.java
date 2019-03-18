@@ -2,6 +2,7 @@ package com.apps.creativesource.censio;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -130,6 +131,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.it_settings:
                 Intent intent = new Intent(this, SettingActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.it_privacy_policy:
+                Intent intentURL = new Intent(Intent.ACTION_VIEW, Uri.parse("https://creativesource.000webhostapp.com/censio-privacy-policy"));
+                startActivity(intentURL);
                 break;
             default:
                 break;
