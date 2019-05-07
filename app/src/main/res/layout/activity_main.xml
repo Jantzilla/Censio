@@ -18,6 +18,192 @@
             android:name="com.apps.creativesource.censio.MainFragment">
         </fragment>
 
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/iv_profile"
+                android:contentDescription="@string/current_user_profile_image"
+                android:layout_width="135dp"
+                android:layout_height="135dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/likes_background"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_thumbs_up"
+            app:layout_constraintEnd_toEndOf="@+id/iv_thumbs_up"
+            app:layout_constraintStart_toStartOf="@+id/tv_likes"
+            app:layout_constraintTop_toTopOf="@+id/iv_thumbs_up" />
+
+        <ImageView
+            android:id="@+id/iv_thumbs_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:padding="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/iv_thumbs_down"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toEndOf="@+id/tv_likes"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_thumb_up_primary_28dp"
+            android:contentDescription="@string/like_count_icon" />
+
+        <TextView
+            android:id="@+id/tv_likes"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:text="@string/zero"
+            android:textColor="#ffffff"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_thumbs_up"
+            app:layout_constraintEnd_toStartOf="@+id/iv_thumbs_up"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/iv_profile"
+            app:layout_constraintTop_toTopOf="@+id/iv_thumbs_up" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_thumbs_down"
+            app:layout_constraintEnd_toEndOf="@+id/tv_dislikes"
+            app:layout_constraintStart_toStartOf="@+id/iv_thumbs_down"
+            app:layout_constraintTop_toTopOf="@+id/iv_thumbs_down" />
+
+        <ImageView
+            android:id="@+id/iv_thumbs_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:padding="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/tv_dislikes"
+            app:layout_constraintStart_toEndOf="@+id/iv_thumbs_up"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_thumb_down_primary_28dp"
+            android:contentDescription="@string/dislikes_count_icon" />
+
+        <TextView
+            android:id="@+id/tv_dislikes"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:text="@string/zero"
+            android:textColor="#ffffff"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_thumbs_down"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_thumbs_down"
+            app:layout_constraintTop_toTopOf="@+id/iv_thumbs_down" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_comments"
+            app:layout_constraintEnd_toEndOf="@+id/tv_comments"
+            app:layout_constraintStart_toStartOf="@+id/iv_comments"
+            app:layout_constraintTop_toTopOf="@+id/iv_comments" />
+
+        <ImageView
+            android:id="@+id/iv_comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toTopOf="@+id/tl_tab_layout"
+            app:layout_constraintEnd_toStartOf="@+id/tv_comments"
+            android:src="@drawable/ic_comment_primary_28dp"
+            android:contentDescription="@string/comment_count_icon" />
+
+        <TextView
+            android:id="@+id/tv_comments"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:text="@string/zero"
+            android:textColor="#ffffff"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_comments"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_comments" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/interaction_background"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_votes"
+            app:layout_constraintEnd_toEndOf="@+id/tv_votes"
+            app:layout_constraintStart_toStartOf="@+id/iv_votes"
+            app:layout_constraintTop_toTopOf="@+id/iv_votes" />
+
+        <ImageView
+            android:id="@+id/iv_votes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:padding="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/view"
+            app:layout_constraintEnd_toStartOf="@+id/tv_votes"
+            android:src="@drawable/ic_touch_app_primary_28dp"
+            android:contentDescription="@string/vote_count_icon" />
+
+        <TextView
+            android:id="@+id/tv_votes"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:text="@string/zero"
+            android:textColor="#ffffff"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_votes"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_votes" />
+
+        <TextView
+            android:id="@+id/tv_first_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv_last_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"/>
+
+        <TextView
+            android:id="@+id/tv_last_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_first_name"/>
+
+        </android.support.constraint.ConstraintLayout>
+
     </com.creativesource.simpledrawerlayout.SimpleDrawerLayout>
 
     <LinearLayout
