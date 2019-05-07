@@ -4,17 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/iv_profile"
-        android:contentDescription="@string/current_user_profile_image"
-        android:layout_width="135dp"
-        android:layout_height="135dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <android.support.design.widget.TabLayout
         android:id="@+id/tl_tab_layout"
         android:layout_width="0dp"
@@ -26,7 +15,7 @@
         app:tabSelectedTextColor="#ffffff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_profile"
+        app:layout_constraintTop_toTopOf="parent"
         app:tabBackground="@drawable/tab_indicator_color"
         app:tabMaxWidth="0dp"
         app:tabGravity="fill"
