@@ -48,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference realtimeRef;
     private FragmentManager fragmentManager;
     private Fragment fragment;
-    private String profileUri;
+    private Uri profileUri;
+    private String profileString;
     private String username;
     private String statement;
     private String interactionCount;
@@ -125,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
             if(detailIntent.hasExtra("orientation")) {
 
-                profileUri = detailIntent.getStringExtra("profileUri");
+                profileString = detailIntent.getStringExtra("profileUri");
                 username = detailIntent.getStringExtra("username");
                 statement = detailIntent.getStringExtra("statement");
                 interactionCount = detailIntent.getStringExtra("interactionCount");
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Bundle args = new Bundle();
 
-                args.putString("profileUri", profileUri);
+                args.putString("profileUri", profileString);
                 args.putString("username", username);
                 args.putString("statement", statement);
                 args.putString("interactionCount", interactionCount);
