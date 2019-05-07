@@ -32,9 +32,7 @@ public class MainFragment extends Fragment {
     private ViewPager viewPager;
 
     private Uri profileUri;
-    private FirebaseUser firebaseUser;
 
-    private DatabaseReference realtimeRef;
     private boolean first = true;
 
     @Override
@@ -45,8 +43,6 @@ public class MainFragment extends Fragment {
         fab = view.findViewById(R.id.fab_add);
         tabLayout = view.findViewById(R.id.tl_tab_layout);
         viewPager = view.findViewById(R.id.vp_view_pager);
-
-        realtimeRef = FirebaseDatabase.getInstance().getReference();
 
         if(getActivity().getIntent().hasExtra("orientation")) {
             first = false;
@@ -125,13 +121,6 @@ public class MainFragment extends Fragment {
     public void onResume() {
         super.onResume();
         viewPager.setCurrentItem(MainActivity.tabIndex);
-    }
-
-    private boolean isUserLogin() {
-        if(auth.getCurrentUser() != null) {
-            return true;
-        }
-        return false;
     }
 
     private void toLogin() {
