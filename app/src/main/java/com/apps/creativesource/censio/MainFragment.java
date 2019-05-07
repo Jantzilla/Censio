@@ -51,39 +51,6 @@ public class MainFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putBoolean("first", first);
 
-        if(!isUserLogin())
-            toLogin();
-        else {
-            firebaseUser = auth.getCurrentUser();
-            assert firebaseUser != null;
-            for (UserInfo profile : firebaseUser.getProviderData()) {
-
-                if(!profile.getDisplayName().isEmpty()) {
-
-                    String name = profile.getDisplayName();
-                    if(name.split("\\w+").length>1){
-
-                        lastNameTextView.setText(name.substring(name.lastIndexOf(" ")+1));
-                        firstNameTextView.setText(name.substring(0, name.lastIndexOf(' ')));
-                    }
-                    else{
-                        firstNameTextView.setText(name);
-                    }
-
-                }
-
-                if(profile.getPhotoUrl() != null) {
-
-                    profileUri = Uri.parse(profile.getPhotoUrl().toString());
-                    Glide.with(this).load(profileUri.toString()).into(profileImageView);
-
-                }
-            }
-
-        }
-
-        getInteractions();
-
         tabAdapter = new TabAdapter(getActivity().getSupportFragmentManager());
 
         FeedFragment feedFragment = new FeedFragment();
@@ -121,38 +88,5 @@ public class MainFragment extends Fragment {
     public void onResume() {
         super.onResume();
         viewPager.setCurrentItem(MainActivity.tabIndex);
-    }
-
-    private void toLogin() {
-        Intent intentToLogin = new Intent(getContext(), LoginActivity.class);
-        startActivity(intentToLogin);
-        getActivity().finish();
-    }
-
-    private void getInteractions() {
-        realtimeRef.child("users")
-                .child(auth.getUid())
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        if(dataSnapshot.exists()) {
-
-                            User user = dataSnapshot.getValue(User.class);
-
-                            likesTextView.setText(String.valueOf(user.likes));
-                            dislikesTextView.setText(String.valueOf(user.dislikes));
-                            votesTextView.setText(String.valueOf(user.votes));
-                            commentsTextView.setText(String.valueOf(user.comments));
-
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
     }
 }
