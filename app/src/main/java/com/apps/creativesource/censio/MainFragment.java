@@ -32,7 +32,6 @@ public class MainFragment extends Fragment {
     private ViewPager viewPager;
 
     private Uri profileUri;
-    private FirebaseAuth auth;
     private FirebaseUser firebaseUser;
 
     private DatabaseReference realtimeRef;
@@ -55,8 +54,6 @@ public class MainFragment extends Fragment {
 
         Bundle bundle = new Bundle();
         bundle.putBoolean("first", first);
-
-        auth = FirebaseAuth.getInstance();
 
         if(!isUserLogin())
             toLogin();
