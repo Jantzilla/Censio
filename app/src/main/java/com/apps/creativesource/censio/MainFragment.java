@@ -27,16 +27,9 @@ import com.google.firebase.database.ValueEventListener;
 public class MainFragment extends Fragment {
 
     private FloatingActionButton fab;
-    private ImageView profileImageView;
     private TabAdapter tabAdapter;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private TextView firstNameTextView;
-    private TextView lastNameTextView;
-    private TextView likesTextView;
-    private TextView dislikesTextView;
-    private TextView votesTextView;
-    private TextView commentsTextView;
 
     private Uri profileUri;
     private FirebaseAuth auth;
@@ -53,13 +46,6 @@ public class MainFragment extends Fragment {
         fab = view.findViewById(R.id.fab_add);
         tabLayout = view.findViewById(R.id.tl_tab_layout);
         viewPager = view.findViewById(R.id.vp_view_pager);
-        profileImageView = view.findViewById(R.id.iv_profile);
-        firstNameTextView = view.findViewById(R.id.tv_first_name);
-        lastNameTextView = view.findViewById(R.id.tv_last_name);
-        likesTextView = view.findViewById(R.id.tv_likes);
-        dislikesTextView = view.findViewById(R.id.tv_dislikes);
-        votesTextView = view.findViewById(R.id.tv_votes);
-        commentsTextView = view.findViewById(R.id.tv_comments);
 
         realtimeRef = FirebaseDatabase.getInstance().getReference();
 
