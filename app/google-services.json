@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "106375141746-unvfej5v76gro0sg2furpbspdalh8u2h.apps.googleusercontent.com",
+          "client_id": "106375141746-0pr6nrhp22e8ejkr0uchhjk5m684v8uc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.apps.creativesource.censio",
-            "certificate_hash": "1a2db02d557e92d374232be9b0433751768112e8"
+            "certificate_hash": "7a8377501ed1596ca4986e5b372cf5783631aac2"
           }
         },
         {
@@ -28,6 +28,14 @@
           "android_info": {
             "package_name": "com.apps.creativesource.censio",
             "certificate_hash": "92cd18f421d9c87dc5bb2649af19e3dc10d1e483"
+          }
+        },
+        {
+          "client_id": "106375141746-unvfej5v76gro0sg2furpbspdalh8u2h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apps.creativesource.censio",
+            "certificate_hash": "1a2db02d557e92d374232be9b0433751768112e8"
           }
         },
         {
@@ -41,20 +49,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "106375141746-asckk2oboko0qjof6btk63cgbfb6ld1k.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }
