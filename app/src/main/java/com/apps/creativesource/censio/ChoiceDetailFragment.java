@@ -675,7 +675,7 @@ public class ChoiceDetailFragment extends Fragment {
 
 
         radioButton.setText(choice.title);
-        radioButton.setId((int) System.currentTimeMillis());
+        radioButton.setId(Math.abs((int) System.currentTimeMillis()));
         String value = String.valueOf((int)(choice.count / Float.valueOf(interactionCountTextView.getText().toString()) * 100)) + "%";
         textView.setText(value);
 
