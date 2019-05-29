@@ -32,15 +32,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import butterknife.BindView;
+
 public class MainActivity extends AppCompatActivity {
-    private LinearLayout linearLayout;
-    private ImageView profileImageView;
-    private TextView firstNameTextView;
-    private TextView lastNameTextView;
-    private TextView likesTextView;
-    private TextView dislikesTextView;
-    private TextView votesTextView;
-    private TextView commentsTextView;
+    @BindView(R.id.ll_transparent) private LinearLayout linearLayout;
+    @BindView(R.id.iv_profile) private ImageView profileImageView;
+    @BindView(R.id.tv_first_name) private TextView firstNameTextView;
+    @BindView(R.id.tv_last_name) private TextView lastNameTextView;
+    @BindView(R.id.tv_likes) private TextView likesTextView;
+    @BindView(R.id.tv_dislikes) private TextView dislikesTextView;
+    @BindView(R.id.tv_votes) private TextView votesTextView;
+    @BindView(R.id.tv_comments) private TextView commentsTextView;
     private FirebaseAuth auth;
     private FirebaseUser firebaseUser;
     private DatabaseReference realtimeRef;
@@ -65,14 +67,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        linearLayout = findViewById(R.id.ll_transparent);
-        profileImageView = findViewById(R.id.iv_profile);
-        firstNameTextView = findViewById(R.id.tv_first_name);
-        lastNameTextView = findViewById(R.id.tv_last_name);
-        likesTextView = findViewById(R.id.tv_likes);
-        dislikesTextView = findViewById(R.id.tv_dislikes);
-        votesTextView = findViewById(R.id.tv_votes);
-        commentsTextView = findViewById(R.id.tv_comments);
         auth = FirebaseAuth.getInstance();
         realtimeRef = FirebaseDatabase.getInstance().getReference();
         typeface = Typeface.createFromAsset(getAssets(), "ColorTube.otf");
