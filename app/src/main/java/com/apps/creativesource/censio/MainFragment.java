@@ -9,12 +9,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainFragment extends Fragment {
 
-    private FloatingActionButton fab;
+    @BindView(R.id.fab_add) private FloatingActionButton fab;
     private TabAdapter tabAdapter;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
+    @BindView(R.id.tl_tab_layout)private TabLayout tabLayout;
+    @BindView(R.id.vp_view_pager)private ViewPager viewPager;
 
     private boolean first = true;
 
@@ -22,10 +26,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-
-        fab = view.findViewById(R.id.fab_add);
-        tabLayout = view.findViewById(R.id.tl_tab_layout);
-        viewPager = view.findViewById(R.id.vp_view_pager);
+        ButterKnife.bind(getActivity());
 
         if(getActivity().getIntent().hasExtra("orientation")) {
             first = false;
