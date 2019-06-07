@@ -25,10 +25,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemClickListener {
-    private RecyclerView pollsList;
-    private ProgressBar progressBar;
-    private TextView emptyListTextView;
+    @BindView(R.id.rv_polls_feed) private RecyclerView pollsList;
+    @BindView(R.id.pb_polls_feed) private ProgressBar progressBar;
+    @BindView(R.id.tv_empty_list_notification) private TextView emptyListTextView;
 
     private FragmentManager fragmentManager;
 
@@ -49,6 +52,7 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
+        ButterKnife.bind(getActivity());
 
         fragmentManager = getActivity().getSupportFragmentManager();
 
@@ -60,10 +64,6 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
         auth = FirebaseAuth.getInstance();
 
         first = getArguments().getBoolean("first");
-
-        pollsList = view.findViewById(R.id.rv_polls_feed);
-        progressBar = view.findViewById(R.id.pb_polls_feed);
-        emptyListTextView = view.findViewById(R.id.tv_empty_list_notification);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         pollsList.setLayoutManager(layoutManager);
