@@ -33,22 +33,24 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import worker8.com.github.radiogroupplus.RadioGroupPlus;
 
 public class ChoiceDetailFragment extends Fragment {
-    private TextView statementTextView;
-    private TextView usernameTextView;
-    private TextView interactionCountTextView;
-    private TextView likesCountTextView;
-    private TextView dislikesCountTextView;
-    private LinearLayout linearLayout;
-    private CircleImageView circleImageView;
-    private ImageView interactionImageView;
-    private ImageView likesImageView;
-    private ImageView dislikesImageView;
-    private FloatingActionButton fab;
-    private RadioGroupPlus choicesRadioGroup;
+    @BindView(R.id.tv_statement) private TextView statementTextView;
+    @BindView(R.id.tv_username) private TextView usernameTextView;
+    @BindView(R.id.tv_comments_count) private TextView interactionCountTextView;
+    @BindView(R.id.tv_likes_count) private TextView likesCountTextView;
+    @BindView(R.id.tv_dislikes_count) private TextView dislikesCountTextView;
+    @BindView(R.id.ll_transparent) private LinearLayout linearLayout;
+    @BindView(R.id.iv_profile) private CircleImageView circleImageView;
+    @BindView(R.id.iv_comments) private ImageView interactionImageView;
+    @BindView(R.id.iv_likes) private ImageView likesImageView;
+    @BindView(R.id.iv_dislikes) private ImageView dislikesImageView;
+    @BindView(R.id.fab_delete) private FloatingActionButton fab;
+    @BindView(R.id.rg_choices) private RadioGroupPlus choicesRadioGroup;
     private SharedPreferences sharedPreferences;
     private DatabaseReference realtimeRef;
     private String postId;
@@ -61,23 +63,11 @@ public class ChoiceDetailFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_choice_detail, container, false);
+        ButterKnife.bind(getActivity());
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         realtimeRef = FirebaseDatabase.getInstance().getReference();
-
-        circleImageView = view.findViewById(R.id.iv_profile);
-        interactionImageView = view.findViewById(R.id.iv_comments);
-        likesImageView = view.findViewById(R.id.iv_likes);
-        dislikesImageView = view.findViewById(R.id.iv_dislikes);
-        statementTextView = view.findViewById(R.id.tv_statement);
-        usernameTextView = view.findViewById(R.id.tv_username);
-        interactionCountTextView = view.findViewById(R.id.tv_comments_count);
-        likesCountTextView = view.findViewById(R.id.tv_likes_count);
-        dislikesCountTextView = view.findViewById(R.id.tv_dislikes_count);
-        choicesRadioGroup = view.findViewById(R.id.rg_choices);
-        fab = view.findViewById(R.id.fab_delete);
-        linearLayout = view.findViewById(R.id.ll_transparent);
 
         Intent initialIntent = getActivity().getIntent();
 
