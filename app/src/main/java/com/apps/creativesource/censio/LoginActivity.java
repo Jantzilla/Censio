@@ -33,6 +33,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 200;
     private FirebaseAuth auth;
@@ -41,10 +44,11 @@ public class LoginActivity extends AppCompatActivity {
     Typeface typeface;
     String token;
 
-    private Button loginButton;
-    private TextView signUpButton, logoTextView;
-    private ConstraintLayout signInLayout;
-    private ProgressBar progressBar;
+    @BindView(R.id.btn_login) private Button loginButton;
+    @BindView(R.id.tv_sign_up) private TextView signUpButton;
+    @BindView(R.id.tv_logo) private TextView logoTextView;
+    @BindView(R.id.cl_sign_in) private ConstraintLayout signInLayout;
+    @BindView(R.id.pb_sign_in) private ProgressBar progressBar;
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -54,18 +58,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        ButterKnife.bind(this);
+
         typeface = Typeface.createFromAsset(getAssets(), "ColorTube.otf");
 
         auth = FirebaseAuth.getInstance();
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
-
-        logoTextView = findViewById(R.id.tv_logo);
-        loginButton = findViewById(R.id.btn_login);
-        signUpButton = findViewById(R.id.tv_sign_up);
-        signInLayout = findViewById(R.id.cl_sign_in);
-        progressBar = findViewById(R.id.pb_sign_in);
 
         logoTextView.setTypeface(typeface);
 
