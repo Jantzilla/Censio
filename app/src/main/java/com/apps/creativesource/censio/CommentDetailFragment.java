@@ -39,25 +39,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CommentDetailFragment extends Fragment {
 
     private ArrayList<Comment> commentArrayList = new ArrayList<>();
     private String commentEntry;
-    private EditText commentEditText;
-    private LinearLayout linearLayout;
-    private TextView statementTextView;
-    private TextView usernameTextView;
-    private TextView interactionCountTextView;
-    private TextView likesCountTextView;
-    private TextView dislikesCountTextView;
-    private RecyclerView commentRecyclerView;
-    private CircleImageView circleImageView;
-    private ImageView interactionImageView;
-    private ImageView likesImageView;
-    private ImageView dislikesImageView;
-    private FloatingActionButton fab;
+    @BindView(R.id.et_comment_post) private EditText commentEditText;
+    @BindView(R.id.ll_transparent) private LinearLayout linearLayout;
+    @BindView(R.id.tv_statement) private TextView statementTextView;
+    @BindView(R.id.tv_username) private TextView usernameTextView;
+    @BindView(R.id.tv_comments_count) private TextView interactionCountTextView;
+    @BindView(R.id.tv_likes_count) private TextView likesCountTextView;
+    @BindView(R.id.tv_dislikes_count) private TextView dislikesCountTextView;
+    @BindView(R.id.rv_comment_list) private RecyclerView commentRecyclerView;
+    @BindView(R.id.iv_profile) private CircleImageView circleImageView;
+    @BindView(R.id.iv_comments) private ImageView interactionImageView;
+    @BindView(R.id.iv_likes) private ImageView likesImageView;
+    @BindView(R.id.iv_dislikes) private ImageView dislikesImageView;
+    @BindView(R.id.fab_delete) private FloatingActionButton fab;
     private CommentAdapter adapter;
     private SharedPreferences sharedPreferences;
     private DatabaseReference realtimeRef;
@@ -69,25 +71,11 @@ public class CommentDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_comment_detail, container, false);
+        ButterKnife.bind(this, view);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         realtimeRef = FirebaseDatabase.getInstance().getReference();
-
-        circleImageView = view.findViewById(R.id.iv_profile);
-        interactionImageView = view.findViewById(R.id.iv_comments);
-        likesImageView = view.findViewById(R.id.iv_likes);
-        dislikesImageView = view.findViewById(R.id.iv_dislikes);
-        statementTextView = view.findViewById(R.id.tv_statement);
-        usernameTextView = view.findViewById(R.id.tv_username);
-        interactionCountTextView = view.findViewById(R.id.tv_comments_count);
-        likesCountTextView = view.findViewById(R.id.tv_likes_count);
-        dislikesCountTextView = view.findViewById(R.id.tv_dislikes_count);
-        fab = view.findViewById(R.id.fab_delete);
-        linearLayout = view.findViewById(R.id.ll_transparent);
-
-        commentEditText = view.findViewById(R.id.et_comment_post);
-        commentRecyclerView = view.findViewById(R.id.rv_comment_list);
 
         Intent initialIntent = getActivity().getIntent();
 
