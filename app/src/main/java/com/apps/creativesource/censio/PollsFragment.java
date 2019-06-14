@@ -52,7 +52,7 @@ public class PollsFragment extends Fragment implements UserPollsAdapter.ListItem
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_polls, container, false);
-        ButterKnife.bind(getActivity());
+        ButterKnife.bind(this, view);
 
         fragmentManager = getActivity().getSupportFragmentManager();
 

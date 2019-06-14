@@ -26,7 +26,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        ButterKnife.bind(getActivity());
+        ButterKnife.bind(this, view);
 
         if(getActivity().getIntent().hasExtra("orientation")) {
             first = false;

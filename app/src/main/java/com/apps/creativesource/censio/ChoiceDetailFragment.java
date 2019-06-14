@@ -63,7 +63,7 @@ public class ChoiceDetailFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_choice_detail, container, false);
-        ButterKnife.bind(getActivity());
+        ButterKnife.bind(this, view);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 

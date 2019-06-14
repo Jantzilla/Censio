@@ -52,7 +52,7 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
-        ButterKnife.bind(getActivity());
+        ButterKnife.bind(this, view);
 
         fragmentManager = getActivity().getSupportFragmentManager();
 
