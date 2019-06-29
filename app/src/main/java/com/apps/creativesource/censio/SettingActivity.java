@@ -31,12 +31,16 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class SettingActivity extends AppCompatActivity {
-    private Button removeButton;
+    @BindView(R.id.btn_remove_account) private Button removeButton;
+    @BindView(R.id.tv_title) private TextView textView;
     private SharedPreferences sharedPreferences;
     private DatabaseReference realtimeRef;
     private FirebaseAuth auth;
-    private LinearLayout linearLayout;
+    @BindView(R.id.ll_transparent) private LinearLayout linearLayout;
     private SharedPreferences.Editor editor;
     private Typeface typeface;
 
@@ -44,22 +48,20 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        View view = LayoutInflater.from(this).inflate(R.layout.title_bar,null);
+        ButterKnife.bind(this);
         Context context = this;
         ActionBar actionBar = getSupportActionBar();
         typeface = Typeface.createFromAsset(getAssets(), "ColorTube.otf");
-        View view = LayoutInflater.from(this).inflate(R.layout.title_bar,null);
-        TextView textView = view.findViewById(R.id.tv_title);
         textView.setText(this.getTitle());
         textView.setTypeface(typeface);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(view);
 
-        removeButton = findViewById(R.id.btn_remove_account);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
         realtimeRef = FirebaseDatabase.getInstance().getReference();
-        linearLayout = findViewById(R.id.ll_transparent);
 
         if(actionBar != null)
             actionBar.setDisplayHomeAsUpEnabled(true);
