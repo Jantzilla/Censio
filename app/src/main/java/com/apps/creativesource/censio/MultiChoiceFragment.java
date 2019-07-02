@@ -12,24 +12,24 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.ListItemClickListener, AddActivity.PublishClickListener {
     private static int optionCount = 2;
     private MultiChoiceAdapter adapter;
-    private RecyclerView multiChoiceList;
-    private FloatingActionButton fab;
+    @BindView(R.id.rv_multi_choice) private RecyclerView multiChoiceList;
+    @BindView(R.id.fab_add) private FloatingActionButton fab;
     private String optionString;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_multi_choice, container, false);
-
-        multiChoiceList = view.findViewById(R.id.rv_multi_choice);
+        ButterKnife.bind(this, view);
 
         optionString = getString(R.string.option);
 
-
-        fab = view.findViewById(R.id.fab_add);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
         multiChoiceList.setLayoutManager(layoutManager);
