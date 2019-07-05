@@ -25,10 +25,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class DetailActivity extends AppCompatActivity {
     private boolean userPost;
     private String postId;
-    private LinearLayout linearLayout;
+    @BindView(R.id.ll_transparent) private LinearLayout linearLayout;
+    @BindView(R.id.tv_title) private TextView textView;
     private DatabaseReference realtimeRef;
     private boolean twoPane;
     private String profileUri;
@@ -46,19 +50,18 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        ButterKnife.bind(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         typeface = Typeface.createFromAsset(getAssets(), "ColorTube.otf");
         View view = LayoutInflater.from(this).inflate(R.layout.title_bar,null);
-        TextView textView = view.findViewById(R.id.tv_title);
         textView.setText(this.getTitle());
         textView.setTypeface(typeface);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(view);
-
-        linearLayout = findViewById(R.id.ll_transparent);
 
         realtimeRef = FirebaseDatabase.getInstance().getReference();
 
