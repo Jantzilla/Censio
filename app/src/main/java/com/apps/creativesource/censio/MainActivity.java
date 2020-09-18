@@ -88,19 +88,21 @@ public class MainActivity extends AppCompatActivity {
             assert firebaseUser != null;
             for (UserInfo profile : firebaseUser.getProviderData()) {
 
-                if(!profile.getDisplayName().isEmpty()) {
+                try {
 
-                    String name = profile.getDisplayName();
-                    if(name.split("\\w+").length>1){
+                    if(!profile.getDisplayName().isEmpty()) {
+                        String name = profile.getDisplayName();
+                        if(name.split("\\w+").length>1){
 
-                        lastNameTextView.setText(name.substring(name.lastIndexOf(" ")+1));
-                        firstNameTextView.setText(name.substring(0, name.lastIndexOf(' ')));
+                            lastNameTextView.setText(name.substring(name.lastIndexOf(" ")+1));
+                            firstNameTextView.setText(name.substring(0, name.lastIndexOf(' ')));
+                        }
+                        else{
+                            firstNameTextView.setText(name);
+                        }
                     }
-                    else{
-                        firstNameTextView.setText(name);
-                    }
 
-                }
+                } catch (Exception e) {}
 
                 if(profile.getPhotoUrl() != null) {
 
