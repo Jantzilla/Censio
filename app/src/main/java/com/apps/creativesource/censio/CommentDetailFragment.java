@@ -48,7 +48,7 @@ public class CommentDetailFragment extends Fragment {
     private ArrayList<Comment> commentArrayList = new ArrayList<>();
     private String commentEntry;
     @BindView(R.id.et_comment_post) EditText commentEditText;
-    @BindView(R.id.ll_transparent) LinearLayout linearLayout;
+    LinearLayout linearLayout;
     @BindView(R.id.tv_statement) TextView statementTextView;
     @BindView(R.id.tv_username) TextView usernameTextView;
     @BindView(R.id.tv_comments_count) TextView interactionCountTextView;
@@ -72,6 +72,8 @@ public class CommentDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_comment_detail, container, false);
         ButterKnife.bind(this, view);
+
+        linearLayout = getActivity().findViewById(R.id.ll_transparent);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 

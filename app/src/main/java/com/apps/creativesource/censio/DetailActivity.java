@@ -32,7 +32,7 @@ public class DetailActivity extends AppCompatActivity {
     private boolean userPost;
     private String postId;
     @BindView(R.id.ll_transparent) LinearLayout linearLayout;
-    @BindView(R.id.tv_title) TextView textView;
+    TextView textView;
     private DatabaseReference realtimeRef;
     private boolean twoPane;
     private String profileUri;
@@ -57,6 +57,7 @@ public class DetailActivity extends AppCompatActivity {
 
         typeface = Typeface.createFromAsset(getAssets(), "ColorTube.otf");
         View view = LayoutInflater.from(this).inflate(R.layout.title_bar,null);
+        textView = view.findViewById(R.id.tv_title);
         textView.setText(this.getTitle());
         textView.setTypeface(typeface);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
