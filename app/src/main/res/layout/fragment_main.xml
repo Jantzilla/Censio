@@ -8,7 +8,6 @@
         android:id="@+id/tl_tab_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:minHeight="?actionBarSize"
         app:tabTextAppearance="@style/TabLayoutStyle"
         app:tabTextColor="@color/colorPrimaryDark"
         app:tabSelectedTextColor="#ffffff"
