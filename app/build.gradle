@@ -70,9 +70,9 @@ dependencies {
     implementation 'com.creativesource:simpledrawerlayout:0.1.0'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.jakewharton:butterknife:10.1.0'
+    implementation 'com.google.firebase:firebase-auth:19.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
 //GoogleServicesPlugin.config.disableVersionCheck = true
-
