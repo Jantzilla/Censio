@@ -43,11 +43,11 @@ public class LoginActivity extends AppCompatActivity {
     Typeface typeface;
     String token;
 
-    @BindView(R.id.btn_login) private Button loginButton;
-    @BindView(R.id.tv_sign_up) private TextView signUpButton;
-    @BindView(R.id.tv_logo) private TextView logoTextView;
-    @BindView(R.id.cl_sign_in) private ConstraintLayout signInLayout;
-    @BindView(R.id.pb_sign_in) private ProgressBar progressBar;
+    @BindView(R.id.btn_login) Button loginButton;
+    @BindView(R.id.tv_sign_up) TextView signUpButton;
+    @BindView(R.id.tv_logo) TextView logoTextView;
+    @BindView(R.id.cl_sign_in) ConstraintLayout signInLayout;
+    @BindView(R.id.pb_sign_in) ProgressBar progressBar;
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;

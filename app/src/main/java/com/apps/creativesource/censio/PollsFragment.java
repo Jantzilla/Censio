@@ -28,9 +28,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PollsFragment extends Fragment implements UserPollsAdapter.ListItemClickListener {
-    @BindView(R.id.rv_user_polls) private RecyclerView pollsList;
-    @BindView(R.id.pb_user_polls) private ProgressBar progressBar;
-    @BindView(R.id.tv_empty_list_notification) private TextView emptyListTextView;
+    @BindView(R.id.rv_user_polls) RecyclerView pollsList;
+    @BindView(R.id.pb_user_polls) ProgressBar progressBar;
+    @BindView(R.id.tv_empty_list_notification) TextView emptyListTextView;
 
     private boolean twoPane = false;
 

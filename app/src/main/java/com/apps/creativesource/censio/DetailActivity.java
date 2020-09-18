@@ -31,8 +31,8 @@ import butterknife.ButterKnife;
 public class DetailActivity extends AppCompatActivity {
     private boolean userPost;
     private String postId;
-    @BindView(R.id.ll_transparent) private LinearLayout linearLayout;
-    @BindView(R.id.tv_title) private TextView textView;
+    @BindView(R.id.ll_transparent) LinearLayout linearLayout;
+    @BindView(R.id.tv_title) TextView textView;
     private DatabaseReference realtimeRef;
     private boolean twoPane;
     private String profileUri;

@@ -18,8 +18,8 @@ import butterknife.ButterKnife;
 public class MultiChoiceFragment extends Fragment implements MultiChoiceAdapter.ListItemClickListener, AddActivity.PublishClickListener {
     private static int optionCount = 2;
     private MultiChoiceAdapter adapter;
-    @BindView(R.id.rv_multi_choice) private RecyclerView multiChoiceList;
-    @BindView(R.id.fab_add) private FloatingActionButton fab;
+    @BindView(R.id.rv_multi_choice) RecyclerView multiChoiceList;
+    @BindView(R.id.fab_add) FloatingActionButton fab;
     private String optionString;
 
     @Override

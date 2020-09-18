@@ -15,10 +15,10 @@ import butterknife.ButterKnife;
 
 public class MainFragment extends Fragment {
 
-    @BindView(R.id.fab_add) private FloatingActionButton fab;
+    @BindView(R.id.fab_add) FloatingActionButton fab;
     private TabAdapter tabAdapter;
-    @BindView(R.id.tl_tab_layout)private TabLayout tabLayout;
-    @BindView(R.id.vp_view_pager)private ViewPager viewPager;
+    @BindView(R.id.tl_tab_layout) TabLayout tabLayout;
+    @BindView(R.id.vp_view_pager) ViewPager viewPager;
 
     private boolean first = true;
 

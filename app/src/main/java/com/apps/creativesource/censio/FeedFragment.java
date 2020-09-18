@@ -29,9 +29,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemClickListener {
-    @BindView(R.id.rv_polls_feed) private RecyclerView pollsList;
-    @BindView(R.id.pb_polls_feed) private ProgressBar progressBar;
-    @BindView(R.id.tv_empty_list_notification) private TextView emptyListTextView;
+    @BindView(R.id.rv_polls_feed) RecyclerView pollsList;
+    @BindView(R.id.pb_polls_feed) ProgressBar progressBar;
+    @BindView(R.id.tv_empty_list_notification) TextView emptyListTextView;
 
     private FragmentManager fragmentManager;
 

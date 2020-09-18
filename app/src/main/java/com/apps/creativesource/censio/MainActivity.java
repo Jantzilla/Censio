@@ -36,14 +36,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
-    @BindView(R.id.ll_transparent) private LinearLayout linearLayout;
-    @BindView(R.id.iv_profile) private ImageView profileImageView;
-    @BindView(R.id.tv_first_name) private TextView firstNameTextView;
-    @BindView(R.id.tv_last_name) private TextView lastNameTextView;
-    @BindView(R.id.tv_likes) private TextView likesTextView;
-    @BindView(R.id.tv_dislikes) private TextView dislikesTextView;
-    @BindView(R.id.tv_votes) private TextView votesTextView;
-    @BindView(R.id.tv_comments) private TextView commentsTextView;
+    @BindView(R.id.ll_transparent) LinearLayout linearLayout;
+    @BindView(R.id.iv_profile) ImageView profileImageView;
+    @BindView(R.id.tv_first_name) TextView firstNameTextView;
+    @BindView(R.id.tv_last_name) TextView lastNameTextView;
+    @BindView(R.id.tv_likes) TextView likesTextView;
+    @BindView(R.id.tv_dislikes) TextView dislikesTextView;
+    @BindView(R.id.tv_votes) TextView votesTextView;
+    @BindView(R.id.tv_comments) TextView commentsTextView;
     private FirebaseAuth auth;
     private FirebaseUser firebaseUser;
     private DatabaseReference realtimeRef;

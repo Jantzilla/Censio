@@ -35,12 +35,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SettingActivity extends AppCompatActivity {
-    @BindView(R.id.btn_remove_account) private Button removeButton;
-    @BindView(R.id.tv_title) private TextView textView;
+    @BindView(R.id.btn_remove_account) Button removeButton;
+    @BindView(R.id.tv_title) TextView textView;
     private SharedPreferences sharedPreferences;
     private DatabaseReference realtimeRef;
     private FirebaseAuth auth;
-    @BindView(R.id.ll_transparent) private LinearLayout linearLayout;
+    @BindView(R.id.ll_transparent) LinearLayout linearLayout;
     private SharedPreferences.Editor editor;
     private Typeface typeface;
 
