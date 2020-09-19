@@ -193,10 +193,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, SettingActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.it_privacy_policy:
-                Intent intentURL = new Intent(Intent.ACTION_VIEW, Uri.parse("https://creativesource.000webhostapp.com/censio-privacy-policy"));
-                startActivity(intentURL);
-                break;
             default:
                 break;
         }
