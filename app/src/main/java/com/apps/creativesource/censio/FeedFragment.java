@@ -88,6 +88,12 @@ public class FeedFragment extends Fragment implements UserPollsAdapter.ListItemC
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 Post post = snapshot.getValue(Post.class);
                                 post.firestoreId = snapshot.getKey();
+
+                                if(post.postTypeId == 2131165338)
+                                    post.postTypeId = R.drawable.ic_touch_app_primary_28dp;
+                                else
+                                    post.postTypeId = R.drawable.ic_comment_primary_28dp;
+
                                 if(!post.author.equals(auth.getUid()))
                                     postArrayList.add(post);
 
