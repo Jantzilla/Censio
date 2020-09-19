@@ -82,7 +82,8 @@ public class CommentDetailFragment extends Fragment {
         Intent initialIntent = getActivity().getIntent();
 
         if(initialIntent.hasExtra("portrait")) {
-            Glide.with(this).load(initialIntent.getStringExtra("profileUri")).into(circleImageView);
+            if(initialIntent.getStringExtra("profileUri") != null)
+                Glide.with(this).load(initialIntent.getStringExtra("profileUri")).into(circleImageView);
             statementTextView.setText(initialIntent.getStringExtra("statement"));
             usernameTextView.setText(initialIntent.getStringExtra("username"));
             interactionCountTextView.setText(initialIntent.getStringExtra("interactionCount"));
@@ -94,7 +95,8 @@ public class CommentDetailFragment extends Fragment {
             userPost = initialIntent.getBooleanExtra("userPost", false);
 
         } else {
-            Glide.with(this).load(getArguments().getString("profileUri")).into(circleImageView);
+            if(getArguments().getString("profileUri") != null)
+                Glide.with(this).load(getArguments().getString("profileUri")).into(circleImageView);
             statementTextView.setText(getArguments().getString("statement"));
             usernameTextView.setText(getArguments().getString("username"));
             interactionCountTextView.setText(getArguments().getString("interactionCount"));
