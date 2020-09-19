@@ -36,7 +36,7 @@ import butterknife.ButterKnife;
 
 public class SettingActivity extends AppCompatActivity {
     @BindView(R.id.btn_remove_account) Button removeButton;
-    @BindView(R.id.tv_title) TextView textView;
+    TextView textView;
     private SharedPreferences sharedPreferences;
     private DatabaseReference realtimeRef;
     private FirebaseAuth auth;
@@ -49,6 +49,7 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         View view = LayoutInflater.from(this).inflate(R.layout.title_bar,null);
+        textView = view.findViewById(R.id.tv_title);
         ButterKnife.bind(this);
         Context context = this;
         ActionBar actionBar = getSupportActionBar();
