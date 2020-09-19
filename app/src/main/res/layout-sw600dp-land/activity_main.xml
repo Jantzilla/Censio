@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.creativesource.simpledrawerlayout.SimpleDrawerLayout
-        android:id="@+id/simple_drawer_layout"
+    <fragment
+        android:id="@+id/fragment"
+        android:name="com.apps.creativesource.censio.MainFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintHorizontal_weight="40"
@@ -14,16 +15,7 @@
         app:layout_constraintEnd_toStartOf="@+id/divider"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:drawerGravity="start">
-
-        <fragment
-            android:id="@+id/fragment"
-            android:name="com.apps.creativesource.censio.MainFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-    </com.creativesource.simpledrawerlayout.SimpleDrawerLayout>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <View
         android:id="@+id/divider"
@@ -32,7 +24,7 @@
         android:background="@color/colorPrimary"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/simple_drawer_layout"
+        app:layout_constraintStart_toEndOf="@+id/fragment"
         app:layout_constraintEnd_toStartOf="@+id/detail_container"/>
 
     <FrameLayout
