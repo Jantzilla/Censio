@@ -59,7 +59,7 @@ public class UserInfoWidget extends AppWidgetProvider {
                 };
 
                 RequestOptions options = new RequestOptions().
-                        override(300, 300).placeholder(R.drawable.ic_person_gray_100dp).error(R.drawable.ic_person_gray_100dp);
+                        override(300, 300).placeholder(R.drawable.ic_person_white_100dp).error(R.drawable.ic_person_white_100dp);
 
 
                 Glide.with(context.getApplicationContext())

@@ -10,7 +10,7 @@
         android:contentDescription="@string/post_author_profile_image"
         android:transitionName="@string/current_user_profile_image"
         android:id="@+id/iv_profile"
-        android:src="@drawable/ic_person_gray_100dp"
+        android:src="@drawable/ic_person_white_100dp"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
