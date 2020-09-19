@@ -81,8 +81,12 @@ public class UserPollsAdapter extends RecyclerView.Adapter<UserPollsAdapter.Poll
 
                             pollsViewHolder.postFireUserId = user.id;
                             pollsViewHolder.profileUri = user.profileUri;
-                            Glide.with(context).load(pollsViewHolder.profileUri).into(pollsViewHolder.profileImageView);
-                            pollsViewHolder.profileTextView.setText(user.name);
+
+                            if(pollsViewHolder.profileUri != null)
+                                Glide.with(context).load(pollsViewHolder.profileUri).into(pollsViewHolder.profileImageView);
+
+                            if(user.name != null)
+                                pollsViewHolder.profileTextView.setText(user.name);
 
                             if(first && twoPane && i == 0 && !(postArrayList.get(i).author.equals(auth.getUid()))) {
                                 pollsViewHolder.itemView.performClick();

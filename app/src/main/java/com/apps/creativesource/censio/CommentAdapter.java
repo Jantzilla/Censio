@@ -65,10 +65,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
                         if(dataSnapshot.exists()) {
                             User user = dataSnapshot.getValue(User.class);
-
                             profileUri = user.profileUri;
-                            Glide.with(context).load(profileUri).into(commentViewHolder.profileImageView);
-                            commentViewHolder.usernameTextView.setText(user.name);
+
+                            if(profileUri != null)
+                                Glide.with(context).load(profileUri).into(commentViewHolder.profileImageView);
+
+                            if(user.name != null)
+                                commentViewHolder.usernameTextView.setText(user.name);
 
                         }
 
