@@ -92,7 +92,7 @@ public class AddActivity extends AppCompatActivity {
         publishButton = findViewById(R.id.btn_publish);
         statementEditText = findViewById(R.id.et_title);
 
-        postTypeId = R.drawable.ic_touch_app_primary_28dp;
+        postTypeId = 2131165338;
 
         auth = FirebaseAuth.getInstance();
 
@@ -130,7 +130,7 @@ public class AddActivity extends AppCompatActivity {
 
                     postTypeId = getPostTypeId();
 
-                    if(postTypeId == R.drawable.ic_comment_primary_28dp || clickListener.myAction() != null) {
+                    if(postTypeId == 2131165325 || clickListener.myAction() != null) {
 
                         addNewPost(statementEditText.getText().toString());
                         Toast.makeText(getApplicationContext(), getString(R.string.poll_posted), Toast.LENGTH_LONG).show();
@@ -163,15 +163,10 @@ public class AddActivity extends AppCompatActivity {
     }
 
     public int getPostTypeId() {
-        switch (viewPager.getCurrentItem()) {
-            case 0:
-                return R.drawable.ic_touch_app_primary_28dp;
-            case 1:
-                return R.drawable.ic_comment_primary_28dp;
-            default:
-                return R.drawable.ic_touch_app_primary_28dp;
-
+        if (viewPager.getCurrentItem() == 1) {
+            return 2131165325;
         }
+        return 2131165338;
     }
 
     private void addNewPost(String statement){
@@ -192,7 +187,7 @@ public class AddActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        if(getPostTypeId() == R.drawable.ic_touch_app_primary_28dp) {
+                        if(getPostTypeId() == 2131165338) {
 
                             choices.addAll(clickListener.myAction());
 
