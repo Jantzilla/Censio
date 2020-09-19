@@ -7,7 +7,9 @@
     android:background="@color/colorPrimary"
     tools:context=".CommentDetailFragment">
 
-    <include layout="@layout/activity_detail_include"/>
+    <include
+        android:id="@+id/include"
+        layout="@layout/activity_detail_include" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_comment_list"
@@ -17,7 +19,7 @@
         app:layout_constraintBottom_toTopOf="@+id/et_comment_post"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/include" />
 
     <EditText
         android:id="@+id/et_comment_post"
