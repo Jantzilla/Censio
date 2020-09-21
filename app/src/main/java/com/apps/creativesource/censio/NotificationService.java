@@ -20,10 +20,13 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 public class NotificationService extends FirebaseMessagingService {
     private final String CHANNEL_ID = "Censio";
     private DatabaseReference databaseReference;
-    private SharedPreferences sharedPreferences;
+    @Inject
+    SharedPreferences sharedPreferences;
     private String userId;
     String notificationTitle = "", notificationBody = "";
     String dataTitle = null, dataMessage = null;
@@ -31,10 +34,16 @@ public class NotificationService extends FirebaseMessagingService {
     private String messageUserId = "";
 
     @Override
+    public void onCreate() {
+        ((MyApp) getApplication()).getAppComponent().inject(this);
+        super.onCreate();
+    }
+
+    @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         createNotificationChannel();
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         userId = sharedPreferences.getString("userFireId","null");
         notifications = sharedPreferences.getBoolean("notifications", true);
 

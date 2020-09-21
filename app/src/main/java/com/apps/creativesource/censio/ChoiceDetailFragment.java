@@ -1,5 +1,6 @@
 package com.apps.creativesource.censio;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,6 +34,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -51,7 +54,8 @@ public class ChoiceDetailFragment extends Fragment {
     @BindView(R.id.iv_dislikes) ImageView dislikesImageView;
     @BindView(R.id.fab_delete) FloatingActionButton fab;
     @BindView(R.id.rg_choices) RadioGroupPlus choicesRadioGroup;
-    private SharedPreferences sharedPreferences;
+    @Inject
+    SharedPreferences sharedPreferences;
     private DatabaseReference realtimeRef;
     private String postId;
     private String postUserId;
@@ -59,13 +63,19 @@ public class ChoiceDetailFragment extends Fragment {
     private int likeCode = 0;
     private boolean userPost;
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        ((MyApp) getActivity().getApplication()).getAppComponent().inject(this);
+        super.onAttach(context);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_choice_detail, container, false);
         ButterKnife.bind(this, view);
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+//        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         realtimeRef = FirebaseDatabase.getInstance().getReference();
 

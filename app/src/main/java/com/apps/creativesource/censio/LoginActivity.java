@@ -32,6 +32,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -49,11 +51,14 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.cl_sign_in) ConstraintLayout signInLayout;
     @BindView(R.id.pb_sign_in) ProgressBar progressBar;
 
-    private SharedPreferences sharedPreferences;
+    @Inject
+    SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ((MyApp) getApplication()).getAppComponent().inject(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -63,7 +68,6 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
 
         logoTextView.setTypeface(typeface);

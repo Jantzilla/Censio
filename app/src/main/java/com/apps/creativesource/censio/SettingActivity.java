@@ -31,13 +31,16 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SettingActivity extends AppCompatActivity {
     @BindView(R.id.btn_remove_account) Button removeButton;
     TextView textView;
-    private SharedPreferences sharedPreferences;
+    @Inject
+    SharedPreferences sharedPreferences;
     private DatabaseReference realtimeRef;
     private FirebaseAuth auth;
     @BindView(R.id.ll_transparent) LinearLayout linearLayout;
@@ -46,6 +49,7 @@ public class SettingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ((MyApp) getApplication()).getAppComponent().inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         View view = LayoutInflater.from(this).inflate(R.layout.title_bar,null);

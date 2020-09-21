@@ -32,6 +32,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
 public class AddActivity extends AppCompatActivity {
     ArrayList<String> choices;
     private TabLayout tabLayout;
@@ -41,7 +43,8 @@ public class AddActivity extends AppCompatActivity {
     private EditText statementEditText;
     private DatabaseReference realtimeRef;
     private FirebaseAuth auth;
-    private SharedPreferences sharedPreferences;
+    @Inject
+    SharedPreferences sharedPreferences;
     private int postTypeId;
     private PublishClickListener clickListener;
     private InterstitialAd interstitialAd;
@@ -66,6 +69,7 @@ public class AddActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ((MyApp) getApplication()).getAppComponent().inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
         ActionBar actionBar = getSupportActionBar();

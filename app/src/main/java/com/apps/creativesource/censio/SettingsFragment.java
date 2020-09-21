@@ -1,7 +1,10 @@
 package com.apps.creativesource.censio;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
@@ -11,10 +14,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
-    private SharedPreferences sharedPreferences;
+    @Inject
+    SharedPreferences sharedPreferences;
     private DatabaseReference realtimeRef;
     private String userId;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        ((MyApp) getActivity().getApplication()).getAppComponent().inject(this);
+        super.onAttach(context);
+    }
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {

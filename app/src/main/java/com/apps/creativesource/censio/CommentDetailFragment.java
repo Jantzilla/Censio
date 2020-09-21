@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -61,12 +63,19 @@ public class CommentDetailFragment extends Fragment {
     @BindView(R.id.iv_dislikes) ImageView dislikesImageView;
     @BindView(R.id.fab_delete) FloatingActionButton fab;
     private CommentAdapter adapter;
-    private SharedPreferences sharedPreferences;
+    @Inject
+    SharedPreferences sharedPreferences;
     private DatabaseReference realtimeRef;
     private String postId;
     private int likeCode = 0;
     private String postUserId;
     private boolean userPost;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        ((MyApp) getActivity().getApplication()).getAppComponent().inject(this);
+        super.onAttach(context);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,7 +84,7 @@ public class CommentDetailFragment extends Fragment {
 
         linearLayout = getActivity().findViewById(R.id.ll_transparent);
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+//        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         realtimeRef = FirebaseDatabase.getInstance().getReference();
 
