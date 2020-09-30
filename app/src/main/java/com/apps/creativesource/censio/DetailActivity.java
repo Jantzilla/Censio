@@ -141,6 +141,8 @@ public class DetailActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         if(userPost)
             inflater.inflate(R.menu.post, menu);
+        else
+            inflater.inflate(R.menu.feed, menu);
         return true;
     }
 
