@@ -1,5 +1,6 @@
 package com.apps.creativesource.censio;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -17,7 +18,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -176,6 +179,16 @@ public class DetailActivity extends AppCompatActivity {
                     }
                 });
                 builder.show();
+                break;
+            case R.id.it_flag:
+                Dialog dialog = new Dialog(DetailActivity.this);
+                dialog.setContentView(R.layout.report_dialog);
+                dialog.setTitle("Test");
+                dialog.setCancelable(true);
+                RadioButton radioButtonOne = dialog.findViewById(R.id.radio_1);
+                RadioButton radioButtonTwo = dialog.findViewById(R.id.radio_2);
+                Button submitButton = dialog.findViewById(R.id.report_button);
+                dialog.show();
                 break;
             default:
                 break;
