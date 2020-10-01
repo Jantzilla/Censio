@@ -21,7 +21,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -183,11 +185,18 @@ public class DetailActivity extends AppCompatActivity {
             case R.id.it_flag:
                 Dialog dialog = new Dialog(DetailActivity.this);
                 dialog.setContentView(R.layout.report_dialog);
-                dialog.setTitle("Test");
                 dialog.setCancelable(true);
+                RadioGroup radioGroup = dialog.findViewById(R.id.radio_group);
                 RadioButton radioButtonOne = dialog.findViewById(R.id.radio_1);
                 RadioButton radioButtonTwo = dialog.findViewById(R.id.radio_2);
                 Button submitButton = dialog.findViewById(R.id.report_button);
+                submitButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String value = ((RadioButton)dialog.findViewById(radioGroup.getCheckedRadioButtonId())).getText().toString();
+                        Toast.makeText(getApplicationContext(), value, Toast.LENGTH_LONG).show();
+                    }
+                });
                 dialog.show();
                 break;
             default:
