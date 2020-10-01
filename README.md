@@ -1,6 +1,6 @@
 ![](static/banner.png)
 
-<a href='https://play.google.com/store/apps/details?id=com.apps.creativesource.censio&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height='65'/></a>
+<!-- <a href='https://play.google.com/store/apps/details?id=com.apps.creativesource.censio&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height='65'/></a> -->
 
 **Censio is a social networking app that's designed to allow users to ask questions, post statements, or share opinions. Users can decide if they want their posts to receive unrestricted or specific feedback from other users.**
 
