@@ -187,8 +187,6 @@ public class DetailActivity extends AppCompatActivity {
                 dialog.setContentView(R.layout.report_dialog);
                 dialog.setCancelable(true);
                 RadioGroup radioGroup = dialog.findViewById(R.id.radio_group);
-                RadioButton radioButtonOne = dialog.findViewById(R.id.radio_1);
-                RadioButton radioButtonTwo = dialog.findViewById(R.id.radio_2);
                 Button submitButton = dialog.findViewById(R.id.report_button);
                 submitButton.setOnClickListener(new View.OnClickListener() {
                     @Override
